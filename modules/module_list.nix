@@ -11,6 +11,7 @@ let
     dockdns = ./dockdns;
     dozzle = ./dozzle;
     filebrowser = ./filebrowser;
+    forgejo = ./forgejo;
     healthchecks = ./healthchecks;
     homepage = ./homepage;
     immich = ./immich;
