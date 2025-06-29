@@ -13,7 +13,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "codeberg.org/forgejo/forgejo:latest";
+      image = "codeberg.org/forgejo/forgejo:11";
       volumes = [
         "${storage}/data:/data"
       ];
