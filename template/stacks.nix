@@ -16,6 +16,7 @@
         envFile = config.sops.secrets."aiostreams/env".path;
       };
       audiobookshelf.enable = true;
+      blocky.enable = false;
       calibre.enable = true;
       changedetection.enable = true;
       crowdsec = {
