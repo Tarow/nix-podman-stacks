@@ -42,7 +42,7 @@ in {
     services.podman.containers = {
       ${name} = {
         image = "ghcr.io/paperless-ngx/paperless-ngx:latest";
-        dependsOn = [dbName brokerName];
+        dependsOnContainer = [dbName brokerName];
         volumes = [
           "${storage}/data:/usr/src/paperless/data"
           "${storage}/media:/usr/src/paperless/media"

@@ -117,7 +117,7 @@ in {
 
       ${qbittorrentName} = lib.mkIf cfg.qbittorrent.enable {
         image = "docker.io/linuxserver/qbittorrent:latest";
-        dependsOn = ["gluetun"];
+        dependsOnContainer = [gluetunName];
         network = lib.mkIf cfg.gluetun.enable (lib.mkForce ["container:${gluetunName}"]);
         volumes = [
           "${storage}/${qbittorrentName}:/config"

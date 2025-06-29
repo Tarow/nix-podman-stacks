@@ -71,7 +71,7 @@ in {
 
         devices = ["/dev/dri:/dev/dri"];
 
-        dependsOn = [redisName dbName];
+        dependsOnContainer = [redisName dbName];
         port = 2283;
 
         stack = name;

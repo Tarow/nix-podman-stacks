@@ -23,11 +23,12 @@ in {
         dependsOn = mkOption {
           type = types.listOf types.str;
           default = [];
-          apply = map (d: "podman-${d}${
-            if lib.hasInfix "." d
-            then ""
-            else ".service"
-          }");
+        };
+
+        dependsOnContainer = mkOption {
+          type = types.listOf types.str;
+          default = [];
+          apply = map (d: "podman-${d}.service");
         };
 
         socketActivation = mkOption {
@@ -56,19 +57,20 @@ in {
         autoUpdate = lib.mkDefault "registry";
 
         network = lib.mkIf (config.stack != null) [config.stack];
-        dependsOn = map (sa:
-          mkSocketName {
-            inherit name;
-            port = sa.port;
-            prefix = "";
-          })
-        config.socketActivation;
+        dependsOn =
+          (map (sa:
+            mkSocketName {
+              inherit name;
+              port = sa.port;
+            })
+          config.socketActivation)
+          ++ lib.optional (builtins.any (lib.hasPrefix "${config.tarow.podman.socketLocation}:")) "podman.socket";
 
         environment.TZ = lib.mkDefault globalConf.tarow.podman.defaultTz;
 
         extraConfig = {
-          Unit.Requires = config.dependsOn;
-          Unit.After = config.dependsOn;
+          Unit.Requires = config.dependsOn ++ config.dependsOnContainer;
+          Unit.After = config.dependsOn ++ config.dependsOnContainer;
 
           # Automatically create host directories for volumes if they don't exist
           Service.ExecStartPre = let
