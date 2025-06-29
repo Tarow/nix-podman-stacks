@@ -64,7 +64,7 @@ in {
               port = sa.port;
             })
           config.socketActivation)
-          ++ lib.optional (builtins.any (lib.hasPrefix "${config.tarow.podman.socketLocation}:")) "podman.socket";
+          ++ lib.optional (builtins.any (lib.hasPrefix "${config.tarow.podman.socketLocation}:") config.volumes) "podman.socket";
 
         environment.TZ = lib.mkDefault globalConf.tarow.podman.defaultTz;
 
