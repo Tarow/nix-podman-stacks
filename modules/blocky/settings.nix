@@ -3,6 +3,7 @@
     groups = {
       default = [
         "5.9.164.112"
+        "9.9.9.9"
         "tcp-tls:fdns1.dismail.de:853"
         "https://dns.digitale-gesellschaft.ch/dns-query"
         "https://cloudflare-dns.com/dns-query"
