@@ -18,10 +18,6 @@ in {
         "${storage}/data:/data"
       ];
       ports = ["222:22"];
-      environment = {
-        USER_UID = config.tarow.podman.defaultUid;
-        USER_GID = config.tarow.podman.defaultGid;
-      };
 
       port = 3000;
       traefik.name = name;
