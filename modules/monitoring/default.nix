@@ -9,6 +9,7 @@
   storage = "${config.tarow.podman.storageBaseDir}/${stackName}";
 
   yaml = pkgs.formats.yaml {};
+  ini = pkgs.formats.ini {};
 
   grafanaName = "grafana";
   lokiName = "loki";
@@ -50,6 +51,11 @@ in {
         default = import ./grafana_datasources.nix lokiUrl prometheusUrl;
         apply = yaml.generate "grafana_datasources.yml";
         readOnly = true;
+      };
+      settings = lib.mkOption {
+        type = ini.type;
+        default = {};
+        apply = ini.generate "grafana.ini";
       };
     };
     loki = {
@@ -124,6 +130,7 @@ in {
         user = config.tarow.podman.defaultUid;
         volumes = [
           "${storage}/grafana/data:/var/lib/grafana"
+          "${cfg.grafana.settings}:/etc/grafana/grafana.ini"
           "${cfg.grafana.datasources}:/etc/grafana/provisioning/datasources/datasources.yaml"
           "${cfg.grafana.dashboardProvider}:/etc/grafana/provisioning/dashboards/provider.yml"
           "${dashboards}:${dashboardPath}"

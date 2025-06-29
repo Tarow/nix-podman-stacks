@@ -34,9 +34,10 @@ in {
         prometheus.enable = true;
       })
     ];
-    tarow.podman.stacks.monitoring.grafana.dashboards = lib.mkIf cfg.enableGrafanaDashboard [
-      ./grafana_dashboard.json
-    ];
+    tarow.podman.stacks.monitoring.grafana = lib.mkIf cfg.enableGrafanaDashboard {
+      dashboards = [./grafana_dashboard.json];
+      settings.rendering.disable_sanitize_html = true;
+    };
     tarow.podman.stacks.monitoring.prometheus.config = lib.mkIf cfg.enablePrometheusExport {
       scrape_configs = [
         {
