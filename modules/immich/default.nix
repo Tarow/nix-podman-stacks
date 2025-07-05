@@ -105,7 +105,7 @@ in {
       };
 
       ${mlName} = {
-        image = "ghcr.io/immich-app/immich-machine-learning:v1.135.2";
+        image = "ghcr.io/immich-app/immich-machine-learning:v1.135.3";
         volumes = ["${storage}/model-cache:/cache"];
 
         stack = name;
