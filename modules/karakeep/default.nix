@@ -53,7 +53,7 @@ in {
       };
 
       ${chromeName} = {
-        image = "gcr.io/zenika-hub/alpine-chrome:123";
+        image = "gcr.io/zenika-hub/alpine-chrome:124";
         exec = lib.concatStringsSep " " [
           "--no-sandbox"
           "--disable-gpu"
