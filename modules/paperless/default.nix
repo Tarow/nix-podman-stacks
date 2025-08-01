@@ -85,7 +85,7 @@ in {
       };
 
       ${brokerName} = {
-        image = "docker.io/redis:6.0";
+        image = "docker.io/redis:8.0";
         stack = name;
       };
 

@@ -95,7 +95,7 @@ in {
       };
 
       ${redisName} = {
-        image = "docker.io/redis:6.2";
+        image = "docker.io/redis:8.0";
         stack = name;
       };
 
