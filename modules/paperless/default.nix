@@ -90,7 +90,7 @@ in {
       };
 
       ${dbName} = {
-        image = "docker.io/postgres:16";
+        image = "docker.io/postgres:17";
         volumes = ["${storage}/db:/var/lib/postgresql/data"];
         environment = {
           POSTGRES_DB = "paperless";
