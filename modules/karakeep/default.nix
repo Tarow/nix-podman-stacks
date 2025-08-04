@@ -67,7 +67,7 @@ in {
       };
 
       ${meilisearchName} = {
-        image = "docker.io/getmeili/meilisearch:v1.15.2";
+        image = "docker.io/getmeili/meilisearch:v1.16.0";
         environment = {
           MEILI_NO_ANALYTICS = "true";
         };
