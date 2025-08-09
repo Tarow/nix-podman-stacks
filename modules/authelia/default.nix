@@ -272,7 +272,7 @@ in {
       };
 
       services.podman.containers.${name} = {
-        image = "ghcr.io/authelia/authelia:4.39.5";
+        image = "ghcr.io/authelia/authelia:4.39.6";
         environment =
           {
             AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE = "/secrets/JWT_SECRET";
