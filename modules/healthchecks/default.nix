@@ -25,7 +25,7 @@ in {
     services.podman.containers = {
       ${name} = {
         # renovate: versioning=regex:^v(?<major>\d+)\.(?<minor>\d+)-ls(?<build>.+)$
-        image = "ghcr.io/linuxserver/healthchecks:v3.10-ls304";
+        image = "ghcr.io/linuxserver/healthchecks:v3.10-ls305";
         volumes = ["${storage}/config:/config"];
         environment = {
           PUID = config.tarow.podman.defaultUid;
