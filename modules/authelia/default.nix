@@ -62,19 +62,6 @@ in
         See <https://www.authelia.com/configuration/storage/introduction/#encryption_key>
       '';
     };
-    env = lib.mkOption {
-      type = (options.services.podman.containers.type.getSubOptions [ ]).environment.type;
-      default = { };
-      description = "Additional environment variables passed to the Authelia container";
-    };
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = ''
-        Path to the environment file containing addiotional variables.
-        Can be used to pass secrets etc.
-      '';
-    };
     oidc = {
       enable = lib.mkEnableOption "OIDC Support";
       hmacSecretFile = lib.mkOption {
@@ -336,36 +323,34 @@ in
     services.podman.containers.${name} = {
       image = "ghcr.io/authelia/authelia:4.39.6";
       environment = {
-        AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE = "/secrets/JWT_SECRET";
-        AUTHELIA_SESSION_SECRET_FILE = "/secrets/SESSION_SECRET";
-        AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE = "/secrets/STORAGE_ENCRYPTION_KEY";
         AUTHELIA_STORAGE_LOCAL_PATH = "/data/db.sqlite3";
       }
       // lib.optionalAttrs oidcEnabled {
-        IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE = "/secrets/oidc/HMAC_SECRET";
         X_AUTHELIA_CONFIG_FILTERS = "template";
         X_AUTHELIA_CONFIG = "/config/configuration.yml,/config/jwks_key_config.yml";
+      };
+
+      fileEnvMount = {
+        AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE = cfg.jwtSecretFile;
+        AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE = cfg.storageEncryptionKeyFile;
+        AUTHELIA_SESSION_SECRET_FILE = cfg.sessionSecretFile;
       }
       // lib.optionalAttrs useLdap {
-        AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = "/secrets/ldap/PASSWORD";
+        AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = cfg.authenticationBackend.ldap.passwordFile;
       }
-      // cfg.env;
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
+      // lib.optionalAttrs oidcEnabled {
+        IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE = cfg.oidc.hmacSecretFile;
+      };
 
       volumes = [
         "${storage}/db:/data"
         "${storage}/notifier:/notifier"
         "${cfg.settings}:/config/configuration.yml"
-        "${cfg.jwtSecretFile}:/secrets/JWT_SECRET"
-        "${cfg.sessionSecretFile}:/secrets/SESSION_SECRET"
-        "${cfg.storageEncryptionKeyFile}:/secrets/STORAGE_ENCRYPTION_KEY"
       ]
       ++ lib.optionals oidcEnabled [
-        "${cfg.oidc.hmacSecretFile}:/secrets/oidc/HMAC_SECRET"
         "${cfg.oidc.jwksRsaKeyFile}:/secrets/oidc/jwks/rsa.key"
         "${writeOidcJwksConfigFile "/secrets/oidc/jwks/rsa.key"}:/config/jwks_key_config.yml"
       ]
-      ++ lib.optional useLdap "${cfg.authenticationBackend.ldap.passwordFile}:/secrets/ldap/PASSWORD"
       ++ lib.optional (!useLdap) "${finalUsersFile}:/config/users.yml";
 
       port = 9091;
