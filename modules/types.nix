@@ -17,5 +17,5 @@ lib: with lib.types; rec {
     fromFileSubmodule
   ]);
 
-  envFromFileOrLiteral = attrsOf primitiveOrFileContent;
+  envSource = attrsOf primitiveOrFileContent;
 }

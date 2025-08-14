@@ -100,7 +100,7 @@ in
       environment = {
         POCKET_ID_CLIENT_ID = cfg.traefikIntegration.clientId;
       };
-      envFromFileOrLiteral = {
+      envSource = {
         POCKET_ID_CLIENT_SECRET.fromFile = cfg.traefikIntegration.clientSecretFile;
         OIDC_MIDDLEWARE_SECRET.fromFile = cfg.traefikIntegration.encryptionSecretFile;
       };
