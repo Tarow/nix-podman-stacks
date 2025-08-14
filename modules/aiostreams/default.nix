@@ -2,22 +2,32 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   name = "aiostreams";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
-in {
-  imports = import ../mkAliases.nix config lib name [name];
+in
+{
+  imports = import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).envFromFileOrLiteral;
+      default = { };
       description = ''
-        Path to the environment file for AIOStreams.
-        Can be used to pass secrets.
+        Extra environment variables to set for the container.
+        Can be used to pass secrets such as the `TMDB_ACCESS_TOKEN`.
+
+        See <https://github.com/Viren070/AIOStreams/wiki/Configuration>
       '';
+      example = {
+        TMDB_ACCESS_TOKEN = {
+          fromFile = "/run/secrets/tmdb_access_token";
+        };
+        FOO = "bar";
+      };
     };
   };
 
@@ -31,14 +41,14 @@ in {
         HealthRetries = 5;
         HealthStartPeriod = "10s";
       };
-      volumes = ["${storage}/data:/app/data"];
+      volumes = [ "${storage}/data:/app/data" ];
       environment = {
         ADDON_NAME = "AIOStreams";
         ADDON_ID = "aiostreams.viren070.com";
         PORT = 3000;
         BASE_URL = config.services.podman.containers.${name}.traefik.serviceDomain;
       };
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
+      envFromFileOrLiteral = cfg.extraEnv;
 
       port = 3000;
       traefik.name = name;

@@ -100,9 +100,9 @@ in
       environment = {
         POCKET_ID_CLIENT_ID = cfg.traefikIntegration.clientId;
       };
-      envFromFile = {
-        POCKET_ID_CLIENT_SECRET = cfg.traefikIntegration.clientSecretFile;
-        OIDC_MIDDLEWARE_SECRET = cfg.traefikIntegration.encryptionSecretFile;
+      envFromFileOrLiteral = {
+        POCKET_ID_CLIENT_SECRET.fromFile = cfg.traefikIntegration.clientSecretFile;
+        OIDC_MIDDLEWARE_SECRET.fromFile = cfg.traefikIntegration.encryptionSecretFile;
       };
     };
     nps.stacks.traefik = lib.mkIf cfg.traefikIntegration.enable {

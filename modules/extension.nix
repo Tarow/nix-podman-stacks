@@ -48,16 +48,24 @@ in
               '';
             };
 
-            envFromFile = lib.mkOption {
-              type = lib.types.attrsOf lib.types.path;
+            envFromFileOrLiteral = lib.mkOption {
+              type = (import ./types.nix lib).envFromFileOrLiteral;
               default = { };
               example = {
                 # Load environment variables from a file
-                DB_PASSWORD = "/some/path/secrets/db-password";
-                API_KEY = "/home/user/api-key";
+                ENCRYPTION_KEY = "literal-value";
+                DB_PASSWORD = {
+                  fromFile = "/some/path/secrets/db-password";
+                };
+                API_KEY = {
+                  fromFile = "/home/user/api-key";
+                };
               };
               description = ''
-                Environment variables that should be loaded from a file.
+                Convinience wrapper option for passing environment variables to the container.
+                The values of the environment variables can either be a primitive value or a path to a file.
+
+                In case of passing a path (using the `fromFile` attribure), the file will be read and the content will be set as the value of the environment variable.
                 Useful for containers that don't support passing environment variables using the "_FILE" pattern.
               '';
             };
@@ -88,7 +96,6 @@ in
                     sourcePath = value;
                     destPath = "/run/secrets/${name}";
                   }
-
               );
               default = { };
               example = {
@@ -178,6 +185,11 @@ in
           config =
             let
               envFromFileContentLocation = "/run/user/${toString globalConf.nps.hostUid}/${name}/extra_file_content_env";
+              extraFileContentEnv =
+                config.envFromFileOrLiteral
+                |> lib.filterAttrs (_: v: lib.isAttrs v)
+                |> lib.mapAttrs (_: v: v.fromFile);
+              extraLiteralEnv = config.envFromFileOrLiteral |> lib.filterAttrs (_: v: !lib.isAttrs v);
             in
             {
               autoUpdate = lib.mkDefault "registry";
@@ -196,8 +208,9 @@ in
               environment = {
                 TZ = lib.mkDefault globalConf.nps.defaultTz;
               }
+              // extraLiteralEnv
               // lib.mapAttrs (_: v: v.destPath) config.fileEnvMount;
-              environmentFile = lib.optional (config.envFromFile != { }) envFromFileContentLocation;
+              environmentFile = lib.optional (extraFileContentEnv != { }) envFromFileContentLocation;
 
               volumes = config.fileEnvMount |> lib.attrValues |> lib.map (v: "${v.sourcePath}:${v.destPath}");
 
@@ -220,23 +233,23 @@ in
                       }
                     ))
                   ]
-                  ++ lib.optional (config.envFromFile != { }) (
+                  ++ lib.optional (extraFileContentEnv != { }) (
                     lib.getExe (
                       pkgs.writeShellApplication {
                         name = "create-env-file-from-file-content";
                         runtimeInputs = [ pkgs.coreutils ];
                         text = ''
                           install -D -m 600 /dev/null ${envFromFileContentLocation}
-                        ''
-                        + (
-                          config.envFromFile
-                          |> lib.mapAttrsToList (
-                            name: path: ''
-                              echo "${name}=$(<${path})" >> "${envFromFileContentLocation}"
-                            ''
-                          )
-                          |> lib.concatStringsSep "\n"
-                        );
+                          {
+                            ${
+                              (
+                                extraFileContentEnv
+                                |> lib.mapAttrsToList (name: path: ''echo "${name}=$(<${path})" '')
+                                |> lib.concatStringsSep "\n"
+                              )
+                            }
+                          } >> "${envFromFileContentLocation}"
+                        '';
                       }
                     )
                   );
