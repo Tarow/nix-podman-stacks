@@ -15,7 +15,7 @@ in
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
     extraEnv = lib.mkOption {
-      type = (import ../types.nix lib).envSource;
+      type = (import ../types.nix lib).extraEnv;
       default = { };
       description = ''
         Extra environment variables to set for the container.
@@ -46,7 +46,7 @@ in
         ALLOW_PASSWORD_CHANGES = true;
         DEBUG = false;
       };
-      envSource = cfg.extraEnv;
+      extraEnv = cfg.extraEnv;
 
       port = 5000;
       traefik.name = name;

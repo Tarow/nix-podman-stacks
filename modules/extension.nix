@@ -48,8 +48,8 @@ in
               '';
             };
 
-            envSource = lib.mkOption {
-              type = (import ./types.nix lib).envSource;
+            extraEnv = lib.mkOption {
+              type = (import ./types.nix lib).extraEnv;
               default = { };
               example = {
                 # Load environment variables from a file
@@ -186,8 +186,8 @@ in
             let
               envFromFileContentLocation = "/run/user/${toString globalConf.nps.hostUid}/${name}/extra_file_content_env";
               extraFileContentEnv =
-                config.envSource |> lib.filterAttrs (_: v: lib.isAttrs v) |> lib.mapAttrs (_: v: v.fromFile);
-              extraLiteralEnv = config.envSource |> lib.filterAttrs (_: v: !lib.isAttrs v);
+                config.extraEnv |> lib.filterAttrs (_: v: lib.isAttrs v) |> lib.mapAttrs (_: v: v.fromFile);
+              extraLiteralEnv = config.extraEnv |> lib.filterAttrs (_: v: !lib.isAttrs v);
             in
             {
               autoUpdate = lib.mkDefault "registry";

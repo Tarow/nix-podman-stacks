@@ -8,14 +8,16 @@ lib: with lib.types; rec {
     }
   );
 
-  primitiveOrFileContent = attrsOf (oneOf [
-    bool
-    int
-    str
-    path
+  primitiveOrFileContent = (
+    oneOf [
+      bool
+      int
+      str
+      path
 
-    fromFileSubmodule
-  ]);
+      fromFileSubmodule
+    ]
+  );
 
-  envSource = attrsOf primitiveOrFileContent;
+  extraEnv = attrsOf primitiveOrFileContent;
 }

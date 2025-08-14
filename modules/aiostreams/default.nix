@@ -14,7 +14,7 @@ in
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
     extraEnv = lib.mkOption {
-      type = (import ../types.nix lib).envSource;
+      type = (import ../types.nix lib).extraEnv;
       default = { };
       description = ''
         Extra environment variables to set for the container.
@@ -48,7 +48,7 @@ in
         PORT = 3000;
         BASE_URL = config.services.podman.containers.${name}.traefik.serviceDomain;
       };
-      envSource = cfg.extraEnv;
+      extraEnv = cfg.extraEnv;
 
       port = 3000;
       traefik.name = name;
