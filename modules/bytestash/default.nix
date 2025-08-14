@@ -3,33 +3,32 @@
   lib,
   options,
   ...
-}: let
+}:
+let
   name = "bytestash";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
-in {
-  imports = import ../mkAliases.nix config lib name [name];
+in
+{
+  imports = import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    env = lib.mkOption {
-      type = (options.services.podman.containers.type.getSubOptions []).environment.type;
-      default = {};
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).envSource;
+      default = { };
       description = ''
-        Additional environment variables passed to the ByteStash container.
-        Can be used to override the preset.
-
-        See <https://docs.romm.app/latest/Getting-Started/Environment-Variables/>
-      '';
-    };
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = ''
-        Path to the environment file containing atleast the 'JWT_SECRET' variable.
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
 
         See <https://github.com/jordan-dalby/ByteStash/wiki/FAQ#environment-variables>
       '';
+      example = {
+        SOME_SECRET = {
+          fromFile = "/run/secrets/secret_name";
+        };
+        FOO = "bar";
+      };
     };
   };
 
@@ -37,19 +36,17 @@ in {
     services.podman.containers.${name} = {
       image = "ghcr.io/jordan-dalby/bytestash:1.5.8";
 
-      volumes = ["${storage}/snippets:/data/snippets"];
-      environment =
-        {
-          BASE_PATH = "";
-          TOKEN_EXPIRY = "24h";
-          ALLOW_NEW_ACCOUNTS = false;
-          DISABLE_ACCOUNTS = false;
-          DISABLE_INTERNAL_ACCOUNTS = false;
-          ALLOW_PASSWORD_CHANGES = true;
-          DEBUG = false;
-        }
-        // cfg.env;
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
+      volumes = [ "${storage}/snippets:/data/snippets" ];
+      environment = {
+        BASE_PATH = "";
+        TOKEN_EXPIRY = "24h";
+        ALLOW_NEW_ACCOUNTS = false;
+        DISABLE_ACCOUNTS = false;
+        DISABLE_INTERNAL_ACCOUNTS = false;
+        ALLOW_PASSWORD_CHANGES = true;
+        DEBUG = false;
+      };
+      envSource = cfg.extraEnv;
 
       port = 5000;
       traefik.name = name;
