@@ -3,28 +3,27 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   name = "dockdns";
   cfg = config.nps.stacks.${name};
-  yaml = pkgs.formats.yaml {};
-in {
-  imports =
-    [
-      ./extension.nix
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
-    ]
-    ++ import ../mkAliases.nix config lib name [name];
+  yaml = pkgs.formats.yaml { };
+in
+{
+  imports = [
+    ./extension.nix
+    (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix { stack = name; })
+  ]
+  ++ import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name} = {
-    enable =
-      lib.mkEnableOption name
-      // {
-        description = ''
-          Whether to enable DockDNS. This will run a Cloudflare DNS client that updates DNS records based on Docker labels.
-          The module contains an extension that will automatically create DNS records for services with the 'public' Traefik middleware,
-          so they are accessible from the internet. It will also automatically delete DNS records for services, that are no longer exposed (e.g. 'private' middleware)
-        '';
-      };
+    enable = lib.mkEnableOption name // {
+      description = ''
+        Whether to enable DockDNS. This will run a Cloudflare DNS client that updates DNS records based on Docker labels.
+        The module contains an extension that will automatically create DNS records for services with the 'public' Traefik middleware,
+        so they are accessible from the internet. It will also automatically delete DNS records for services, that are no longer exposed (e.g. 'private' middleware)
+      '';
+    };
     settings = lib.mkOption {
       type = yaml.type;
       description = ''
@@ -35,12 +34,21 @@ in {
       '';
       apply = yaml.generate "dockdns_config.yaml";
     };
-    envFile = lib.mkOption {
-      type = lib.types.path;
-      default = null;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
       description = ''
-        Path to a file containing environment variables for the API token for the domain.
-        E.g. for a domain 'test.example.com', the file should contain 'TEST_EXAMPLE_COM_API_TOKEN=your_api_token'.'';
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+        See <https://github.com/crowdsecurity/crowdsec/blob/master/docker/README.md#environment-variables>
+      '';
+      example = {
+        SOME_SECRET = {
+          fromFile = "/run/secrets/secret_name";
+        };
+        FOO = "bar";
+      };
     };
   };
 
@@ -66,10 +74,10 @@ in {
         "${cfg.settings}:/app/config.yaml"
       ];
 
-      environment = {
+      extraEnv = {
         DOCKER_HOST = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
-      };
-      environmentFile = [cfg.envFile];
+      }
+      // cfg.extraEnv;
 
       port = 8080;
       traefik.name = name;
