@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   name = "karakeep";
   chromeName = "${name}-chrome";
   meilisearchName = "${name}-meilisearch";
@@ -10,15 +11,30 @@
   storage = "${config.nps.storageBaseDir}/${name}";
 
   cfg = config.nps.stacks.${name};
-in {
-  imports = import ../mkAliases.nix config lib name [name chromeName meilisearchName];
+in
+{
+  imports = import ../mkAliases.nix config lib name [
+    name
+    chromeName
+    meilisearchName
+  ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    envFile = lib.mkOption {
+    nextauthSecretFile = lib.mkOption {
       type = lib.types.path;
       description = ''
-        Path to env file containing atleast 'NEXTAUTH_SECRET' and 'MEILI_MASTER_KEY'
+        Path to file containing the NEXTAUTH_SECRET
+
+        See <https://docs.karakeep.app/configuration/>
+      '';
+    };
+    meiliMasterKeyFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to file containing the MEILI_MASTER_KEY
+
+        See <https://docs.karakeep.app/configuration/>
       '';
     };
   };
@@ -36,7 +52,10 @@ in {
           BROWSER_WEB_URL = "http://${chromeName}:9222";
           NEXTAUTH_URL = cfg.containers.${name}.traefik.serviceDomain;
         };
-        environmentFile = [cfg.envFile];
+        extraEnv = {
+          NEXTAUTH_SECRET.fromFile = cfg.nextauthSecretFile;
+          MEILI_MASTER_KEY.fromFile = cfg.meiliMasterKeyFile;
+        };
 
         stack = name;
         port = 3000;
@@ -71,8 +90,10 @@ in {
         environment = {
           MEILI_NO_ANALYTICS = "true";
         };
-        environmentFile = [cfg.envFile];
-        volumes = ["${storage}/meilisearch:/meili_data"];
+        extraEnv = {
+          MEILI_MASTER_KEY.fromFile = cfg.meiliMasterKeyFile;
+        };
+        volumes = [ "${storage}/meilisearch:/meili_data" ];
 
         stack = name;
       };
