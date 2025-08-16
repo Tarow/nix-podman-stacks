@@ -285,13 +285,7 @@ in
       readOnly = true;
       visible = false;
     };
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = ''
-        Path to the environment file for LLDAP. Can be used to pass additional variables or secrets.
-      '';
-    };
+
   };
 
   config = lib.mkIf cfg.enable {
@@ -331,8 +325,6 @@ in
         LLDAP_KEY_SEED_FILE = cfg.keySeedFile;
         LLDAP_LDAP_USER_PASS_FILE = cfg.adminPasswordFile;
       };
-
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
 
       port = 17170;
       traefik.name = name;
