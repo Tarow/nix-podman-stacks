@@ -62,19 +62,24 @@ in
       };
     };
     authelia = {
-      registerClient = lib.mkOption {
+      enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
         description = ''
-          Whether to register a Paperless OIDC client in Authelia.
-          If enabled you need to provide a hashed secret in the `client_secret` option.
+          Whether to enable OIDC login with Authelia. This will register an OIDC client in Authelia
+          and setup the necessary configuration for Paperless.
 
-          To enable OIDC Login for Paperless, you will have to provide the environment variable `PAPERLESS_SOCIALACCOUNT_PROVIDERS`,
-          e.g. in the `extraEnv` option.
+          For details, see:
 
           For details, see:
           - <https://www.authelia.com/integration/openid-connect/clients/paperless/>
           - <https://docs.paperless-ngx.com/advanced_usage/#openid-connect-and-social-authentication>
+        '';
+      };
+      clientSecretFile = lib.mkOption {
+        type = lib.types.str;
+        description = ''
+          The file containing the client secret for the Paperless OIDC client that will be registered in Authelia.
         '';
       };
       clientSecretHash = lib.mkOption {
@@ -90,7 +95,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    nps.stacks.authelia.oidc.clients.${name} = lib.mkIf cfg.authelia.registerClient {
+    nps.stacks.authelia.oidc.clients.${name} = lib.mkIf cfg.authelia.enable {
       client_name = "Paperless";
       client_secret = cfg.authelia.clientSecretHash;
       public = false;
@@ -124,15 +129,21 @@ in
           PAPERLESS_TIME_ZONE = config.nps.defaultTz;
           PAPERLESS_FILENAME_FORMAT = "{{created_year}}/{{correspondent}}/{{title}}";
           PAPERLESS_URL = config.services.podman.containers.${name}.traefik.serviceDomain;
-        }
-        // lib.optionalAttrs cfg.authelia.registerClient {
-          PAPERLESS_APPS = "allauth.socialaccount.providers.openid_connect";
         };
 
         extraEnv = {
           PAPERLESS_DBUSER = cfg.db.username;
           PAPERLESS_DBPASS.fromFile = cfg.db.passwordFile;
           PAPERLESS_SECRET_KEY.fromFile = cfg.secretKeyFile;
+        }
+        // lib.optionalAttrs cfg.authelia.enable {
+          PAPERLESS_APPS = "allauth.socialaccount.providers.openid_connect";
+          AUTHELIA_CLIENT_SECRET.fromFile = cfg.authelia.clientSecretFile;
+          PAPERLESS_SOCIALACCOUNT_PROVIDERS.fromTemplate =
+            let
+              autheliaUrl = config.nps.containers.authelia.traefik.serviceDomain;
+            in
+            ''{"openid_connect":{"SCOPE":["openid","profile","email"],"OAUTH_PKCE_ENABLED":true,"APPS":[{"provider_id":"authelia","name":"Authelia","client_id":"${name}","secret":"''${AUTHELIA_CLIENT_SECRET}","settings":{"server_url":"${autheliaUrl}","token_auth_method":"client_secret_basic"}}]}}'';
         }
         // cfg.extraEnv;
 
