@@ -83,16 +83,10 @@ in
         '';
       };
     };
-    envFile = lib.mkOption {
+    dbPasswordFile = lib.mkOption {
       type = lib.types.path;
       description = ''
-        Path to the env file containing the 'DB_PASSWORD' variable
-      '';
-    };
-    db.envFile = lib.mkOption {
-      type = lib.types.path;
-      description = ''
-        Path to the env file containing the 'POSTGRES_PASSWORD' variable
+        Path to the file containing the PostgreSQL password for the Immich database.
       '';
     };
   };
@@ -192,7 +186,7 @@ in
         ++ lib.optional (cfg.settings != null) "${configSource}:${env.IMMICH_CONFIG_FILE}";
 
         environment = env;
-        environmentFile = [ cfg.envFile ];
+        extraEnv.DB_PASSWORD.fromFile = cfg.dbPasswordFile;
         devices = [ "/dev/dri:/dev/dri" ];
 
         extraConfig.Service.ExecStartPre = lib.mkIf cfg.authelia.enable [
@@ -241,10 +235,11 @@ in
       ${dbName} = {
         image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0";
         volumes = [ "${storage}/pgdata:/var/lib/postgresql/data" ];
-        environmentFile = [ cfg.db.envFile ];
-        environment = {
+
+        extraEnv = {
           POSTGRES_USER = env.DB_USERNAME;
           POSTGRES_DB = env.DB_DATABASE_NAME;
+          POSTGRES_PASSWORD.fromFile = cfg.dbPasswordFile;
         };
 
         stack = name;
