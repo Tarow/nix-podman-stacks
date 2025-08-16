@@ -27,19 +27,11 @@ in
       type = lib.types.path;
       description = "Path to the file containing the admin password";
     };
-    databaseUrlFile = lib.mkOption {
-      type = lib.types.path;
-      description = ''
-        Path to the file containing the database URL in the format
-        `mysql://<<DATABASE_USER>>:<<DATABASE_PASSWORD>>@kimai-db/<<DATABASE_NAME>>?charset=utf8mb4`
-        with the variables matching the ones given in the `db` options.
-      '';
-    };
 
     db = {
       databaseName = lib.mkOption {
         type = lib.types.str;
-        default = "kimai-db";
+        default = "kimai";
         description = "Name of the database to use for Kimai.";
       };
       username = lib.mkOption {
@@ -72,7 +64,9 @@ in
         extraEnv = {
           ADMINMAIL = cfg.adminEmail;
           ADMINPASS.fromFile = cfg.adminPasswordFile;
-          DATABASE_URL.fromFile = cfg.databaseUrlFile;
+
+          DATABASE_PASSWORD.fromFile = cfg.db.userPasswordFile;
+          DATABASE_URL.fromTemplate = "mysql://${cfg.db.username}:\${DATABASE_PASSWORD}@${dbName}/${cfg.db.databaseName}?charset=utf8mb4";
         };
 
         dependsOnContainer = [ dbName ];
