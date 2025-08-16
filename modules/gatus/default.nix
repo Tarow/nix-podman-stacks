@@ -77,16 +77,10 @@ in
           - <https://github.com/TwiN/gatus?tab=readme-ov-file#oidc>
         '';
       };
-      clientSecretEnvName = lib.mkOption {
+      clientSecretFile = lib.mkOption {
         type = lib.types.str;
         description = ''
-          Name of the environment variable that contains the client_secret.
-          You will have to provide a variable with the given name in the `env_file` option.
-
-          E.g. when setting `clientSecretEnvName = AUTHELIA_CLIENT_SECRET`, then the `envFile` should be a file containing the variable:
-          ```env
-          AUTHELIA_CLIENT_SECRET=some_secret
-          ```
+          The file containing the client secret for the Gatus OIDC client that will be registered in Authelia.
         '';
       };
       clientSecretHash = lib.mkOption {
@@ -106,13 +100,21 @@ in
         '';
       };
     };
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
       description = ''
-        Path to the environment file for the container.
-        Can be used to e.g. pass secrets that are referenced in the settings.
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+        See <https://github.com/TwiN/gatus?tab=readme-ov-file#configuration>
       '';
+      example = {
+        SOME_SECRET = {
+          fromFile = "/run/secrets/secret_name";
+        };
+        FOO = "bar";
+      };
     };
     db = {
       type = lib.mkOption {
@@ -126,14 +128,22 @@ in
           If set to "postgres", the envFile option must be set.
         '';
       };
-      envFile = lib.mkOption {
-        type = lib.types.path;
+      postgresUser = lib.mkOption {
+        type = lib.types.str;
+        default = "gatus";
         description = ''
-          Path to the environment file for the database.
-          Required if db.type is set to "postgres".
-          Must contain the environment variables 'POSTGRES_USER', and 'POSTGRES_PASSWORD'.
+          The PostgreSQL user to use for the database.
+          Only used if db.type is set to "postgres".
         '';
       };
+      postgresPasswordFile = lib.mkOption {
+        type = lib.types.path;
+        description = ''
+          The file containing the PostgreSQL password for the database.
+          Only used if db.type is set to "postgres".
+        '';
+      };
+
     };
   };
 
@@ -173,7 +183,7 @@ in
           {
             issuer-url = authelia.containers.authelia.traefik.serviceDomain;
             client-id = oidcClient.client_id;
-            client-secret = "\${${cfg.authelia.clientSecretEnvName}}";
+            client-secret = "\${AUTHELIA_CLIENT_SECRET}";
             redirect-url = lib.elemAt oidcClient.redirect_uris 0;
             scopes = [
               "openid"
@@ -203,9 +213,14 @@ in
           environment = {
             GATUS_CONFIG_PATH = configDir;
           };
-          environmentFile =
-            (lib.optional (cfg.envFile != null) cfg.envFile)
-            ++ (lib.optional (cfg.db.type == "postgres") cfg.db.envFile);
+          extraEnv = {
+            AUTHELIA_CLIENT_SECRET.fromFile = cfg.authelia.clientSecretFile;
+          }
+          // lib.optionalAttrs (cfg.db.type == "postgres") {
+            POSTGRES_USER = cfg.db.postgresUser;
+            POSTGRES_PASSWORD.fromFile = cfg.db.postgresPasswordFile;
+          }
+          // cfg.extraEnv;
 
           stack = name;
           port = 8080;
@@ -224,10 +239,11 @@ in
       ${dbName} = lib.mkIf (cfg.db.type == "postgres") {
         image = "docker.io/postgres:17";
         volumes = [ "${storage}/postgres:/var/lib/postgresql/data" ];
-        environment = {
+        extraEnv = {
           POSTGRES_DB = "gatus";
+          POSTGRES_USER = cfg.db.postgresUser;
+          POSTGRES_PASSWORD.fromFile = cfg.db.postgresPasswordFile;
         };
-        environmentFile = [ cfg.db.envFile ];
 
         stack = name;
       };
