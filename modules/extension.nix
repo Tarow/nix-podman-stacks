@@ -57,6 +57,9 @@ in
                 DB_PASSWORD = {
                   fromFile = "/some/path/secrets/db-password";
                 };
+                DB_URL = {
+                  fromTemplate = "postgresql://user:\${DB_PASSWORD}@localhost:5432/mydb";
+                };
                 API_KEY = {
                   fromFile = "/home/user/api-key";
                 };
@@ -185,9 +188,18 @@ in
           config =
             let
               envFromFileContentLocation = "/run/user/${toString globalConf.nps.hostUid}/${name}/extra_file_content_env";
-              extraFileContentEnv =
-                config.extraEnv |> lib.filterAttrs (_: v: lib.isAttrs v) |> lib.mapAttrs (_: v: v.fromFile);
+              envFromTemplateLocation = "/run/user/${toString globalConf.nps.hostUid}/${name}/extra_templated_env";
+
               extraLiteralEnv = config.extraEnv |> lib.filterAttrs (_: v: !lib.isAttrs v);
+              extraFileContentEnv =
+                config.extraEnv
+                |> lib.filterAttrs (_: v: lib.isAttrs v && v.fromFile != null)
+                |> lib.mapAttrs (_: v: v.fromFile);
+              extraTemplateEnv =
+                config.extraEnv
+                |> lib.filterAttrs (_: v: lib.isAttrs v && v.fromTemplate != null)
+                |> lib.mapAttrs (_: v: v.fromTemplate);
+
             in
             {
               autoUpdate = lib.mkDefault "registry";
@@ -208,7 +220,9 @@ in
               }
               // extraLiteralEnv
               // lib.mapAttrs (_: v: v.destPath) config.fileEnvMount;
-              environmentFile = lib.optional (extraFileContentEnv != { }) envFromFileContentLocation;
+              environmentFile =
+                lib.optional (extraFileContentEnv != { }) envFromFileContentLocation
+                ++ lib.optional (extraTemplateEnv != { }) envFromTemplateLocation;
 
               volumes = config.fileEnvMount |> lib.attrValues |> lib.map (v: "${v.sourcePath}:${v.destPath}");
 
@@ -231,23 +245,49 @@ in
                       }
                     ))
                   ]
-                  ++ lib.optional (extraFileContentEnv != { }) (
+                  ++ lib.optional (extraFileContentEnv != { } || extraTemplateEnv != { }) (
                     lib.getExe (
                       pkgs.writeShellApplication {
-                        name = "create-env-file-from-file-content";
-                        runtimeInputs = [ pkgs.coreutils ];
-                        text = ''
-                          install -D -m 600 /dev/null ${envFromFileContentLocation}
-                          {
+                        name = "create-extra-env-files";
+                        runtimeInputs = [
+                          pkgs.coreutils
+                          pkgs.envsubst
+                        ];
+                        text =
+                          lib.optionalString (extraFileContentEnv != { }) ''
+                            # Write file-based envs to file
+                            install -D -m 600 /dev/null ${envFromFileContentLocation}
+                            {
                             ${
-                              (
-                                extraFileContentEnv
-                                |> lib.mapAttrsToList (name: path: ''echo "${name}=$(<${path})" '')
+                              extraFileContentEnv
+                              |> lib.mapAttrsToList (name: path: ''echo "${name}=$(<${path})" '')
+                              |> lib.concatStringsSep "\n"
+                            }
+                            } >> "${envFromFileContentLocation}"
+                          ''
+                          + lib.optionalString (extraTemplateEnv != { }) ''
+                            # Export all env vars so envsubst can use them for the template
+                            ${
+                              config.environment
+                              |> lib.mapAttrsToList (name: value: ''${name}="${toString value}"; export ${name}'')
+                              |> lib.concatStringsSep "\n"
+                            }
+                            ${
+                              extraFileContentEnv
+                              |> lib.mapAttrsToList (name: path: ''${name}=$(<${path}); export ${name}'')
+                              |> lib.concatStringsSep "\n"
+                            }
+
+                            # Write template-based envs to a new file using envsubst
+                            install -D -m 600 /dev/null ${envFromTemplateLocation}                          
+                            envsubst < "${
+                              pkgs.writeText "env-template-${name}" (
+                                extraTemplateEnv
+                                |> lib.mapAttrsToList (name: template: ''${name}=${template}'')
                                 |> lib.concatStringsSep "\n"
                               )
-                            }
-                          } >> "${envFromFileContentLocation}"
-                        '';
+                            }" >> "${envFromTemplateLocation}"
+                          '';
                       }
                     )
                   );
@@ -259,6 +299,22 @@ in
   };
 
   config = {
+    assertions = [
+      {
+        message = "When using `extraEnv` with `fromFile` or `fromTemplate`, exactly one of them must be set.";
+        # For every container check all extraEnv attributes that are attrs.
+        # If yes check that only one of 'fromFile' or 'fromTemplate' is set.
+        assertion =
+          config.services.podman.containers
+          |> lib.attrValues
+          |> lib.all (
+            c:
+            c.extraEnv
+            |> lib.attrValues
+            |> lib.all (v: (!lib.isAttrs v) || (v.fromFile != null) != (v.fromTemplate != null))
+          );
+      }
+    ];
     # For every stack, define a default network.
     services.podman.networks =
       let
