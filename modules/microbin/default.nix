@@ -44,7 +44,7 @@ in
         # Requires MICROBIN_UPLOADER_PASSWORD (e.g. in extraEnv) to take effect
         MICROBIN_READONLY = true;
       };
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
+      extraEnv = cfg.extraEnv;
 
       port = 8080;
       traefik.name = name;
