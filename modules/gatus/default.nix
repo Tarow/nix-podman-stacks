@@ -125,7 +125,7 @@ in
         description = ''
           Type of the database to use.
           Can be set to "sqlite" or "postgres".
-          If set to "postgres", the envFile option must be set.
+          If set to "postgres", the `postgresPasswordFile` option must be set.
         '';
       };
       postgresUser = lib.mkOption {
