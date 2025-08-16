@@ -42,7 +42,7 @@ in
         default = "kimai-db";
         description = "Name of the database to use for Kimai.";
       };
-      userName = lib.mkOption {
+      username = lib.mkOption {
         type = lib.types.str;
         default = "kimai";
         description = "Username for the Kimai database user.";
@@ -95,7 +95,7 @@ in
         volumes = [ "${storage}/db:/var/lib/mysql" ];
         extraEnv = {
           MYSQL_DATABASE = cfg.db.databaseName;
-          MYSQL_USER = cfg.db.userName;
+          MYSQL_USER = cfg.db.username;
           MYSQL_PASSWORD.fromFile = cfg.db.userPasswordFile;
           MYSQL_ROOT_PASSWORD.fromFile = cfg.db.rootPasswordFile;
         };

@@ -3,7 +3,8 @@
   lib,
   options,
   ...
-}: let
+}:
+let
   name = "paperless";
   dbName = "${name}-db";
   brokerName = "${name}-broker";
@@ -11,7 +12,8 @@
 
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
-in {
+in
+{
   imports = import ../mkAliases.nix config lib name [
     name
     dbName
@@ -21,35 +23,42 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    env = lib.mkOption {
-      type = (options.services.podman.containers.type.getSubOptions []).environment.type;
-      default = {};
-      description = "Additional environment variables passed to the Paperless container";
-    };
-    envFile = lib.mkOption {
+    secretKeyFile = lib.mkOption {
       type = lib.types.path;
       description = ''
-        Path to the environment file containing the 'PAPERLESS_DBUSER' 'PAPERLESS_DBPASS' and 'PAPERLESS_SECRET_KEY' variables.
+        Path to the file containing the Paperless secret key
+              
+        See <https://docs.paperless-ngx.com/configuration/#PAPERLESS_SECRET_KEY>
       '';
     };
-    db.envFile = lib.mkOption {
-      type = lib.types.path;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
       description = ''
-        Path to the env file containing the 'POSTGRES_USER' and 'POSTGRES_PASSWORD' variables
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+        See <https://docs.paperless-ngx.com/configuration>
       '';
+    };
+    db = {
+      username = lib.mkOption {
+        type = lib.types.str;
+        default = "paperless";
+        description = "Database user name for Paperless";
+      };
+      passwordFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the file containing the database password for Paperless";
+      };
     };
     ftp = {
-      enable =
-        lib.mkEnableOption "FTP server"
-        // {
-          default = true;
-        };
-      envFile = lib.mkOption {
+      enable = lib.mkEnableOption "FTP server" // {
+        default = true;
+      };
+      passwordFile = lib.mkOption {
         type = lib.types.path;
-        description = ''
-          Path to the env file containing the 'FTP_PASS' variable.
-          Uploads to the FTP will be placed in the 'consume' directory to be ingested by Paperless.
-        '';
+        description = "Path to the file containing the FTP password";
       };
     };
     authelia = {
@@ -60,8 +69,8 @@ in {
           Whether to register a Paperless OIDC client in Authelia.
           If enabled you need to provide a hashed secret in the `client_secret` option.
 
-          To enable OIDC Login for Paperless, you will have to provide the environment variables `PAPERLESS_APPS` and `PAPERLESS_SOCIALACCOUNT_PROVIDERS`,
-          e.g. in the `envFile` option.
+          To enable OIDC Login for Paperless, you will have to provide the environment variable `PAPERLESS_SOCIALACCOUNT_PROVIDERS`,
+          e.g. in the `extraEnv` option.
 
           For details, see:
           - <https://www.authelia.com/integration/openid-connect/clients/paperless/>
@@ -107,19 +116,26 @@ in {
           "${storage}/export:/usr/src/paperless/export"
           "${storage}/consume:/usr/src/paperless/consume"
         ];
-        environment =
-          {
-            PAPERLESS_REDIS = "redis://${brokerName}:6379";
-            PAPERLESS_DBHOST = dbName;
-            USERMAP_UID = config.nps.defaultUid;
-            USERMAP_GID = config.nps.defaultGid;
-            PAPERLESS_TIME_ZONE = config.nps.defaultTz;
-            PAPERLESS_FILENAME_FORMAT = "{{created_year}}/{{correspondent}}/{{title}}";
-            PAPERLESS_URL = config.services.podman.containers.${name}.traefik.serviceDomain;
-          }
-          // cfg.env;
+        environment = {
+          PAPERLESS_REDIS = "redis://${brokerName}:6379";
+          PAPERLESS_DBHOST = dbName;
+          USERMAP_UID = config.nps.defaultUid;
+          USERMAP_GID = config.nps.defaultGid;
+          PAPERLESS_TIME_ZONE = config.nps.defaultTz;
+          PAPERLESS_FILENAME_FORMAT = "{{created_year}}/{{correspondent}}/{{title}}";
+          PAPERLESS_URL = config.services.podman.containers.${name}.traefik.serviceDomain;
+        }
+        // lib.optionalAttrs cfg.authelia.registerClient {
+          PAPERLESS_APPS = "allauth.socialaccount.providers.openid_connect";
+        };
 
-        environmentFile = [cfg.envFile];
+        extraEnv = {
+          PAPERLESS_DBUSER = cfg.db.username;
+          PAPERLESS_DBPASS.fromFile = cfg.db.passwordFile;
+          PAPERLESS_SECRET_KEY.fromFile = cfg.secretKeyFile;
+        }
+        // cfg.extraEnv;
+
         port = 8000;
 
         stack = name;
@@ -142,44 +158,42 @@ in {
 
       ${dbName} = {
         image = "docker.io/postgres:16";
-        volumes = ["${storage}/db:/var/lib/postgresql/data"];
-        environment = {
+        volumes = [ "${storage}/db:/var/lib/postgresql/data" ];
+        extraEnv = {
           POSTGRES_DB = "paperless";
+          POSTGRES_USER = cfg.db.username;
+          POSTGRES_PASSWORD.fromFile = cfg.db.passwordFile;
         };
-        environmentFile = [cfg.db.envFile];
 
         stack = name;
       };
 
-      ${ftpName} = let
-        uid = config.nps.defaultUid;
-        gid = config.nps.defaultGid;
+      ${ftpName} =
+        let
+          uid = config.nps.defaultUid;
+          gid = config.nps.defaultGid;
 
-        user =
-          if uid == 0
-          then "root"
-          else "paperless";
-        home =
-          if uid == 0
-          then "/${user}"
-          else "home/${user}";
-      in {
-        image = "docker.io/garethflowers/ftp-server:0.9.2";
-        volumes = [
-          "${storage}/consume:${home}"
-        ];
-        environment = {
-          PUBLIC_IP = config.nps.hostIP4Address;
-          FTP_USER = user;
-          UID = uid;
-          GID = gid;
+          user = if uid == 0 then "root" else "paperless";
+          home = if uid == 0 then "/${user}" else "home/${user}";
+        in
+        {
+          image = "docker.io/garethflowers/ftp-server:0.9.2";
+          volumes = [
+            "${storage}/consume:${home}"
+          ];
+          extraEnv = {
+            PUBLIC_IP = config.nps.hostIP4Address;
+            FTP_USER = user;
+            FTP_PASS.fromFile = cfg.ftp.passwordFile;
+            UID = uid;
+            GID = gid;
+          };
+
+          ports = [
+            "21:21"
+            "40000-40009:40000-40009"
+          ];
         };
-        environmentFile = [cfg.ftp.envFile];
-        ports = [
-          "21:21"
-          "40000-40009:40000-40009"
-        ];
-      };
     };
   };
 }
