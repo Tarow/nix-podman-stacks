@@ -2,37 +2,61 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   name = "kimai";
   dbName = "${name}-db";
 
   storage = "${config.nps.storageBaseDir}/${name}";
 
   cfg = config.nps.stacks.${name};
-in {
-  imports = import ../mkAliases.nix config lib name [name dbName];
+in
+{
+  imports = import ../mkAliases.nix config lib name [
+    name
+    dbName
+  ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-
-    envFile = lib.mkOption {
+    adminEmail = lib.mkOption {
+      type = lib.types.str;
+      description = "Email address of the admin user";
+    };
+    adminPasswordFile = lib.mkOption {
+      type = lib.types.path;
+      description = "Path to the file containing the admin password";
+    };
+    databaseUrlFile = lib.mkOption {
       type = lib.types.path;
       description = ''
-        Path to env file containing the `ADMINMAIL`, `ADMINPASS` and
-        `DATABASE_URL` variables. The `ADMINPASS` should have at least 8 characters for the
-        provisioning to succeed.
+        Path to the file containing the database URL in the format
+        `mysql://<<DATABASE_USER>>:<<DATABASE_PASSWORD>>@kimai-db/<<DATABASE_NAME>>?charset=utf8mb4`
+        with the variables matching the ones given in the `db` options.
+      '';
+    };
 
-        The `DATABASE_URL` variable should be in the format `DATABASE_URL=mysql://<<DATABASE_USER>>:<<DATABASE_PASSWORD>>@kimai-db/<<DATABASE_NAME>>?charset=utf8mb4`
-        with the variables matching the ones passed in the `db.envFile` option.
-      '';
+    db = {
+      databaseName = lib.mkOption {
+        type = lib.types.str;
+        default = "kimai-db";
+        description = "Name of the database to use for Kimai.";
+      };
+      userName = lib.mkOption {
+        type = lib.types.str;
+        default = "kimai";
+        description = "Username for the Kimai database user.";
+      };
+      userPasswordFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the file containing the password for the Kimai database user.";
+      };
+      rootPasswordFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the file containing the password for the MySQL root user.";
+      };
     };
-    db.envFile = lib.mkOption {
-      type = lib.types.path;
-      description = ''
-        Path to env file containing the `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD` and
-        `MYSQL_ROOT_PASSWORD` variables.
-      '';
-    };
+
   };
 
   config = lib.mkIf cfg.enable {
@@ -45,9 +69,13 @@ in {
           "${storage}/plugins:/opt/kimai/var/plugins"
         ];
 
-        environmentFile = [cfg.envFile];
+        extraEnv = {
+          ADMINMAIL = cfg.adminEmail;
+          ADMINPASS.fromFile = cfg.adminPasswordFile;
+          DATABASE_URL.fromFile = cfg.databaseUrlFile;
+        };
 
-        dependsOnContainer = [dbName];
+        dependsOnContainer = [ dbName ];
         stack = name;
 
         port = 8001;
@@ -64,8 +92,13 @@ in {
 
       ${dbName} = {
         image = "docker.io/mysql:9";
-        volumes = ["${storage}/db:/var/lib/mysql"];
-        environmentFile = [cfg.db.envFile];
+        volumes = [ "${storage}/db:/var/lib/mysql" ];
+        extraEnv = {
+          MYSQL_DATABASE = cfg.db.databaseName;
+          MYSQL_USER = cfg.db.userName;
+          MYSQL_PASSWORD.fromFile = cfg.db.userPasswordFile;
+          MYSQL_ROOT_PASSWORD.fromFile = cfg.db.rootPasswordFile;
+        };
 
         extraConfig.Container = {
           Notify = "healthy";
