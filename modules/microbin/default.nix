@@ -2,23 +2,25 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   name = "microbin";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
-in {
-  imports = import ../mkAliases.nix config lib name [name];
+in
+{
+  imports = import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
       description = ''
-        Path to env file passed to the container.
-        Can be used to optionally pass secrets such as 'MICROBIN_ADMIN_USERNAME',
-        'MICROBIN_ADMIN_PASSWORD', 'MICROBIN_BASIC_AUTH_USERNAME', 'MICROBIN_BASIC_AUTH_PASSWORD' &
-        'MICROBIN_UPLOADER_PASSWORD'.
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+        See <https://microbin.eu/docs/installation-and-configuration/configuration>
       '';
     };
   };
@@ -35,11 +37,11 @@ in {
         MICROBIN_QR = true;
         MICROBIN_ENCRYPTION_CLIENT_SIDE = true;
         MICROBIN_ENCRYPTION_SERVER_SIDE = true;
-        # False enables enternal pastas: https://github.com/szabodanika/m/issues/270
+        # False enables enternal pastas: https://github.com/szabodanika/microbin/issues/273
         MICROBIN_ETERNAL_PASTA = false;
         MICROBIN_ENABLE_READONLY = true;
         MICROBIN_DISABLE_TELEMETRY = true;
-        # Requires MICROBIN_UPLOADER_PASSWORD (e.g. in envFile) to take effect
+        # Requires MICROBIN_UPLOADER_PASSWORD (e.g. in extraEnv) to take effect
         MICROBIN_READONLY = true;
       };
       environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
