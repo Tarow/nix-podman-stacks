@@ -2,12 +2,14 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   name = "wg-easy";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
-in {
-  imports = import ../mkAliases.nix config lib name [name];
+in
+{
+  imports = import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
@@ -21,9 +23,10 @@ in {
         See <https://wg-easy.github.io/wg-easy/v15.1/advanced/config/unattended-setup/>
       '';
       default =
-        if config.nps.stacks.traefik.enable
-        then "vpn.${config.nps.stacks.traefik.domain}"
-        else config.nps.hostIP4Address;
+        if config.nps.stacks.traefik.enable then
+          "vpn.${config.nps.stacks.traefik.domain}"
+        else
+          config.nps.hostIP4Address;
       defaultText = lib.literalExpression ''"vpn.''${config.nps.stacks.traefik.domain}"'';
     };
     port = lib.mkOption {
@@ -36,14 +39,23 @@ in {
       '';
       default = 51820;
     };
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
       description = ''
-        Path to the environment file.
-        Can be used to pass secrets, e.g. 'INIT_PASSWORD'.
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+        See <https://wg-easy.github.io/wg-easy/latest/advanced/config/unattended-setup/>
       '';
-      default = null;
+      example = {
+        INIT_PASSWORD = {
+          fromFile = "/run/secrets/wg_easy_admin_password";
+        };
+        INIT_DNS = "1.1.1.1";
+      };
     };
+
   };
 
   config = lib.mkIf cfg.enable {
@@ -53,8 +65,12 @@ in {
         "${storage}/config:/etc/wireguard"
       ];
 
-      ports = ["${toString cfg.port}:${toString cfg.port}/udp"];
-      addCapabilities = ["NET_ADMIN" "NET_RAW" "SYS_MODULE"];
+      ports = [ "${toString cfg.port}:${toString cfg.port}/udp" ];
+      addCapabilities = [
+        "NET_ADMIN"
+        "NET_RAW"
+        "SYS_MODULE"
+      ];
       extraPodmanArgs = [
         "--sysctl=net.ipv4.conf.all.src_valid_mark=1"
         "--sysctl=net.ipv4.ip_forward=1"
@@ -62,7 +78,7 @@ in {
         "--sysctl=net.ipv6.conf.all.forwarding=1"
         "--sysctl=net.ipv6.conf.default.forwarding=1"
       ];
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
+
       environment = {
         INIT_ENABLED = true;
         INIT_HOST = cfg.host;
@@ -71,6 +87,8 @@ in {
         INIT_IPV4_CIDR = "172.20.0.0/24";
         INIT_IPV6_CIDR = "2001:0DB8::/32";
       };
+
+      extraEnv = cfg.extraEnv;
 
       port = 51821;
       traefik = {
