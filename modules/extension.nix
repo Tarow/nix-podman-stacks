@@ -227,8 +227,17 @@ in
               volumes = config.fileEnvMount |> lib.attrValues |> lib.map (v: "${v.sourcePath}:${v.destPath}");
 
               extraConfig = {
-                Unit.Requires = config.dependsOn ++ config.dependsOnContainer;
-                Unit.After = config.dependsOn ++ config.dependsOnContainer;
+                Unit = {
+                  Requires = config.dependsOn ++ config.dependsOnContainer;
+                  After = config.dependsOn ++ config.dependsOnContainer;
+
+                  # Try restarting every 5 seconds for a max 5 times
+                  RestartSec = lib.mkDefault "5s";
+                };
+                Service = {
+                  StartLimitIntervalSec = lib.mkDefault "60";
+                  StartLimitBurst = lib.mkDefault 5;
+                };
 
                 # Automatically create host directories for volumes if they don't exist
                 Service.ExecStartPre =
