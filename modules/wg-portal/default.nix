@@ -3,13 +3,15 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   name = "wg-portal";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
-  yaml = pkgs.formats.yaml {};
-in {
-  imports = import ../mkAliases.nix config lib name [name];
+  yaml = pkgs.formats.yaml { };
+in
+{
+  imports = import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
@@ -18,9 +20,34 @@ in {
       description = ''
         Settings for the wg-portal container.
         Will be converted to YAML and passed to the container.
+
         See <https://wgportal.org/latest/documentation/configuration/overview/>
       '';
       apply = yaml.generate "config.yaml";
+      example = {
+        core = {
+          admin = {
+            username = "admin";
+            # ADMIN_PASSWORD will be set from the extraEnv option
+            password = "\${ADMIN_PASSWORD}";
+          };
+        };
+      };
+    };
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
+      description = ''
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+        Can be used to pass secrets or other environment variables that are referenced in the settings.
+      '';
+      example = {
+        ADMIN_PASSWORD = {
+          fromFile = "/run/secrets/secret_name";
+        };
+      };
     };
     port = lib.mkOption {
       type = lib.types.port;
@@ -29,14 +56,6 @@ in {
         Will be exposed and passed as the 'start_listen_port' setting in the configuration.
       '';
       default = 51820;
-    };
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      description = ''
-        Path to the environment file.
-        Can be used to pass env variables such as secrets, that are used in the settings.
-      '';
-      default = null;
     };
   };
 
@@ -52,8 +71,12 @@ in {
         "${storage}/data:/app/data"
         "${cfg.settings}:/app/config/config.yaml"
       ];
-      ports = ["${toString cfg.port}:${toString cfg.port}/udp"];
-      addCapabilities = ["NET_ADMIN" "NET_RAW" "SYS_MODULE"];
+      ports = [ "${toString cfg.port}:${toString cfg.port}/udp" ];
+      addCapabilities = [
+        "NET_ADMIN"
+        "NET_RAW"
+        "SYS_MODULE"
+      ];
       extraPodmanArgs = [
         "--sysctl=net.ipv4.conf.all.src_valid_mark=1"
         "--sysctl=net.ipv4.ip_forward=1"
@@ -61,7 +84,7 @@ in {
         "--sysctl=net.ipv6.conf.all.forwarding=1"
         "--sysctl=net.ipv6.conf.default.forwarding=1"
       ];
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
+      extraEnv = cfg.extraEnv;
 
       port = 8888;
       traefik = {
