@@ -3,27 +3,32 @@
   lib,
   options,
   ...
-}: let
+}:
+let
   name = "vaultwarden";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
-in {
-  imports = import ../mkAliases.nix config lib name [name];
+in
+{
+  imports = import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    env = lib.mkOption {
-      type = (options.services.podman.containers.type.getSubOptions []).environment.type;
-      default = {};
-      description = "Additional environment variables passed to the container";
-    };
-    envFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
       description = ''
-        Environment file passed to the container. Can be used to pass secrets such as 'ADMIN_TOKEN;
-        For a list of all environment variables refer to <https://github.com/dani-garcia/vaultwarden/blob/main/.env.template>
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+        See <https://github.com/dani-garcia/vaultwarden/blob/main/.env.template>
       '';
+      example = {
+        ADMIN_TOKEN = {
+          fromFile = "/run/secrets/vaultwarden_admin_token";
+        };
+        ADMIN_SESSION_LIFETIME = 30;
+      };
     };
   };
 
@@ -33,12 +38,10 @@ in {
       volumes = [
         "${storage}/data:/data"
       ];
-      environment =
-        {
-          DOMAIN = cfg.containers.${name}.traefik.serviceDomain;
-        }
-        // cfg.env;
-      environmentFile = lib.optional (cfg.envFile != null) cfg.envFile;
+      environment = {
+        DOMAIN = cfg.containers.${name}.traefik.serviceDomain;
+      };
+      extraEnv = cfg.extraEnv;
 
       port = 80;
       traefik.name = "vw";
