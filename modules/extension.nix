@@ -231,12 +231,12 @@ in
                   Requires = config.dependsOn ++ config.dependsOnContainer;
                   After = config.dependsOn ++ config.dependsOnContainer;
 
-                  # Try restarting every 5 seconds for a max 5 times
-                  RestartSec = lib.mkDefault "5s";
-                };
-                Service = {
                   StartLimitIntervalSec = lib.mkDefault "60";
                   StartLimitBurst = lib.mkDefault 5;
+                };
+                Service = {
+                  # Try restarting every 5 seconds for a max 5 times
+                  RestartSec = lib.mkDefault "5s";
                 };
 
                 # Automatically create host directories for volumes if they don't exist
