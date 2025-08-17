@@ -3,10 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   stackName = "streaming";
 
-  toml = pkgs.formats.toml {};
+  toml = pkgs.formats.toml { };
 
   gluetunName = "gluetun";
   qbittorrentName = "qbittorrent";
@@ -26,54 +27,115 @@
     "${name}__AUTH__METHOD" = "Forms";
     "${name}__AUTH__REQUIRED" = "DisabledForLocalAddresses";
   };
-in {
-  imports = import ../mkAliases.nix config lib stackName [gluetunName qbittorrentName jellyfinName sonarrName radarrName bazarrName prowlarrName];
+in
+{
+  imports = import ../mkAliases.nix config lib stackName [
+    gluetunName
+    qbittorrentName
+    jellyfinName
+    sonarrName
+    radarrName
+    bazarrName
+    prowlarrName
+  ];
 
-  options.nps.stacks.${stackName} =
-    {
-      enable = lib.mkEnableOption stackName;
-      gluetun = {
-        enable = lib.mkEnableOption "Gluetun" // {default = true;};
-        vpnProvider = lib.mkOption {
-          type = lib.types.str;
-          description = "The VPN provider to use with Gluetun.";
+  options.nps.stacks.${stackName} = {
+    enable = lib.mkEnableOption stackName;
+    gluetun = {
+      enable = lib.mkEnableOption "Gluetun" // {
+        default = true;
+      };
+      vpnProvider = lib.mkOption {
+        type = lib.types.str;
+        description = "The VPN provider to use with Gluetun.";
+      };
+      wireguardPrivateKeyFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the file containing the Wireguard private key. Will be used to set the `WIREGUARD_PRIVATE_KEY` environment variable.";
+      };
+      wireguardPresharedKeyFile = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        description = "Path to the file containing the Wireguard pre-shared key. Will be used to set the `WIREGUARD_PRESHARED_KEY` environment variable.";
+      };
+      wireguardAddressesFile = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        description = "Path to the file containing the Wireguard addresses. Will be used to set the `WIREGUARD_ADDRESSES` environment variable.";
+      };
+      extraEnv = lib.mkOption {
+        type = (import ../types.nix lib).extraEnv;
+        default = { };
+        description = ''
+          Extra environment variables to set for the container.
+          Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+          See <https://github.com/qdm12/gluetun-wiki/tree/main/setup/options>
+        '';
+        example = {
+          SERVER_NAMES = "Alderamin,Alderamin";
+          HTTP_CONTROL_SERVER_LOG = "off";
+          HTTPPROXY_PASSWORD = {
+            fromFile = "/run/secrets/http_proxy_password";
+          };
         };
-        envFile = lib.mkOption {
-          type = lib.types.path;
+      };
+      settings = lib.mkOption {
+        type = toml.type;
+        apply = toml.generate "config.toml";
+        description = "Additional Gluetun configuration settings.";
+      };
+    };
+    qbittorrent = {
+      enable = lib.mkEnableOption "qBittorrent" // {
+        default = true;
+      };
+      extraEnv = lib.mkOption {
+        type = (import ../types.nix lib).extraEnv;
+        default = { };
+        description = ''
+          Extra environment variables to set for the container.
+          Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+          See <https://docs.linuxserver.io/images/docker-qbittorrent/#environment-variables-e>
+        '';
+        example = {
+          TORRENTING_PORT = "6881";
+        };
+      };
+    };
+    jellyfin.enable = lib.mkEnableOption "Jellyfin" // {
+      default = true;
+    };
+    flaresolverr.enable = lib.mkEnableOption "Flaresolverr" // {
+      default = true;
+    };
+  }
+  // (
+    [
+      sonarrName
+      radarrName
+      bazarrName
+      prowlarrName
+    ]
+    |> lib.map (
+      name:
+      lib.nameValuePair name {
+        enable = lib.mkEnableOption name // {
+          default = true;
+        };
+        extraEnv = lib.mkOption {
+          type = (import ../types.nix lib).extraEnv;
+          default = { };
           description = ''
-            Path to the environment file for Gluetun.
-            Should contain Wireguard credentials such as 'WIREGUARD_PRIVATE_KEY', 'WIREGUARD_ADDRESSES'
-            and 'WIREGUARD_PRESHARED_KEY'
+            Extra environment variables to set for the container.
+            Variables can be either set directly or sourced from a file (e.g. for secrets).
           '';
         };
-        settings = lib.mkOption {
-          type = toml.type;
-          apply = toml.generate "config.toml";
-          description = "Additional Gluetun configuration settings.";
-        };
-      };
-      qbittorrent = {
-        enable = lib.mkEnableOption "qBittorrent" // {default = true;};
-        envFile = lib.mkOption {
-          type = lib.types.nullOr lib.types.path;
-          default = null;
-          description = "Path to the environment file for qBittorrent.";
-        };
-      };
-      jellyfin.enable = lib.mkEnableOption "Jellyfin" // {default = true;};
-      flaresolverr.enable = lib.mkEnableOption "Flaresolverr" // {default = true;};
-    }
-    // ([sonarrName radarrName bazarrName prowlarrName]
-      |> lib.map (name:
-        lib.nameValuePair name {
-          enable = lib.mkEnableOption name // {default = true;};
-          envFile = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
-            default = null;
-            description = "Path to the environment file for ${name}.";
-          };
-        })
-      |> lib.listToAttrs);
+      }
+    )
+    |> lib.listToAttrs
+  );
 
   config = lib.mkIf cfg.enable {
     nps.stacks.streaming.gluetun.settings = import ./gluetun_config.nix;
@@ -81,13 +143,12 @@ in {
     services.podman.containers = {
       ${gluetunName} = lib.mkIf cfg.gluetun.enable {
         image = "docker.io/qmcgaw/gluetun:v3.40.0";
-        addCapabilities = ["NET_ADMIN"];
-        devices = ["/dev/net/tun:/dev/net/tun"];
+        addCapabilities = [ "NET_ADMIN" ];
+        devices = [ "/dev/net/tun:/dev/net/tun" ];
         volumes = [
           "${storage}/${gluetunName}:/gluetun"
           "${cfg.gluetun.settings}:/gluetun/auth/config.toml"
         ];
-        environmentFile = [cfg.gluetun.envFile];
         environment = {
           WIREGUARD_MTU = 1320;
           HTTP_CONTROL_SERVER_LOG = "off";
@@ -97,7 +158,14 @@ in {
           HTTPPROXY = "on";
           HEALTH_VPN_DURATION_INITIAL = "60s";
         };
-        network = [config.nps.stacks.traefik.network.name];
+        extraEnv = {
+          WIREGUARD_PRIVATE_KEY.fromFile = cfg.gluetun.wireguardPrivateKeyFile;
+          WIREGUARD_PRESHARED_KEY.fromFile = cfg.gluetun.wireguardPresharedKeyFile;
+          WIREGUARD_ADDRESSES.fromFile = cfg.gluetun.wireguardAddressesFile;
+        }
+        // cfg.gluetun.extraEnv;
+
+        network = [ config.nps.stacks.traefik.network.name ];
 
         stack = stackName;
         port = 8888;
@@ -117,19 +185,21 @@ in {
 
       ${qbittorrentName} = lib.mkIf cfg.qbittorrent.enable {
         image = "docker.io/linuxserver/qbittorrent:5.1.2";
-        dependsOnContainer = [gluetunName];
-        network = lib.mkIf cfg.gluetun.enable (lib.mkForce ["container:${gluetunName}"]);
+        dependsOnContainer = [ gluetunName ];
+        network = lib.mkIf cfg.gluetun.enable (lib.mkForce [ "container:${gluetunName}" ]);
         volumes = [
           "${storage}/${qbittorrentName}:/config"
           "${mediaStorage}:/media"
         ];
-        environmentFile = [cfg.qbittorrent.envFile];
+
         environment = {
           PUID = config.nps.defaultUid;
           PGID = config.nps.defaultGid;
           UMASK = "022";
           WEBUI_PORT = 8080;
         };
+
+        extraEnv = cfg.qbittorrent.extraEnv;
 
         stack = stackName;
         port = 8080;
@@ -151,11 +221,12 @@ in {
           "${storage}/${jellyfinName}:/config"
           "${mediaStorage}:/media"
         ];
-        devices = ["/dev/dri:/dev/dri"];
+        devices = [ "/dev/dri:/dev/dri" ];
         environment = {
           PUID = config.nps.defaultUid;
           PGID = config.nps.defaultGid;
-          JELLYFIN_PublishedServerUrl = config.services.podman.containers.${jellyfinName}.traefik.serviceDomain;
+          JELLYFIN_PublishedServerUrl =
+            config.services.podman.containers.${jellyfinName}.traefik.serviceDomain;
         };
 
         port = 8096;
@@ -179,7 +250,7 @@ in {
           "${mediaStorage}:/media"
         ];
         environment = mkServarrEnv "SONARR";
-        environmentFile = lib.optional (cfg.sonarr.envFile != null) cfg.sonarr.envFile;
+        extraEnv = cfg.${sonarrName}.extraEnv;
 
         port = 8989;
         stack = stackName;
@@ -202,7 +273,7 @@ in {
           "${mediaStorage}:/media"
         ];
         environment = mkServarrEnv "RADARR";
-        environmentFile = lib.optional (cfg.radarr.envFile != null) cfg.radarr.envFile;
+        extraEnv = cfg.${radarrName}.extraEnv;
 
         port = 7878;
         stack = stackName;
@@ -225,7 +296,7 @@ in {
           "${mediaStorage}:/media"
         ];
         environment = mkServarrEnv "BAZARR";
-        environmentFile = lib.optional (cfg.bazarr.envFile != null) cfg.bazarr.envFile;
+        extraEnv = cfg.${bazarrName}.extraEnv;
 
         port = 6767;
         stack = stackName;
@@ -247,7 +318,7 @@ in {
           "${storage}/${prowlarrName}:/config"
         ];
         environment = mkServarrEnv "PROWLARR";
-        environmentFile = lib.optional (cfg.prowlarr.envFile != null) cfg.prowlarr.envFile;
+        extraEnv = cfg.${prowlarrName}.extraEnv;
 
         port = 9696;
         stack = stackName;
