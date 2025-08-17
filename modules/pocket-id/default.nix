@@ -108,7 +108,7 @@ in
     nps.stacks.traefik = lib.mkIf cfg.traefikIntegration.enable {
       staticConfig.experimental.plugins.traefik-oidc-auth = {
         moduleName = "github.com/sevensolutions/traefik-oidc-auth";
-        version = "v0.14.0";
+        version = "v0.15.0";
       };
       dynamicConfig.http.middlewares = {
         pocketid.plugin.traefik-oidc-auth = {
