@@ -3,30 +3,29 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   name = "traefik";
   cfg = config.nps.stacks.${name};
 
-  yaml = pkgs.formats.yaml {};
+  yaml = pkgs.formats.yaml { };
 
   storage = "${config.nps.storageBaseDir}/${name}";
-in {
-  imports =
-    [
-      ./extension.nix
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
-    ]
-    ++ import ../mkAliases.nix config lib name name;
+in
+{
+  imports = [
+    ./extension.nix
+    (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix { stack = name; })
+  ]
+  ++ import ../mkAliases.nix config lib name name;
 
   options.nps.stacks.${name} = {
-    enable =
-      lib.options.mkEnableOption name
-      // {
-        description = ''
-          Wheter to enable Traefik.
-          The Traefik stack ships preconfigured with a dynamic and static configuration.
-        '';
-      };
+    enable = lib.options.mkEnableOption name // {
+      description = ''
+        Wheter to enable Traefik.
+        The Traefik stack ships preconfigured with a dynamic and static configuration.
+      '';
+    };
     domain = lib.options.mkOption {
       type = lib.types.str;
       description = "Base domain handled by Traefik";
@@ -71,10 +70,10 @@ in {
       apply = yaml.generate "traefik.yml";
       description = ''
         Static configuration for Traefik.
-        By default, for the configured domain, a wildcard certificate will be requested from letsencrypt
+        By default, for the configured domain, a wildcard certificate will be requested from Let's Encrypt
         and used for all services that are registered with Traefik.
         By default Cloudflare with DNS challenge will be used to request the certificate.
-        This requires the 'CF_DNS_API_TOKEN' environment variable to be set in the `envFile` option file.
+        This requires the 'CF_DNS_API_TOKEN' environment variable to be present, e.g. by providing it via the `extraEnv` option.
 
         The DNS provider as well as any other settings can be overwritten.
         For an example see <https://github.com/Tarow/nix-podman-stacks/blob/main/examples/traefik-dns-provider.nix>
@@ -82,7 +81,7 @@ in {
     };
     dynamicConfig = lib.options.mkOption {
       type = yaml.type;
-      default = {};
+      default = { };
       description = ''
         Dynamic configuration for Traefik.
         By default, the module will setup two middlewares: private & public.
@@ -91,9 +90,19 @@ in {
         with a rate limit, security headers and a geoblock plugin (if enabled).
       '';
     };
-    envFile = lib.options.mkOption {
-      type = lib.types.path;
-      description = "Path to the environment file for Traefik. Can be used to pass secrets, e.g. the API tokens for the DNS provider.";
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
+      default = { };
+      description = ''
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
+      '';
+      example = {
+        CF_DNS_API_TOKEN = {
+          fromFile = "/run/secrets/secret_name";
+        };
+        TRAEFIK_LOG_LEVEL = "ERROR";
+      };
     };
     geoblock = {
       enable = lib.mkOption {
@@ -109,7 +118,7 @@ in {
       };
       allowedCountries = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = [];
+        default = [ ];
         description = ''
           List of allowed country codes (ISO 3166-1 alpha-2 format)
           See <https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements>
@@ -124,7 +133,7 @@ in {
   config = lib.mkIf cfg.enable {
     nps.stacks.${name} = {
       staticConfig = lib.mkMerge [
-        (import ./config/traefik.nix cfg.domain cfg.network.name)
+        (import ./config/traefik.nix lib cfg.domain cfg.network.name)
 
         (lib.mkIf cfg.useSocketProxy {
           providers.docker.endpoint = config.nps.stacks.docker-socket-proxy.address;
@@ -136,13 +145,11 @@ in {
         })
       ];
       dynamicConfig = lib.mkMerge [
-        (
-          import ./config/dynamic.nix
-        )
+        (import ./config/dynamic.nix)
 
         (lib.mkIf cfg.geoblock.enable {
           http.middlewares = {
-            public.chain.middlewares = lib.mkOrder 1100 ["geoblock"];
+            public.chain.middlewares = lib.mkOrder 1100 [ "geoblock" ];
             geoblock.plugin.geoblock = {
               enabled = true;
               databaseFilePath = "/plugins/geoblock/IP2LOCATION-LITE-DB1.IPV6.BIN";
@@ -164,7 +171,7 @@ in {
         honor_timestamps = true;
         metrics_path = "/metrics";
         scheme = "http";
-        static_configs = [{targets = ["${name}:9100"];}];
+        static_configs = [ { targets = [ "${name}:9100" ]; } ];
       };
     };
 
@@ -190,7 +197,9 @@ in {
           fileDescriptorName = "websecure";
         }
       ];
-      environmentFile = [cfg.envFile];
+
+      extraEnv = cfg.extraEnv;
+
       volumes = [
         "${storage}/letsencrypt:/letsencrypt"
         "${cfg.staticConfig}:/etc/traefik/traefik.yml:ro"

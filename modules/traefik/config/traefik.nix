@@ -1,4 +1,5 @@
-domain: network: let
+lib: domain: network:
+let
   mkRedirect = to: {
     address = ":80";
     http = {
@@ -10,7 +11,8 @@ domain: network: let
       };
     };
   };
-in {
+in
+{
   entryPoints = rec {
     web = mkRedirect "websecure";
 
@@ -26,7 +28,7 @@ in {
           domains = [
             {
               main = domain;
-              sans = ["*.${domain}"];
+              sans = [ "*.${domain}" ];
             }
           ];
         };
@@ -36,8 +38,12 @@ in {
     # Used with podman network internal connections
     websecure-internal = websecure;
   };
-  serversTransport = {insecureSkipVerify = true;};
-  api = {dashboard = true;};
+  serversTransport = {
+    insecureSkipVerify = true;
+  };
+  api = {
+    dashboard = true;
+  };
   providers = {
     docker = {
       exposedByDefault = false;
@@ -55,8 +61,11 @@ in {
         email = "mail@${domain}";
         storage = "/letsencrypt/acme.json";
         dnsChallenge = {
-          provider = "cloudflare";
-          resolvers = ["1.1.1.1:53" "8.8.8.8:53"];
+          provider = lib.mkDefault "cloudflare";
+          resolvers = [
+            "1.1.1.1:53"
+            "8.8.8.8:53"
+          ];
         };
       };
     };
@@ -69,6 +78,10 @@ in {
       };
     };
   };
-  accessLog = {format = "json";};
-  log = {level = "WARN";};
+  accessLog = {
+    format = "json";
+  };
+  log = {
+    level = "WARN";
+  };
 }
