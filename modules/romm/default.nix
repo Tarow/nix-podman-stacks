@@ -23,17 +23,34 @@ in
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    setupAdminUser = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+    adminProvisioning = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Whether to automatically create an admin user on the first run.
+          If set to false, you will be prompted to create an admin user when visiting the web ui.
+        '';
+      };
+      username = lib.mkOption {
+        type = lib.types.str;
+        default = "admin";
+        description = "Username for the admin user";
+      };
+      email = lib.mkOption {
+        type = lib.types.str;
+        description = "Email address for the admin user";
+      };
+      passwordFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to a file containing the admin user password";
+      };
+    };
+    authSecretKeyFile = lib.mkOption {
+      type = lib.types.path;
       description = ''
-        Whether to enable automated admin user provisioning.
-        If enabled, an admin user will be created automatically on startup.
-
-        Make sure the file provided in the `envFile` option contains the variables `ADMIN_USERNAME` (default 'admin'),
-        `ADMIN_PASSWORD` (default 'admin') and `ADMIN_EMAIL` (default 'admin@admin.com').
-
-        When disabled, you will be prompted for admin user creation when visiting the RomM UI the first time.
+        Path to the file containing the random secret key.
+        Can be generated with `openssl rand -hex 32`.
       '';
     };
     romLibraryPath = lib.mkOption {
@@ -65,27 +82,23 @@ in
         See <https://docs.romm.app/latest/Getting-Started/Configuration-File/>
       '';
     };
-    env = lib.mkOption {
-      type = (options.services.podman.containers.type.getSubOptions [ ]).environment.type;
+    extraEnv = lib.mkOption {
+      type = (import ../types.nix lib).extraEnv;
       default = { };
       description = ''
-        Additional environment variables passed to the RomM container
+        Extra environment variables to set for the container.
+        Variables can be either set directly or sourced from a file (e.g. for secrets).
 
         See <https://docs.romm.app/latest/Getting-Started/Environment-Variables/>
       '';
+      example = {
+        IGDB_CLIENT_SECRET = {
+          fromFile = "/run/secrets/igdb_client_secret";
+        };
+        UPLOAD_TIMEOUT = 900;
+      };
     };
-    envFile = lib.mkOption {
-      type = lib.types.path;
-      description = ''
-        Path to env file containing the `DB_PASSWD` and the `ROMM_AUTH_SECRET_KEY` variables.
-        The `DB_PASSWD` should match the `MARIA_DB` password passed in the `db.envFile` option.
 
-        Can optionally include more secrets and other variables, such as API_KEYS, e.g.
-        `RETROACHIEVEMENTS_API_KEY` or `STEAMGRIDDB_API_KEY`.
-
-        See <https://docs.romm.app/latest/Getting-Started/Environment-Variables/>
-      '';
-    };
     authelia = {
       enable = lib.mkOption {
         type = lib.types.bool;
@@ -116,11 +129,15 @@ in
         '';
       };
     };
-    db.envFile = lib.mkOption {
-      type = lib.types.path;
-      description = ''
-        Path to the env file containing the 'MARIADB_ROOT_PASSWORD' and 'MARIADB_PASSWORD' variables.
-      '';
+    db = {
+      userPasswordFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the file containing the password for the romm database user";
+      };
+      rootPasswordFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the file containing the password for the MariaDB root user";
+      };
     };
   };
 
@@ -168,15 +185,21 @@ in
           )
         ];
 
-        environmentFile = [ cfg.envFile ];
-        environment =
+        extraEnv =
           let
             db = cfg.containers.${dbName}.environment;
           in
           {
+            ROMM_AUTH_SECRET_KEY.fromFile = cfg.authSecretKeyFile;
             DB_HOST = dbName;
             DB_NAME = db.MARIADB_DATABASE;
             DB_USER = db.MARIADB_USER;
+            DB_PASSWD.fromFile = cfg.db.userPasswordFile;
+          }
+          // lib.optionalAttrs cfg.adminProvisioning.enable {
+            ADMIN_USERNAME = cfg.adminProvisioning.username;
+            ADMIN_PASSWORD.fromFile = cfg.adminProvisioning.passwordFile;
+            ADMIN_EMAIL = cfg.adminProvisioning.email;
           }
           // lib.optionalAttrs (cfg.authelia.enable) (
             let
@@ -191,7 +214,7 @@ in
               OIDC_SERVER_APPLICATION_URL = authelia.containers.authelia.traefik.serviceDomain;
             }
           )
-          // cfg.env;
+          // cfg.extraEnv;
         fileEnvMount.OIDC_CLIENT_SECRET_FILE = lib.mkIf cfg.authelia.enable cfg.authelia.clientSecretFile;
 
         extraConfig = {
@@ -204,7 +227,7 @@ in
             HealthStartPeriod = "5s";
           };
           Service = {
-            ExecStartPost = lib.mkIf cfg.setupAdminUser (
+            ExecStartPost = lib.mkIf cfg.adminProvisioning.enable (
               lib.getExe (
                 pkgs.writeShellScriptBin "user_provision" ''
                   ${lib.getExe pkgs.podman} exec ${name} bash -c "$(${pkgs.coreutils}/bin/cat ${./create_admin_user.sh})"
@@ -232,11 +255,12 @@ in
       ${dbName} = {
         image = "docker.io/mariadb:11";
         volumes = [ "${storage}/db:/var/lib/mysql" ];
-        environment = {
+        extraEnv = {
           MARIADB_DATABASE = "romm";
           MARIADB_USER = "romm-user";
+          MARIADB_ROOT_PASSWORD.fromFile = cfg.db.rootPasswordFile;
+          MARIADB_PASSWORD.fromFile = cfg.db.userPasswordFile;
         };
-        environmentFile = [ cfg.db.envFile ];
 
         extraConfig.Container = {
           Notify = "healthy";
