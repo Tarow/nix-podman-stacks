@@ -45,7 +45,7 @@
         pkgs = nixpkgs.legacyPackages."x86_64-linux";
         modules = [
           sops-nix.homeManagerModules.sops
-          self.homeModules.all
+          self.homeModules.nps
           {
             home.stateVersion = "25.05";
             home.username = "ci";
