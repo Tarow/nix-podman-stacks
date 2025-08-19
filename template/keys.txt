@@ -1,0 +1,5 @@
+# Private key used to encrypt the `secrets.yaml` file.
+# In a real setup make sure to place this outside of the repository.
+
+# `secrets.yaml` file can be decrypted by running `SOPS_AGE_KEY_FILE=./keys.txt sops secrets.yaml`
+AGE-SECRET-KEY-1LP5G0XZFAGAV9GSS9SN3NCL678JTKNFRGNPDKLPVQ9HLLXDNG3SQ69XDVT

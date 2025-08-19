@@ -119,21 +119,30 @@ Most stacks will rely or use a few centrally defined variables. These include:
 
 ## 🚀 Setup
 
-If you already have an existing flake setup, add this projects flake as an input and include the flake output `homeModules.all` in your Home Manager modules.
+If you already have an existing flake setup, add this projects flake as an input and include the flake output `homeModules.nps` in your Home Manager modules.
 
 ---
 
 If you don't use Nix yet, you can use the projects template to get started:
+The template includes an example configuration of the following setup:
 
-1. `nix flake init --template github:Tarow/nix-podman-stacks`
-2. Modify the `stacks.nix` file to enable, disable and modify settings according to your preferences
-3. Generate your age key and create the `.sops.yaml` based on the `.sops.yaml.example`
-4. Create the `secrets.yaml` file containing all secrets used in the stack configurations
-5. Make sure to declare the used secrets in the `sops.nix` file
-6. Modify the `flake.nix` to reflect your system architecture, username and home directory
-7. Apply your configuration: `nix run home-manager -- switch --experimental-features "nix-command flakes pipe-operators" -b bak --flake .#myhost`
+- Authelia as an OIDC provider with LLDAP as the user backend
+- Immich & Paperless with OIDC login pre-configured
+- Traefik as a reverse proxy including a Geoblocking middleware. Wildcard certificates will be fetched from Let's Encrypt (DNS Challenge).
+- CrowdSec including a Traefik middleware setup
+- Blocky as DNS proxy
+- Monitoring stack with Alloy, Loki, Grafana & Prometheus. Comes with Grafana dashboards for Traefik & Blocky
+- Podman Socket Access through a read-only proxy
+- Secrets are provisioned by sops-nix
 
-This is just one example. Feel free to use a different tool for secret management or restructure files to your preference.
+The rough overview of the templates architecture will look like this:
+
+<p align="center">
+<img src="./images/template-overview.excalidraw.svg" alt="template-overview">
+</p>
+
+Make sure to go through the `flake.nix`, `stacks.nix` & `sops.nix` files and adapt options as needed.
+Also make sure to generate your own encryption age key and encrypt your secrets with it!
 
 ## 🔧 Customize Settings
 

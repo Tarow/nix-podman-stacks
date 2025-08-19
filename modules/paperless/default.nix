@@ -53,9 +53,7 @@ in
       };
     };
     ftp = {
-      enable = lib.mkEnableOption "FTP server" // {
-        default = true;
-      };
+      enable = lib.mkEnableOption "FTP server";
       passwordFile = lib.mkOption {
         type = lib.types.path;
         description = "Path to the file containing the FTP password";
@@ -187,7 +185,7 @@ in
           user = if uid == 0 then "root" else "paperless";
           home = if uid == 0 then "/${user}" else "home/${user}";
         in
-        {
+        lib.mkIf cfg.ftp.enable {
           image = "docker.io/garethflowers/ftp-server:0.9.2";
           volumes = [
             "${storage}/consume:${home}"

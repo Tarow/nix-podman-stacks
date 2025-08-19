@@ -17,29 +17,35 @@
     };
   };
 
-  outputs = {
-    home-manager,
-    nixpkgs,
-    sops-nix,
-    nix-podman-stacks,
-    ...
-  }: let
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-  in {
-    homeConfigurations.myhost = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      modules = [
-        sops-nix.homeManagerModules.sops
-        nix-podman-stacks.homeModules.all
-        {
-          home.stateVersion = "25.05";
-          home.username = "someuser";
-          home.homeDirectory = "/home/someuser";
-        }
-        ./sops.nix
-        ./stacks.nix
-      ];
+  outputs =
+    {
+      home-manager,
+      nixpkgs,
+      sops-nix,
+      nix-podman-stacks,
+      ...
+    }:
+    let
+      # Replace with your system architecture (if necessary)
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      homeConfigurations.myhost = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          sops-nix.homeManagerModules.sops
+          nix-podman-stacks.homeModules.all
+          {
+            home.stateVersion = "25.05";
+
+            # Replace with your own username and home directory
+            home.username = "someuser";
+            home.homeDirectory = "/home/someuser";
+          }
+          ./sops.nix
+          ./stacks.nix
+        ];
+      };
     };
-  };
 }

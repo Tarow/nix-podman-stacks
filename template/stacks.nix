@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   ...
 }:
 {
@@ -11,116 +10,91 @@
     externalStorageBaseDir = "/mnt/hdd";
 
     stacks = {
-      adguard.enable = true;
-      aiostreams = {
+      authelia = {
         enable = true;
-        envFile = config.sops.secrets."aiostreams/env".path;
+        jwtSecretFile = config.sops.secrets."authelia/jwt_secret".path;
+        sessionSecretFile = config.sops.secrets."authelia/session_secret".path;
+        storageEncryptionKeyFile = config.sops.secrets."authelia/encryption_key".path;
+        authenticationBackend.type = "ldap";
+        oidc = {
+          enable = true;
+          hmacSecretFile = config.sops.secrets."authelia/oidc_hmac_secret".path;
+          jwksRsaKeyFile = config.sops.secrets."authelia/oidc_rsa_pk".path;
+        };
       };
-      audiobookshelf.enable = true;
-      beszel = {
-        enable = true;
-        ed25519PrivateKeyFile = config.sops.secrets."beszel/ssh_key".path;
-        ed25519PublicKeyFile = config.sops.secrets."beszel/ssh_pub_key".path;
-      };
+
       blocky = {
-        enable = false;
+        enable = true;
         enableGrafanaDashboard = true;
         enablePrometheusExport = true;
+        containers.blocky = {
+          # When clicking the Blocky icon in the homepage, it will redirect to the Grafana dashboard.
+          homepage.settings.href = "${config.nps.containers.grafana.traefik.serviceDomain}/d/blocky";
+        };
       };
-      bytestash = {
-        enable = true;
-        envFile = config.sops.secrets."bytestash/env".path;
-      };
-      calibre.enable = true;
-      changedetection.enable = true;
+
       crowdsec = {
         enable = true;
-        envFile = config.sops.secrets."crowdsec/env".path;
         traefikIntegration = {
-          bouncerEnvFile = config.sops.secrets."crowdsec/traefikBouncerEnv".path;
+          bouncerKeyFile = config.sops.secrets."crowdsec/traefik_bouncer_key".path;
         };
       };
-      dozzle.enable = true;
-      docker-socket-proxy.enable = false;
-      filebrowser.enable = true;
-      forgejo.enable = false;
-      freshrss.enable = false;
-      gatus = {
-        enable = true;
-        db.type = "sqlite";
-      };
-      healthchecks = {
-        enable = true;
-        envFile = config.sops.secrets."healthchecks/env".path;
-      };
-      homeassistant.enable = true;
+
+      docker-socket-proxy.enable = true;
+
       homepage.enable = true;
+
       immich = {
         enable = true;
-        envFile = config.sops.secrets."immich/env".path;
-        db.envFile = config.sops.secrets."immich/db_env".path;
-      };
-      ittools.enable = true;
-      karakeep = {
-        enable = true;
-        envFile = config.sops.secrets."karakeep/env".path;
-      };
-      microbin = {
-        enable = true;
-        envFile = config.sops.secrets."microbin/env".path;
-      };
-      monitoring.enable = true;
-      n8n.enable = false;
-      ntfy = {
-        enable = true;
-        envFile = config.sops.secrets."ntfy/env".path;
-      };
-      omnitools.enable = false;
-      paperless = {
-        enable = true;
-        env = {
-          PAPERLESS_OCR_LANGUAGES = "eng deu";
-          PAPERLESS_OCR_LANGUAGE = "eng+deu";
-        };
-        envFile = config.sops.secrets."paperless/env".path;
-        db.envFile = config.sops.secrets."paperless/db_env".path;
-        ftp.envFile = config.sops.secrets."paperless/ftp_env".path;
-      };
-      pocketid = {
-        traefikIntegration = {
+        authelia = {
           enable = true;
-          clientId = "some-client-id";
-          clientSecretFile = config.sops.secrets."pocketid/traefik/clientSecret".path;
-          encryptionSecretFile = config.sops.secrets."pocketid/traefik/middlewareSecret".path;
+          clientSecretFile = config.sops.secrets."immich/authelia_client_secret".path;
+          clientSecretHash = "$pbkdf2-sha512$310000$CmFYHZTQ0aMd9P/RaFJjrw$7Mht0oY97PDzdLP6GbEKB1dZ1ZQeL66TjrfhjyV0sWOtGKDxkyTcUFfIEh/bzPKM2Bs4.BCmZZWkYiKZ2E0T5Q";
+        };
+        dbPasswordFile = config.sops.secrets."immich/db_password".path;
+      };
+
+      lldap = {
+        enable = true;
+        baseDn = "DC=example,DC=com";
+        jwtSecretFile = config.sops.secrets."lldap/jwt_secret".path;
+        keySeedFile = config.sops.secrets."lldap/key_seed".path;
+        adminPasswordFile = config.sops.secrets."lldap/admin_password".path;
+        bootstrap = {
+          cleanUp = true;
+          users = {
+            john = {
+              email = "john@example.com";
+              password_file = config.sops.secrets."lldap/john_password".path;
+            };
+          };
         };
       };
-      romm = {
-        enable = true;
-        envFile = config.sops.secrets."romm/env".path;
-        db.envFile = config.sops.secrets."romm/db_env".path;
-      };
-      stirling-pdf.enable = true;
-      streaming = {
-        enable = true;
-        gluetun = {
-          vpnProvider = "airvpn";
-          envFile = config.sops.secrets."gluetun/env".path;
+
+      monitoring.enable = true;
+
+      paperless = {
+        authelia = {
+          enable = true;
+          clientSecretFile = config.sops.secrets."paperless/authelia_client_secret".path;
+          clientSecretHash = "$pbkdf2-sha512$310000$wUGniL1V/2bHarMRgE4GQQ$NeJhO.8afkZ7aYJQ5l9f5FfDwFp8dE8PWevkUYdvxP69zieO1kdEIX4xe2UCQvLsAd7pWmwwQgyypbkXQya7FQ";
         };
-        qbittorrent.envFile = config.sops.secrets."qbittorrent/env".path;
+        secretKeyFile = config.sops.secrets."paperless/secret_key".path;
+        db = {
+          passwordFile = config.sops.secrets."paperless/db_password".path;
+        };
       };
+
       traefik = {
         enable = true;
-        domain = "mydomain.com";
-        envFile = config.sops.secrets."traefik/env".path;
+        domain = "example.com";
+        extraEnv.CF_DNS_API_TOKEN.fromFile = config.sops.secrets."traefik/cf_api_token".path;
         geoblock.allowedCountries = [ "DE" ];
+        enablePrometheusExport = true;
+        enableGrafanaMetricsDashboard = true;
+        enableGrafanaAccessLogDashboard = true;
       };
-      uptime-kuma.enable = true;
-      vaultwarden.enable = true;
-      wg-easy = {
-        enable = true;
-        envFile = config.sops.secrets."wg-easy/env".path;
-      };
-      wg-portal.enable = false;
+
     };
   };
 }
