@@ -35,7 +35,7 @@
         inherit pkgs;
         modules = [
           sops-nix.homeManagerModules.sops
-          nix-podman-stacks.homeModules.all
+          nix-podman-stacks.homeModules.nps
           {
             home.stateVersion = "25.05";
 
