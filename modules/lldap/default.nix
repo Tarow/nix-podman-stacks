@@ -300,7 +300,7 @@ in
       # lldap_config.toml will be attemped which fails
 
       # renovate: versioning=loose
-      image = "ghcr.io/lldap/lldap:2025-08-17-alpine-rootless";
+      image = "ghcr.io/lldap/lldap:2025-08-21-alpine-rootless";
       user = config.nps.defaultUid;
       volumes = [
         "${storage}/db:/db"
