@@ -440,7 +440,7 @@ in {
         };
 
         flaresolverr = lib.mkIf cfg.flaresolverr.enable {
-          image = "ghcr.io/flaresolverr/flaresolverr:v3.3.25";
+          image = "ghcr.io/flaresolverr/flaresolverr:v3.4.0";
           volumes = [
             "${storage}/${prowlarrName}:/config"
           ];
