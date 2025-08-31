@@ -31,7 +31,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/viren070/aiostreams:v2.11.5";
+      image = "ghcr.io/viren070/aiostreams:v2.12.0";
       extraConfig.Container = {
         HealthCmd = "wget -qO- http://localhost:3000/api/v1/status";
         HealthInterval = "1m";
