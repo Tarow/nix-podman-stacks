@@ -126,7 +126,7 @@ in {
         containers.traefik.wantsContainer = [name];
         staticConfig.experimental.plugins.bouncer = {
           moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";
-          version = "v1.4.4";
+          version = "v1.4.5";
         };
         dynamicConfig.http.middlewares = {
           public.chain.middlewares = lib.mkAfter ["crowdsec"];
