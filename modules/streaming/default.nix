@@ -378,7 +378,7 @@ in {
       };
 
       ${radarrName} = lib.mkIf cfg.radarr.enable {
-        image = "lscr.io/linuxserver/radarr:5.26.2";
+        image = "lscr.io/linuxserver/radarr:5.27.5";
         volumes = [
           "${storage}/${radarrName}:/config"
           "${mediaStorage}:/media"
