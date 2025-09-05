@@ -14,7 +14,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "docker.io/stirlingtools/stirling-pdf:1.2.0";
+      image = "docker.io/stirlingtools/stirling-pdf:1.3.1";
       environment = {
         DOCKER_ENABLE_SECURITY = false;
         ALLOW_GOOGLE_VISIBILITY = false;
