@@ -116,7 +116,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         id: trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.33.1
         continue-on-error: true
         with:
           image-ref: ${{ matrix.image }}
