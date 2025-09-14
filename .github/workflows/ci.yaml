@@ -106,13 +106,21 @@ jobs:
           FAIL=0
 
           for IMG in $(echo "$IMAGES" | jq -r '.[]'); do
-            SAFE_NAME=$(echo "$IMG" | tr '/:' '_' | tr -d '.')
-            OUTPUT="trivy-results/trivy-$SAFE_NAME.txt"
-            echo "🔍 Scanning $IMG"
-            trivy image --exit-code 1 --severity CRITICAL,HIGH --format table "$IMG" | tee "$OUTPUT"
+            SAFE_NAME=$(echo "$IMG" | sed 's|[:/\.]|_|g')
+            OUTPUT_TXT="trivy-results/trivy-$SAFE_NAME.txt"
+            OUTPUT_SARIF="trivy-results/trivy-$SAFE_NAME.sarif"
+
+            # Store original image in txt file
+            echo "IMAGE=$IMG" > "$OUTPUT_TXT"
+
+            echo "🔍 Scanning $IMG (table output)"
+            trivy image --exit-code 1 --severity CRITICAL,HIGH --format table "$IMG" >> "$OUTPUT_TXT"
             if [ "${PIPESTATUS[0]}" -ne 0 ]; then
               FAIL=1
             fi
+
+            echo "🔒 Generating SARIF for $IMG"
+            trivy image --format sarif --output "$OUTPUT_SARIF" "$IMG"
           done
 
           echo "Trivy scan completed"
@@ -125,6 +133,13 @@ jobs:
           name: trivy-results
           path: trivy-results
           retention-days: 1
+
+      - name: Upload SARIF results to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results/
+          category: "trivy-scans"
 
   trivy-pr-comment:
     name: Update PR comment
@@ -146,9 +161,9 @@ jobs:
           BODY="$BODY\n\nScanned the following updated images:\n"
 
           for f in results/*.txt; do
-            IMG=$(basename "$f" | sed 's/^trivy-//; s/\.txt//; s/_/:/g')
+            IMG=$(head -n 1 "$f" | sed 's/^IMAGE=//')
             if [ -s "$f" ]; then
-              BODY="$BODY\n\n### \`$IMG\`\n<details><summary>Details</summary>\n\n\`\`\`\n$(cat "$f")\n\`\`\`\n</details>"
+              BODY="$BODY\n\n### \`$IMG\`\n<details><summary>Details</summary>\n\n\`\`\`\n$(tail -n +2 "$f")\n\`\`\`\n</details>"
             else
               BODY="$BODY\n\n### \`$IMG\`\n✅ No vulnerabilities were detected."
             fi
