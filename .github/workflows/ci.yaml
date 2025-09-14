@@ -101,6 +101,7 @@ jobs:
 
       - name: Scan changed images
         run: |
+          set -euo pipefail
           IMAGES='${{ needs.detect-changed-images.outputs.images }}'
           mkdir -p trivy-results
           FAIL=0
@@ -110,12 +111,10 @@ jobs:
             OUTPUT_TXT="trivy-results/trivy-$SAFE_NAME.txt"
             OUTPUT_SARIF="trivy-results/trivy-$SAFE_NAME.sarif"
 
-            # Store original image in txt file
             echo "IMAGE=$IMG" > "$OUTPUT_TXT"
 
             echo "🔍 Scanning $IMG (table output)"
-            trivy image --exit-code 1 --severity CRITICAL,HIGH --format table "$IMG" >> "$OUTPUT_TXT"
-            if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+            if ! trivy image --exit-code 1 --severity CRITICAL,HIGH --format table "$IMG" | tee -a "$OUTPUT_TXT"; then
               FAIL=1
             fi
 
@@ -168,6 +167,8 @@ jobs:
               BODY="$BODY\n\n### \`$IMG\`\n✅ No vulnerabilities were detected."
             fi
           done
+
+          BODY="$BODY\n\n📊 Check the [Security tab](https://github.com/${{ github.repository }}/security/code-scanning?query=pr%3A${{ github.event.pull_request.number }}) for full SARIF reports."
           echo -e "$BODY" > comment.md
 
       - name: Comment PR with Trivy results
