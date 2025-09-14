@@ -156,8 +156,14 @@ jobs:
 
       - name: Build PR comment
         run: |
-          BODY="## 🔒 Container Image Security Scan"
-          BODY="$BODY\n\nScanned the following updated images:\n"
+          STATUS=$(cat results/status.txt 2>/dev/null || echo "fail")
+          if [[ "$STATUS" == "success" ]]; then
+            HEADER="## ✅ Container Image Security Scan Passed"
+          else
+            HEADER="## ❌ Container Image Security Scan Failed"
+          fi
+
+          BODY="$HEADER\n\nScanned the following updated images:\n"
 
           for f in results/*.txt; do
             IMG=$(head -n 1 "$f" | sed 's/^IMAGE=//')
