@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.2.3
+        uses: aquasecurity/setup-trivy@v0.2.4
 
       - name: Scan changed images
         run: |
