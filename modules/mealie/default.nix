@@ -77,7 +77,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/mealie-recipes/mealie:v3.2.0";
+        image = "ghcr.io/mealie-recipes/mealie:v3.2.1";
         volumes = ["${storage}/data:/app/data/"];
         environment = {
           ALLOW_SIGNUP = false;
