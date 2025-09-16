@@ -70,7 +70,7 @@ in {
     ];
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/tarow/dockdns:v0.7.0";
+      image = "ghcr.io/tarow/dockdns:v0.7.1";
       volumes = [
         "${cfg.settings}:/app/config.yaml"
       ];
