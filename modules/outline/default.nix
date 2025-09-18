@@ -132,7 +132,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/outlinewiki/outline:0.87.3";
+        image = "docker.io/outlinewiki/outline:0.87.4";
         volumes = ["${storage}/data:/var/lib/outline/data"];
         extraEnv =
           {
