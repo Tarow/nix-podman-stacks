@@ -215,7 +215,7 @@ in {
           };
         configDir = "/app/config";
       in {
-        image = "ghcr.io/twin/gatus:v5.23.2";
+        image = "ghcr.io/twin/gatus:v5.24.0";
         volumes =
           [
             "${yaml.generate "config.yml" settings}:${configDir}/config.yml"
