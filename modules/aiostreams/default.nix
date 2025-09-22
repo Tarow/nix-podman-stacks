@@ -58,6 +58,12 @@ in {
           icon = "stremio";
         };
       };
+      glance = {
+        category = "Media & Downloads";
+        name = "AIOStreams";
+        description = "Stream Source Aggregator";
+        icon = "di:stremio";
+      };
     };
   };
 }

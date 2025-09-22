@@ -1,9 +1,9 @@
 /*
 In order to avoid having a service show up in the homepage dashboard,
-set the `enable` option to `false`.
+set the `category` option to `null`.
 */
 {
   nps.stacks = {
-    streaming.containers.sonarr.homepage.enable = false;
+    streaming.containers.sonarr.homepage.category = null;
   };
 }

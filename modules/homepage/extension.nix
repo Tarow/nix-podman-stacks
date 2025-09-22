@@ -6,9 +6,7 @@
 }: let
   yaml = pkgs.formats.yaml {};
 
-  homepageContainers =
-    lib.filterAttrs (k: c: c.homepage.enable && c.homepage.settings != {})
-    config.services.podman.containers;
+  homepageContainers = lib.filterAttrs (k: c: c.homepage.category != null) config.services.podman.containers;
 
   mergedServices =
     builtins.foldl' (
@@ -37,13 +35,6 @@ in {
       ...
     }: {
       options.homepage = with lib; {
-        enable = options.mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to add the container as a service to the Homepage dashboard.
-          '';
-        };
         category = options.mkOption {
           type = types.nullOr types.str;
           default = null;
@@ -52,12 +43,12 @@ in {
           '';
         };
         name = options.mkOption {
-          type = types.nullOr types.str;
+          type = types.str;
           default = lib.toSentenceCase name;
           defaultText = lib.literalExpression ''lib.toSentenceCase <containerName>'';
           description = ''
             The name of the service as it will appear on the Homepage dashboard.
-            If not set, the container name will be used.
+            Defaults to the container name.
           '';
         };
         settings = options.mkOption {
@@ -72,7 +63,7 @@ in {
         };
       };
 
-      config = lib.mkIf (config.homepage.enable && config.homepage.category != null) {
+      config = lib.mkIf (config.homepage.category != null) {
         homepage.settings = {
           href = lib.mkIf (config.traefik.name != null) (lib.mkDefault config.traefik.serviceUrl);
           server = lib.mkDefault "local";

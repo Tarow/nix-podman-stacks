@@ -40,7 +40,7 @@ in {
       # Socket Proxy option exists, but it not used.
       # Mount the socket directly then.
       volumes = lib.mkIf (!cfg.useSocketProxy) [
-        "${config.nps.socketLocation}:/${targetLocation}:ro"
+        "${config.nps.socketLocation}:${targetLocation}:ro"
       ];
 
       # If socket-proxy is used, add the container to its bridge network so the proxy can be reached

@@ -40,6 +40,12 @@ in {
           icon = "dozzle";
         };
       };
+      glance = {
+        category = "Monitoring";
+        name = "Dozzle";
+        description = "Container Log Viewer";
+        icon = "di:dozzle";
+      };
     };
   };
 }
