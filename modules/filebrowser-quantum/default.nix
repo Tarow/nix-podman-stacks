@@ -198,7 +198,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/gtsteffaniak/filebrowser:0.8.6-beta";
+      image = "ghcr.io/gtsteffaniak/filebrowser:0.8.7-beta";
       volumes =
         [
           "${yaml.generate "config.yml" cfg.settings}:/home/filebrowser/config.yml"
