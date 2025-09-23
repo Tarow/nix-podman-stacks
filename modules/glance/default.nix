@@ -28,7 +28,8 @@ in {
               options = {
                 name = lib.mkOption {
                   type = lib.types.str;
-                  default = name;
+                  default = lib.toSentenceCase name;
+                  defaultText = lib.literalExpression ''lib.toSentenceCase <pageName>'';
                   description = "The name of the page. Default to the attribute name.";
                 };
                 columns = lib.mkOption {

@@ -37,7 +37,7 @@
     (groupByCategory glanceContainers);
 in {
   config = {
-    nps.stacks.glance.settings.pages.Home.columns.center = {
+    nps.stacks.glance.settings.pages.home.columns.center = {
       size = lib.mkDefault "full";
       widgets = widgets;
     };
