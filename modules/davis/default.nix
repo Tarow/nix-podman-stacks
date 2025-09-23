@@ -8,6 +8,9 @@
   dbName = "${name}-db";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "General";
+  description = "DAV Server";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -129,12 +132,16 @@ in {
         port = 9000;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Davis";
+          inherit category;
           settings = {
-            description = "DAV Server";
+            inherit description;
             icon = "davis";
           };
+        };
+        glance = {
+          inherit category description;
+          id = name;
+          icon = "di:davis";
         };
       };
 
@@ -158,6 +165,12 @@ in {
         };
 
         stack = name;
+
+        glance = {
+          inherit category;
+          parent = name;
+          icon = "di:mariadb";
+        };
       };
     };
   };

@@ -6,6 +6,9 @@
   name = "changedetection";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Website Change Detection";
 in {
   imports = import ../mkAliases.nix config lib name [name "sockpuppetbrowser"];
 
@@ -28,13 +31,17 @@ in {
         port = 5000;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Changedetection";
+          inherit category;
           settings = {
-            description = "Website Change Detection";
+            inherit description;
             icon = "changedetection";
             widget.type = "changedetectionio";
           };
+        };
+        glance = {
+          inherit category description;
+          id = name;
+          icon = "di:changedetection";
         };
       };
 
@@ -49,6 +56,11 @@ in {
         addCapabilities = ["SYS_ADMIN"];
 
         stack = name;
+        glance = {
+          inherit category;
+          parent = name;
+          icon = "di:chrome";
+        };
       };
     };
   };

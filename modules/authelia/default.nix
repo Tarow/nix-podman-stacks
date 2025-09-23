@@ -10,6 +10,9 @@
 
   storage = "${config.nps.storageBaseDir}/${name}";
 
+  category = "Network & Administration";
+  description = "Authentication & Authorization Server";
+
   yaml = pkgs.formats.yaml {};
 
   # Write this file manually, otherwise there will be single quotes around the key, breaking the file after templating
@@ -305,13 +308,18 @@ in {
         stack = name;
         port = 9091;
         traefik.name = name;
+
         homepage = {
-          category = "Network & Administration";
-          name = "Authelia";
+          inherit category;
           settings = {
-            description = "Authentication & Authorization Server";
+            inherit description;
             icon = "authelia";
           };
+        };
+        glance = {
+          inherit category description;
+          id = name;
+          icon = "di:authelia";
         };
       };
 
@@ -327,6 +335,12 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "10s";
+        };
+        glance = {
+          name = "Redis (Authelia)";
+          parent = name;
+          icon = "di:redis";
+          inherit category;
         };
       };
     };

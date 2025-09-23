@@ -50,7 +50,7 @@ in {
       ...
     }: {
       options.glance = lib.mkOption {
-        type = lib.types.submodule {
+        type = lib.types.submodule ({name, ...}: {
           freeformType = yaml.type;
           options = {
             category = lib.mkOption {
@@ -62,7 +62,9 @@ in {
             };
             name = lib.mkOption {
               type = lib.types.str;
-              description = "The name of the service.";
+              description = "The name of the service as it will displayed on the dashboard.";
+              default = lib.toSentenceCase name;
+              defaultText = lib.literalExpression ''lib.toSentenceCase <containerName>'';
             };
             url = lib.mkOption {
               type = lib.types.str;
@@ -70,7 +72,7 @@ in {
               default = config.traefik.serviceUrl;
             };
           };
-        };
+        });
         default = {};
         description = ''
           Settings for the service.

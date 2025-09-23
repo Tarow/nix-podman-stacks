@@ -7,6 +7,9 @@
   name = "dockdns";
   cfg = config.nps.stacks.${name};
   yaml = pkgs.formats.yaml {};
+
+  category = "Network & Administration";
+  description = "Label-based DNS Client";
 in {
   imports =
     [
@@ -84,12 +87,16 @@ in {
       port = 8080;
       traefik.name = name;
       homepage = {
-        category = "Network & Administration";
-        name = "DockDNS";
+        inherit category;
         settings = {
-          description = "Label-based DNS Client";
+          inherit description;
           icon = "azure-dns";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:azure-dns";
       };
     };
   };

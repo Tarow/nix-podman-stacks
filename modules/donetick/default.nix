@@ -8,6 +8,9 @@
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
   yaml = pkgs.formats.yaml {};
+
+  category = "General";
+  description = "Task Organizer";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -194,12 +197,16 @@ in {
         port = 2021;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Donetick";
+          inherit category;
           settings = {
-            description = "Task Organizer";
+            inherit description;
             icon = "donetick";
           };
+        };
+        glance = {
+          inherit category description;
+          id = name;
+          icon = "di:donetick";
         };
       };
     };

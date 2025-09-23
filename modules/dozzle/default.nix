@@ -5,6 +5,9 @@
 }: let
   name = "dozzle";
   cfg = config.nps.stacks.${name};
+
+  category = "Monitoring";
+  description = "Container Log Viewer";
 in {
   imports =
     [
@@ -33,17 +36,15 @@ in {
       port = 8080;
       traefik.name = name;
       homepage = {
-        category = "Monitoring";
-        name = "Dozzle";
+        inherit category;
         settings = {
-          description = "Container Log Viewer";
+          inherit description;
           icon = "dozzle";
         };
       };
       glance = {
-        category = "Monitoring";
-        name = "Dozzle";
-        description = "Container Log Viewer";
+        inherit category description;
+        id = name;
         icon = "di:dozzle";
       };
     };

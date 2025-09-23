@@ -6,6 +6,10 @@
   name = "calibre";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Ebook Library";
+  downloaderDescription = "Book Downloader for Calibre Web";
 in {
   imports = import ../mkAliases.nix config lib name [name "${name}-downloader"];
 
@@ -28,13 +32,17 @@ in {
       stack = name;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "Calibre Web";
+        inherit category;
         settings = {
-          description = "Ebook Library";
+          inherit description;
           icon = "calibre-web";
           widget.type = "calibreweb";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:calibre-web";
       };
     };
 
@@ -60,12 +68,17 @@ in {
       stack = name;
       traefik.name = "calibre-downloader";
       homepage = {
-        category = "Media & Downloads";
-        name = "Calibre Web Book Downloader";
+        inherit category;
         settings = {
-          description = "Book Downloader for Calibre Web";
+          description = downloaderDescription;
           icon = "sh-cwa-book-downloader";
         };
+      };
+      glance = {
+        inherit category;
+        id = name;
+        description = downloaderDescription;
+        icon = "di:sh-cwa-book-downloader";
       };
     };
   };

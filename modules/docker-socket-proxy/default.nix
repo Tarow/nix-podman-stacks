@@ -5,6 +5,9 @@
 }: let
   name = "docker-socket-proxy";
   cfg = config.nps.stacks.${name};
+
+  category = "Network & Administration";
+  description = "Security Proxy for the Docker Socket";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -51,13 +54,16 @@ in {
       port = cfg.port;
       traefik.name = "dsp";
       homepage = {
-        category = "Network & Administration";
-        name = "Docker Socket Proxy";
+        inherit category;
         settings = {
-          href = "${cfg.containers.${name}.traefik.serviceUrl}/version";
-          description = "Security Proxy for the Docker Socket";
+          inherit description;
           icon = "haproxy";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:haproxy";
       };
     };
   };

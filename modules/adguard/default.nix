@@ -6,6 +6,9 @@
   name = "adguard";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "Network & Administration";
+  description = "Adblocker";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -28,13 +31,17 @@ in {
       port = 3000;
       traefik.name = name;
       homepage = {
-        category = "Network & Administration";
-        name = "AdGuard Home";
+        inherit category;
         settings = {
-          description = "Adblocker";
+          inherit description;
           icon = "adguard-home";
           widget.type = "adguard";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:adguard-home";
       };
     };
   };

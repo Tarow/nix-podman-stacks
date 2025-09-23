@@ -13,6 +13,9 @@
   yaml = pkgs.formats.yaml {};
 
   socketTargetLocation = "/var/run/podman.sock";
+
+  category = "Monitoring";
+  description = "Lightweight Monitoring Platform";
 in {
   imports =
     [
@@ -155,12 +158,16 @@ in {
         port = 8090;
         traefik.name = name;
         homepage = {
-          category = "Monitoring";
-          name = "Beszel";
+          inherit category;
           settings = {
-            description = "Lightweight Monitoring Platform";
+            inherit description;
             icon = "beszel";
           };
+        };
+        glance = {
+          inherit category description;
+          id = name;
+          icon = "di:beszel";
         };
       };
 
@@ -184,6 +191,12 @@ in {
             if !cfg.useSocketProxy
             then "unix://${socketTargetLocation}"
             else config.nps.stacks.docker-socket-proxy.address;
+        };
+
+        glance = {
+          inherit category;
+          parent = name;
+          icon = "di:beszel";
         };
       };
     };

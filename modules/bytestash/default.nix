@@ -7,6 +7,9 @@
   name = "bytestash";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "General";
+  description = "Code Snippets Organizer";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -49,12 +52,16 @@ in {
       port = 5000;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "ByteStash";
+        inherit category;
         settings = {
-          description = "Code Snippets Organizer";
+          inherit description;
           icon = "bytestash";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:bytestash";
       };
     };
   };

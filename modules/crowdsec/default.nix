@@ -10,6 +10,9 @@
 
   yaml = pkgs.formats.yaml {};
 
+  category = "Network & Administration";
+  description = "Collaborative Security Threat Prevention";
+
   timer = {
     Timer = {
       OnCalendar = "01:30";
@@ -194,16 +197,20 @@ in {
       extraEnv = cfg.extraEnv;
 
       homepage = {
-        category = "Network & Administration";
-        name = "Crowdsec";
+        inherit category;
         settings = {
-          description = "Collaborative Security Threat Prevention";
+          inherit description;
           icon = "crowdsec";
           widget = {
             type = "crowdsec";
             url = "http://${name}:8080";
           };
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:crowdsec";
       };
     };
   };

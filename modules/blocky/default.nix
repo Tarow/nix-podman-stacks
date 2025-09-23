@@ -10,6 +10,9 @@
   yaml = pkgs.formats.yaml {};
 
   ip = config.nps.hostIP4Address;
+
+  category = "Network & Administration";
+  description = "Adblocker";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -51,7 +54,7 @@ in {
           honor_timestamps = true;
           metrics_path = "/metrics";
           scheme = "http";
-          static_configs = [{targets = ["${name}:4000"];}];
+          static_configs = [{targets = [(name + ":4000")];}];
         }
       ];
     };
@@ -68,12 +71,16 @@ in {
       port = 4000;
       traefik.name = name;
       homepage = {
-        category = "Network & Administration";
-        name = "Blocky";
+        inherit category;
         settings = {
-          description = "Adblocker";
+          inherit description;
           icon = "blocky";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:blocky";
       };
     };
   };

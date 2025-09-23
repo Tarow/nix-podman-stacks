@@ -7,6 +7,9 @@
   storage = "${config.nps.storageBaseDir}/${name}";
   mediaStorage = config.nps.mediaStorageBaseDir;
   cfg = config.nps.stacks.${name};
+
+  category = "Media & Downloads";
+  description = "Audiobook & Podcast Server";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -110,14 +113,19 @@ in {
       ];
       port = 80;
       traefik.name = name;
+
       homepage = {
-        category = "Media & Downloads";
-        name = "Audiobookshelf";
+        inherit category;
         settings = {
-          description = "Audiobook & Podcast Server";
+          inherit description;
           icon = "audiobookshelf";
           widget.type = "audiobookshelf";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:audiobookshelf";
       };
     };
   };

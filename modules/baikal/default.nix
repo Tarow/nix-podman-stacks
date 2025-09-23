@@ -6,6 +6,9 @@
   name = "baikal";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "General";
+  description = "DAV Server";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -22,12 +25,16 @@ in {
       port = 80;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "Baikal";
+        inherit category;
         settings = {
-          description = "DAV Server";
+          inherit description;
           icon = "baikal";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:baikal";
       };
     };
   };
