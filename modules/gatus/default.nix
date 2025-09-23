@@ -9,6 +9,10 @@
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
   yaml = pkgs.formats.yaml {};
+
+  category = "Monitoring";
+  description = "Health Monitoring";
+  displayName = "Gatus";
 in {
   imports =
     [
@@ -244,13 +248,19 @@ in {
         port = 8080;
         traefik.name = name;
         homepage = {
-          category = "Monitoring";
-          name = "Gatus";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Health Monitoring";
+            inherit description;
             icon = "gatus";
             widget.type = "gatus";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:gatus";
         };
       };
 
@@ -264,6 +274,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          inherit category;
+          parent = name;
+          name = "Postgres";
+          icon = "di:postgres";
+        };
       };
     };
   };

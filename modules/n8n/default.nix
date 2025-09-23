@@ -6,6 +6,10 @@
   name = "n8n";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Workflow Automation";
+  displayName = "n8n";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -26,12 +30,18 @@ in {
       port = 5678;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "n8n";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Workflow Automation";
+          inherit description;
           icon = "n8n";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:n8n";
       };
     };
   };

@@ -8,6 +8,10 @@
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
 
+  category = "Network & Administration";
+  description = "SSH & Telnet Client";
+  displayName = "Sshwifty";
+
   json = pkgs.formats.json {};
 in {
   imports = import ../mkAliases.nix config lib name [name];
@@ -64,12 +68,18 @@ in {
         subDomain = "ssh";
       };
       homepage = {
-        category = "Network & Administration";
-        name = "Sshwifty";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "SSH & Telnet Client";
+          inherit description;
           icon = "sshwifty";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:sshwifty";
       };
     };
   };

@@ -9,6 +9,10 @@
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
   yaml = pkgs.formats.yaml {};
+
+  category = "General";
+  description = "To-Dos";
+  displayName = "Vikunja";
 in {
   imports = import ../mkAliases.nix config lib name [
     name
@@ -179,13 +183,19 @@ in {
         port = 3456;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Vikunja";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "To-Dos";
+            inherit description;
             icon = "vikunja";
             widget.type = "vikunja";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:vikunja";
         };
       };
 
@@ -199,6 +209,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          parent = name;
+          name = "Postgres";
+          icon = "di:postgres";
+          inherit category;
+        };
       };
     };
   };

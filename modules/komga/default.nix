@@ -8,6 +8,10 @@
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
   yaml = pkgs.formats.yaml {};
+
+  category = "Media & Downloads";
+  description = "Ebook Media Server";
+  displayName = "Komga";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -125,13 +129,19 @@ in {
         port = 25600;
         traefik.name = name;
         homepage = {
-          category = "Media & Downloads";
-          name = "Komga";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Ebook Media Server";
+            inherit description;
             icon = "komga";
             widget.type = "komga";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:komga";
         };
       };
     };

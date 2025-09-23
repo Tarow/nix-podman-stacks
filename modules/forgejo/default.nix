@@ -9,6 +9,9 @@
   cfg = config.nps.stacks.${name};
 
   ini = pkgs.formats.ini {};
+
+  category = "General";
+  description = "Git Server";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -41,12 +44,16 @@ in {
       port = 3000;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "Forgejo";
+        inherit category;
         settings = {
-          description = "Git Server";
+          inherit description;
           icon = "forgejo";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:forgejo";
       };
     };
   };

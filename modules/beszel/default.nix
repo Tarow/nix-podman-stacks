@@ -196,6 +196,7 @@ in {
         glance = {
           inherit category;
           parent = name;
+          name = "Beszel Agent";
           icon = "di:beszel";
         };
       };

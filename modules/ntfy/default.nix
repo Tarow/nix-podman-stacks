@@ -1,13 +1,16 @@
 {
   config,
   lib,
-  options,
   pkgs,
   ...
 }: let
   name = "ntfy";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Push Notifications";
+  displayName = "ntfy";
 
   yaml = pkgs.formats.yaml {};
 in {
@@ -91,13 +94,20 @@ in {
 
       port = 80;
       traefik.name = name;
+
       homepage = {
-        category = "General";
-        name = "ntfy";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Push Notifications";
+          inherit description;
           icon = "ntfy";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:ntfy";
       };
     };
   };

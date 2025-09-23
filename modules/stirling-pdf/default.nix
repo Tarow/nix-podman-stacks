@@ -5,6 +5,10 @@
 }: let
   name = "stirling-pdf";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Web-based PDF-Tools";
+  displayName = "Stirling PDF";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -24,12 +28,18 @@ in {
       port = 8080;
       traefik.name = "pdf";
       homepage = {
-        category = "General";
-        name = "Stirling PDF";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Web-based PDF-Tools";
+          inherit description;
           icon = "stirling-pdf";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:stirling-pdf";
       };
     };
   };

@@ -14,6 +14,10 @@
   mediaStorage = "${config.nps.mediaStorageBaseDir}";
   cfg = config.nps.stacks.${name};
 
+  category = "Media & Downloads";
+  description = "Photo & Video Management";
+  displayName = "Immich";
+
   env =
     {
       DB_HOSTNAME = dbName;
@@ -235,20 +239,33 @@ in {
 
         stack = name;
         traefik.name = name;
+
         homepage = {
-          category = "Media & Downloads";
-          name = "Immich";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Photo & Video Management";
+            inherit description;
             icon = "immich";
             widget.type = "immich";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:immich";
         };
       };
 
       ${redisName} = {
         image = "docker.io/redis:8.0";
         stack = name;
+        glance = {
+          inherit category;
+          parent = name;
+          name = "Redis";
+          icon = "di:redis";
+        };
       };
 
       ${dbName} = {
@@ -262,6 +279,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          inherit category;
+          parent = name;
+          name = "Postgres";
+          icon = "di:postgres";
+        };
       };
 
       ${mlName} = {
@@ -269,6 +292,12 @@ in {
         volumes = ["${storage}/model-cache:/cache"];
 
         stack = name;
+        glance = {
+          inherit category;
+          name = "Immich Machine Learning";
+          parent = name;
+          icon = "di:immich";
+        };
       };
     };
   };

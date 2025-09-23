@@ -8,6 +8,10 @@
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
 
+  category = "Network & Administration";
+  description = "Light LDAP Implementation";
+  displayName = "LLDAP";
+
   toml = pkgs.formats.toml {};
   json = pkgs.formats.json {};
 
@@ -348,12 +352,18 @@ in {
       port = 17170;
       traefik.name = name;
       homepage = {
-        category = "Network & Administration";
-        name = "LLDAP";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Light LDAP Implementation";
-          icon = "sh-lldap";
+          inherit description;
+          icon = "lldap-dark";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:lldap-dark";
       };
     };
   };

@@ -1,12 +1,15 @@
 {
   config,
   lib,
-  options,
   ...
 }: let
   name = "vaultwarden";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Password Vault";
+  displayName = "Vaultwarden";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -44,12 +47,18 @@ in {
       port = 80;
       traefik.name = "vw";
       homepage = {
-        category = "General";
-        name = "Vaultwarden";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Password Vault";
+          inherit description;
           icon = "vaultwarden";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:vaultwarden";
       };
     };
   };

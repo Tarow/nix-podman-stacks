@@ -8,6 +8,10 @@
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
   yaml = pkgs.formats.yaml {};
+
+  category = "General";
+  displayName = "Filebrowser Quantum";
+  description = "Web-based File Manager";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -214,12 +218,18 @@ in {
       port = 80;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "FileBrowser Quantum";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Web-based File Manager";
+          inherit description;
           icon = "filebrowser-quantum";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        name = displayName;
+        icon = "di:filebrowser-quantum";
       };
     };
   };

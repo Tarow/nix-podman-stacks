@@ -7,6 +7,10 @@
   dbName = "${name}-db";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "General";
+  description = "Knowledge Management";
+  displayName = "Memos";
 in {
   imports = import ../mkAliases.nix config lib name [
     name
@@ -127,12 +131,18 @@ in {
         port = 5230;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Memos";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Knowledge Management";
+            inherit description;
             icon = "memos";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:memos";
         };
       };
 
@@ -146,6 +156,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          inherit category;
+          name = "Postgres";
+          parent = name;
+          icon = "di:postgres";
+        };
       };
     };
   };

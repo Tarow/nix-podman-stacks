@@ -5,6 +5,10 @@
 }: let
   name = "ittools";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Developer Tools";
+  displayName = "IT-Tools";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -18,12 +22,18 @@ in {
       port = 80;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "IT-Tools";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Developer Tools";
+          inherit description;
           icon = "it-tools";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:it-tools";
       };
     };
   };

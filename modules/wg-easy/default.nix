@@ -6,6 +6,10 @@
   name = "wg-easy";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "Network & Administration";
+  description = "VPN Server";
+  displayName = "wg-easy";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -92,16 +96,22 @@ in {
         subDomain = "wg";
       };
       homepage = {
-        category = "Network & Administration";
-        name = "wg-easy";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "VPN Server";
+          inherit description;
           icon = "wireguard";
           widget = {
             type = "wgeasy";
             version = 2;
           };
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:wireguard";
       };
     };
   };

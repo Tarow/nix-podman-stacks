@@ -8,6 +8,10 @@
   dbName = "${name}-db";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "Network & Administration";
+  description = "Remote Access Gateway";
+  displayName = "Guacamole";
 in {
   imports = import ../mkAliases.nix config lib name [
     name
@@ -132,12 +136,18 @@ in {
         port = 8080;
         traefik.name = name;
         homepage = {
-          category = "Network & Administration";
-          name = "Guacamole";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Remote Access Gateway";
+            inherit description;
             icon = "guacamole";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:guacamole";
         };
       };
 
@@ -160,6 +170,11 @@ in {
         };
 
         stack = name;
+        glance = {
+          inherit category;
+          parent = name;
+          icon = "di:postgres";
+        };
       };
     };
   };

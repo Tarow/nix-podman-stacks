@@ -8,6 +8,18 @@
   cfg = config.nps.stacks.${stackName};
   storage = "${config.nps.storageBaseDir}/${stackName}";
 
+  category = "Monitoring";
+  grafanaDescription = "Monitoring & Observability Platform";
+  grafanaDisplayName = "Grafana";
+  lokiDescription = "Log Aggregation";
+  lokiDisplayName = "Loki";
+  alloyDescription = "Telemetry Collector";
+  alloyDisplayName = "Alloy";
+  prometheusDescription = "Metrics & Monitoring";
+  prometheusDisplayName = "Prometheus";
+  podmanExporterDescription = "Podman Metric Exporter";
+  podmanExporterDisplayName = "Podman Prometheus Exporter";
+
   yaml = pkgs.formats.yaml {};
   ini = pkgs.formats.ini {};
 
@@ -325,13 +337,20 @@ in {
         stack = stackName;
         traefik.name = grafanaName;
         homepage = {
-          category = "Monitoring";
-          name = "Grafana";
+          inherit category;
+          name = grafanaDisplayName;
           settings = {
-            description = "Monitoring & Observability Platform";
+            description = grafanaDescription;
             icon = "grafana";
             widget.type = "grafana";
           };
+        };
+        glance = {
+          inherit category;
+          description = grafanaDescription;
+          name = grafanaDisplayName;
+          id = grafanaName;
+          icon = "di:grafana";
         };
       };
 
@@ -346,12 +365,19 @@ in {
 
         stack = stackName;
         homepage = {
-          category = "Monitoring";
-          name = "Loki";
+          inherit category;
+          name = lokiDisplayName;
           settings = {
-            description = "Log Aggregation";
+            description = lokiDescription;
             icon = "loki";
           };
+        };
+        glance = {
+          inherit category;
+          description = lokiDescription;
+          name = lokiDisplayName;
+          id = lokiName;
+          icon = "di:loki";
         };
       };
 
@@ -369,12 +395,19 @@ in {
           inherit (cfg.alloy) port;
           traefik.name = alloyName;
           homepage = {
-            category = "Monitoring";
-            name = "Alloy";
+            inherit category;
+            name = alloyDisplayName;
             settings = {
-              description = "Telemetry Collector";
+              description = alloyDescription;
               icon = "alloy";
             };
+          };
+          glance = {
+            inherit category;
+            description = alloyDescription;
+            name = alloyDisplayName;
+            id = alloyName;
+            icon = "di:alloy";
           };
         };
 
@@ -394,13 +427,20 @@ in {
           stack = stackName;
           traefik.name = "prometheus";
           homepage = {
-            category = "Monitoring";
-            name = "Prometheus";
+            inherit category;
+            name = prometheusDisplayName;
             settings = {
-              description = "Metrics & Monitoring";
+              description = prometheusDescription;
               icon = "prometheus";
               widget.type = "prometheus";
             };
+          };
+          glance = {
+            inherit category;
+            description = prometheusDescription;
+            name = prometheusDisplayName;
+            id = prometheusName;
+            icon = "di:prometheus";
           };
         };
 
@@ -414,6 +454,21 @@ in {
         extraPodmanArgs = ["--security-opt=label=disable"];
 
         stack = stackName;
+        homepage = {
+          inherit category;
+          name = podmanExporterDisplayName;
+          settings = {
+            description = podmanExporterDescription;
+            icon = "podman";
+          };
+        };
+        glance = {
+          inherit category;
+          description = podmanExporterDescription;
+          name = podmanExporterDisplayName;
+          id = podmanExporterName;
+          icon = "di:podman";
+        };
       };
     };
   };

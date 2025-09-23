@@ -8,6 +8,10 @@
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
   yaml = pkgs.formats.yaml {};
+
+  category = "Network & Administration";
+  description = "Wireguard Management UI";
+  displayName = "Wireguard Portal";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -204,12 +208,18 @@ in {
         subDomain = "wg";
       };
       homepage = {
-        category = "Network & Administration";
-        name = "Wireguard Portal";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Wireguard Management UI";
+          inherit description;
           icon = "wireguard";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:wireguard";
       };
     };
   };

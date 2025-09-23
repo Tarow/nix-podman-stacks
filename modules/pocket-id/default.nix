@@ -7,6 +7,10 @@
   name = "pocketid";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "Network & Administration";
+  description = "Simple OIDC Provider";
+  displayName = "Pocket ID";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -173,12 +177,18 @@ in {
       port = 1411;
       traefik.name = name;
       homepage = {
-        category = "Network & Administration";
-        name = "Pocket ID";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Simple OIDC Provider";
+          inherit description;
           icon = "pocket-id";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:pocket-id";
       };
     };
   };

@@ -11,6 +11,10 @@
   defaultRomStorage = "${storage}/library";
   cfg = config.nps.stacks.${name};
 
+  category = "General";
+  description = "Rom Manager";
+  displayName = "RomM";
+
   yaml = pkgs.formats.yaml {};
 in {
   imports = import ../mkAliases.nix config lib name [
@@ -276,13 +280,19 @@ in {
         port = 8080;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "RomM";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Rom Manager";
+            inherit description;
             icon = "romm";
             widget.type = "romm";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:romm";
         };
       };
       ${dbName} = {
@@ -305,6 +315,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          parent = name;
+          name = "MariaDB";
+          icon = "si:mariadb";
+          inherit category;
+        };
       };
     };
   };

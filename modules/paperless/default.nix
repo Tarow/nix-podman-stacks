@@ -10,6 +10,10 @@
 
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "General";
+  description = "Document Management System";
+  displayName = "Paperless-ngx";
 in {
   imports = import ../mkAliases.nix config lib name [
     name
@@ -217,19 +221,31 @@ in {
         stack = name;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Paperless-ngx";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Document Management System";
+            inherit description;
             icon = "paperless-ngx";
             widget.type = "paperlessngx";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:paperless-ngx";
         };
       };
 
       ${brokerName} = {
         image = "docker.io/redis:8.0";
         stack = name;
+        glance = {
+          parent = name;
+          name = "Redis";
+          icon = "di:redis";
+          inherit category;
+        };
       };
 
       ${dbName} = {
@@ -242,6 +258,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          parent = name;
+          name = "Postgres";
+          icon = "di:postgres";
+          inherit category;
+        };
       };
 
       ${ftpName} = let
@@ -274,6 +296,13 @@ in {
             "21:21"
             "40000-40009:40000-40009"
           ];
+
+          glance = {
+            parent = name;
+            name = "FTP-Server";
+            icon = "si:sftpgo";
+            inherit category;
+          };
         };
     };
   };

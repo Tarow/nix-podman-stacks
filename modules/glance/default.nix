@@ -90,7 +90,10 @@ in {
       ];
 
       port = 8080;
-      traefik.name = name;
+      traefik = {
+        name = name;
+        subDomain = "";
+      };
     };
   };
 }

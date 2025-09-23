@@ -7,6 +7,10 @@
   name = "storyteller";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "Media & Downloads";
+  description = "Immersive Reading Platform";
+  displayName = "Storyteller";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -129,12 +133,18 @@ in {
       port = 8001;
       traefik.name = name;
       homepage = {
-        category = "Media & Downloads";
-        name = "Storyteller";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Immersive Reading Platform";
+          inherit description;
           icon = "sh-storyteller";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:sh-storyteller";
       };
     };
   };

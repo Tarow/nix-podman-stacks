@@ -141,7 +141,7 @@ in {
         glance = {
           inherit category description;
           id = name;
-          icon = "di:davis";
+          icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/davis.webp";
         };
       };
 
@@ -169,6 +169,7 @@ in {
         glance = {
           inherit category;
           parent = name;
+          name = "MariaDB";
           icon = "di:mariadb";
         };
       };

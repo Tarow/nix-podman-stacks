@@ -10,6 +10,10 @@
 
   cfg = config.nps.stacks.${name};
 
+  category = "General";
+  description = "Home Automation";
+  displayName = "Home Assistant";
+
   traefikSubnet = config.nps.stacks.traefik.network.subnet;
 in {
   imports = import ../mkAliases.nix config lib name [name];
@@ -54,12 +58,18 @@ in {
       port = 8123;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "Home Assistant";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Home Automation";
+          inherit description;
           icon = "home-assistant";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:home-assistant";
       };
     };
   };

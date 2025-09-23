@@ -337,8 +337,8 @@ in {
           HealthStartPeriod = "10s";
         };
         glance = {
-          name = "Redis (Authelia)";
           parent = name;
+          name = "Redis";
           icon = "di:redis";
           inherit category;
         };

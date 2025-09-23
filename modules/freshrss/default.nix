@@ -1,12 +1,15 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   name = "freshrss";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Feeds Aggregator";
+  displayName = "FreshRSS";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -172,12 +175,18 @@ in {
       port = 80;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "FreshRSS";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Feeds Aggregator";
+          inherit description;
           icon = "freshrss";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:freshrss";
       };
     };
   };

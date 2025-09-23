@@ -5,6 +5,10 @@
 }: let
   name = "omnitools";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Tool Collection";
+  displayName = "OmniTools";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -17,12 +21,18 @@ in {
       port = 80;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "OmniTools";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Tool Collection";
+          inherit description;
           icon = "omni-tools";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:omni-tools";
       };
     };
   };

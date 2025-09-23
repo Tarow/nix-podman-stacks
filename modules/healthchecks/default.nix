@@ -7,6 +7,10 @@
 
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "Monitoring";
+  description = "Job Monitoring";
+  displayName = "Healthchecks";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -57,13 +61,19 @@ in {
         stack = name;
         traefik.name = name;
         homepage = {
-          category = "Monitoring";
-          name = "Healthchecks";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Job Monitoring";
+            inherit description;
             icon = "healthchecks";
             widget.type = "healthchecks";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:healthchecks";
         };
       };
     };

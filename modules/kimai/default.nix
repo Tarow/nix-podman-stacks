@@ -9,6 +9,10 @@
   storage = "${config.nps.storageBaseDir}/${name}";
 
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Time Tracker";
+  displayName = "Kimai";
 in {
   imports = import ../mkAliases.nix config lib name [
     name
@@ -71,12 +75,18 @@ in {
         port = 8001;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Kimai";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Time Tracker";
+            inherit description;
             icon = "kimai";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:kimai";
         };
       };
 
@@ -100,6 +110,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          inherit category;
+          name = "MySQL";
+          parent = name;
+          icon = "di:mysql";
+        };
       };
     };
   };

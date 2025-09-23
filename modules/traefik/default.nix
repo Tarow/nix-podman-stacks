@@ -9,6 +9,10 @@
 
   yaml = pkgs.formats.yaml {};
 
+  category = "Network & Administration";
+  description = "Reverse Proxy";
+  displayName = "Traefik";
+
   storage = "${config.nps.storageBaseDir}/${name}";
 in {
   imports =
@@ -327,14 +331,20 @@ in {
       traefik.name = name;
       alloy.enable = true;
       homepage = {
-        category = "Network & Administration";
-        name = "Traefik";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Reverse Proxy";
+          inherit description;
           href = "https://${name}.${cfg.domain}";
           icon = "traefik";
           widget.type = "traefik";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:traefik";
       };
     };
   };

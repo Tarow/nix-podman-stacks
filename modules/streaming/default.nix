@@ -15,6 +15,27 @@
   radarrName = "radarr";
   bazarrName = "bazarr";
   prowlarrName = "prowlarr";
+  flaresolverrName = "flaresolverr";
+
+  category = "Media & Downloads";
+  qbittorrentDescription = "BitTorrent Client";
+  qbittorrentDisplayName = "qBittorrent";
+  jellyfinDescription = "Media Server";
+  jellyfinDisplayName = "Jellyfin";
+  sonarrDescription = "Series Management";
+  sonarrDisplayName = "Sonarr";
+  radarrDescription = "Movie Management";
+  radarrDisplayName = "Radarr";
+  bazarrDescription = "Subtitle Management";
+  bazarrDisplayName = "Bazarr";
+  prolarrDescription = "Indexer Management";
+  prowlarrDisplayName = "Prowlarr";
+  flaresolverrDescription = "Cloudflare Protection Bypass";
+  flaresolverrDisplayName = "Flaresolverr";
+
+  gluetunCategory = "Network & Administration";
+  gluetunDescription = "VPN client";
+  gluetunDisplayName = "Gluetun";
 
   cfg = config.nps.stacks.${stackName};
   storage = "${config.nps.storageBaseDir}/${stackName}";
@@ -245,16 +266,23 @@ in {
         stack = stackName;
         port = 8888;
         homepage = {
-          category = "Network & Administration";
-          name = "Gluetun";
+          category = gluetunCategory;
+          name = gluetunDisplayName;
           settings = {
-            description = "VPN client";
+            description = gluetunDescription;
             icon = "gluetun";
             widget = {
               type = "gluetun";
               url = "http://${gluetunName}:8000";
             };
           };
+        };
+        glance = {
+          category = gluetunCategory;
+          description = gluetunDescription;
+          name = gluetunDisplayName;
+          id = gluetunName;
+          icon = "di:gluetun";
         };
       };
 
@@ -280,13 +308,20 @@ in {
         port = 8080;
         traefik.name = qbittorrentName;
         homepage = {
-          category = "Media & Downloads";
-          name = "qBittorrent";
+          inherit category;
+          name = qbittorrentDisplayName;
           settings = {
-            description = "BitTorrent Client";
+            description = qbittorrentDescription;
             icon = "qbittorrent";
             widget.type = "qbittorrent";
           };
+        };
+        glance = {
+          inherit category;
+          description = qbittorrentDescription;
+          name = qbittorrentDisplayName;
+          id = qbittorrentName;
+          icon = "di:qbittorrent";
         };
       };
 
@@ -344,13 +379,20 @@ in {
           stack = stackName;
           traefik.name = jellyfinName;
           homepage = {
-            category = "Media & Downloads";
-            name = "Jellyfin";
+            inherit category;
+            name = jellyfinDisplayName;
             settings = {
-              description = "Media Server";
+              description = jellyfinDescription;
               icon = "jellyfin";
               widget.type = "jellyfin";
             };
+          };
+          glance = {
+            inherit category;
+            description = jellyfinDescription;
+            name = jellyfinDisplayName;
+            id = jellyfinName;
+            icon = "di:jellyfin";
           };
         };
 
@@ -367,13 +409,20 @@ in {
         stack = stackName;
         traefik.name = sonarrName;
         homepage = {
-          category = "Media & Downloads";
-          name = "Sonarr";
+          inherit category;
+          name = sonarrDisplayName;
           settings = {
-            description = "Series Management";
+            description = sonarrDescription;
             icon = "sonarr";
             widget.type = "sonarr";
           };
+        };
+        glance = {
+          inherit category;
+          description = sonarrDescription;
+          name = sonarrDisplayName;
+          id = sonarrName;
+          icon = "di:sonarr";
         };
       };
 
@@ -390,13 +439,20 @@ in {
         stack = stackName;
         traefik.name = radarrName;
         homepage = {
-          category = "Media & Downloads";
-          name = "Radarr";
+          inherit category;
+          name = radarrDisplayName;
           settings = {
-            description = "Movie Management";
+            description = radarrDescription;
             icon = "radarr";
             widget.type = "radarr";
           };
+        };
+        glance = {
+          inherit category;
+          description = radarrDescription;
+          name = radarrDisplayName;
+          id = radarrName;
+          icon = "di:radarr";
         };
       };
 
@@ -413,13 +469,20 @@ in {
         stack = stackName;
         traefik.name = bazarrName;
         homepage = {
-          category = "Media & Downloads";
-          name = "Bazarr";
+          inherit category;
+          name = bazarrDisplayName;
           settings = {
-            description = "Subtitle Management";
+            description = bazarrDescription;
             icon = "bazarr";
             widget.type = "bazarr";
           };
+        };
+        glance = {
+          inherit category;
+          description = bazarrDescription;
+          name = bazarrDisplayName;
+          id = bazarrName;
+          icon = "di:bazarr";
         };
       };
 
@@ -435,17 +498,24 @@ in {
         stack = stackName;
         traefik.name = prowlarrName;
         homepage = {
-          category = "Media & Downloads";
-          name = "Prowlarr";
+          inherit category;
+          name = prowlarrName;
           settings = {
-            description = "Indexer Management";
+            description = prolarrDescription;
             icon = "prowlarr";
             widget.type = "prowlarr";
           };
         };
+        glance = {
+          inherit category;
+          description = prolarrDescription;
+          name = prowlarrDisplayName;
+          id = prowlarrName;
+          icon = "di:prowlarr";
+        };
       };
 
-      flaresolverr = lib.mkIf cfg.flaresolverr.enable {
+      ${flaresolverrName} = lib.mkIf cfg.flaresolverr.enable {
         image = "ghcr.io/flaresolverr/flaresolverr:v3.4.1";
         volumes = [
           "${storage}/${prowlarrName}:/config"
@@ -458,12 +528,19 @@ in {
 
         stack = stackName;
         homepage = {
-          category = "Media & Downloads";
-          name = "Flaresolverr";
+          inherit category;
+          name = flaresolverrDisplayName;
           settings = {
+            description = flaresolverrDescription;
             icon = "flaresolverr";
-            description = "Cloudflare Protection Bypass";
           };
+        };
+        glance = {
+          inherit category;
+          description = flaresolverrDescription;
+          name = flaresolverrDisplayName;
+          id = flaresolverrName;
+          icon = "di:flaresolverr";
         };
       };
     };

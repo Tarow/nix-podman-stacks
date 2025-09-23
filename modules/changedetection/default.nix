@@ -59,6 +59,7 @@ in {
         glance = {
           inherit category;
           parent = name;
+          name = "Sockpuppetbrowser";
           icon = "di:chrome";
         };
       };

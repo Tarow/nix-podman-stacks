@@ -6,8 +6,12 @@
   name = "outline";
   dbName = "${name}-db";
   redisName = "${name}-redis";
-
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Collaborative Knowledge Base";
+  displayName = "Outline";
+
   storage = "${config.nps.storageBaseDir}/${name}";
 in {
   imports = import ../mkAliases.nix config lib name [name dbName];
@@ -157,12 +161,18 @@ in {
         port = 3000;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Outline";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Collaborative Knowledge Base";
+            inherit description;
             icon = "outline";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:outline";
         };
       };
 
@@ -177,6 +187,13 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "10s";
+        };
+
+        glance = {
+          parent = name;
+          name = "Redis";
+          icon = "di:redis";
+          inherit category;
         };
       };
 
@@ -199,6 +216,12 @@ in {
         };
 
         stack = name;
+        glance = {
+          parent = name;
+          name = "Postgres";
+          icon = "di:postgres";
+          inherit category;
+        };
       };
     };
   };

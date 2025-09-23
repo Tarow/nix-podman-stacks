@@ -5,6 +5,10 @@
 }: let
   name = "mazanoke";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Image Optimizer";
+  displayName = "Mazanoke";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -17,12 +21,18 @@ in {
       port = 80;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "Mazanoke";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Image Optimizer";
+          inherit description;
           icon = "mazanoke";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/mazanoke.webp";
       };
     };
   };

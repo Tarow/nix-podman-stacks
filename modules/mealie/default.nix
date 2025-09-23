@@ -6,6 +6,10 @@
   name = "mealie";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Recipe Manager";
+  displayName = "Mealie";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -103,13 +107,19 @@ in {
         port = 9000;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Mealie";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Recipe Manager";
+            inherit description;
             icon = "mealie";
             widget.type = "mealie";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:mealie";
         };
       };
     };

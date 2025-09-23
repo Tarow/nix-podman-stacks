@@ -10,6 +10,10 @@
   storage = "${config.nps.storageBaseDir}/${name}";
 
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Bookmark Everything";
+  displayName = "Karakeep";
 in {
   imports = import ../mkAliases.nix config lib name [
     name
@@ -142,13 +146,19 @@ in {
         port = 3000;
         traefik.name = name;
         homepage = {
-          category = "General";
-          name = "Karakeep";
+          inherit category;
+          name = displayName;
           settings = {
-            description = "Bookmark Everything";
+            inherit description;
             icon = "karakeep";
             widget.type = "karakeep";
           };
+        };
+        glance = {
+          inherit category description;
+          name = displayName;
+          id = name;
+          icon = "di:karakeep";
         };
       };
 
@@ -164,6 +174,12 @@ in {
         ];
 
         stack = name;
+        glance = {
+          inherit category;
+          name = "Chrome";
+          parent = name;
+          icon = "di:chrome";
+        };
       };
 
       ${meilisearchName} = {
@@ -177,6 +193,12 @@ in {
         volumes = ["${storage}/meilisearch:/meili_data"];
 
         stack = name;
+        glance = {
+          inherit category;
+          name = "Meilisearch";
+          parent = name;
+          icon = "di:meilisearch";
+        };
       };
     };
   };

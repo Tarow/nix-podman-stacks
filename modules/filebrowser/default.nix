@@ -7,6 +7,9 @@
   storage = "${config.nps.storageBaseDir}/${name}";
   externalStorage = config.nps.externalStorageBaseDir;
   cfg = config.nps.stacks.${name};
+
+  category = "General";
+  description = "Web-based File Manager";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -50,12 +53,16 @@ in {
       port = 80;
       traefik.name = name;
       homepage = {
-        category = "General";
-        name = "File Browser";
+        inherit category;
         settings = {
-          description = "Web-based File Manager";
+          inherit description;
           icon = "filebrowser";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:filebrowser";
       };
     };
   };

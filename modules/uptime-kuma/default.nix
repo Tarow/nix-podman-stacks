@@ -6,6 +6,10 @@
   name = "uptime-kuma";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+
+  category = "Monitoring";
+  description = "Uptime Monitoring";
+  displayName = "Uptime Kuma";
 in {
   imports = import ../mkAliases.nix config lib name [name];
   options.nps.stacks.${name}.enable = lib.mkEnableOption name;
@@ -29,13 +33,19 @@ in {
         subDomain = "uptime";
       };
       homepage = {
-        category = "Monitoring";
-        name = "Uptime Kuma";
+        inherit category;
+        name = displayName;
         settings = {
-          description = "Uptime Monitoring";
+          inherit description;
           icon = "uptime-kuma";
           widget.type = "uptimekuma";
         };
+      };
+      glance = {
+        inherit category description;
+        name = displayName;
+        id = name;
+        icon = "di:uptime-kuma";
       };
     };
   };
