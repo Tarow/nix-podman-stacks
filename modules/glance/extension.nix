@@ -50,7 +50,7 @@ in {
       ...
     }: {
       options.glance = lib.mkOption {
-        type = lib.types.submodule ({name, ...}: {
+        type = lib.types.submodule {
           freeformType = yaml.type;
           options = {
             category = lib.mkOption {
@@ -72,7 +72,7 @@ in {
               default = config.traefik.serviceUrl;
             };
           };
-        });
+        };
         default = {};
         description = ''
           Settings for the service.
