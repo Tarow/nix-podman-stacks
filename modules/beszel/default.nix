@@ -135,7 +135,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/henrygd/beszel/beszel:0.12.10";
+        image = "ghcr.io/henrygd/beszel/beszel:0.12.12";
         volumes =
           [
             "${storage}/data:/beszel_data"
@@ -172,7 +172,7 @@ in {
       };
 
       ${agentName} = {
-        image = "ghcr.io/henrygd/beszel/beszel-agent:0.12.10";
+        image = "ghcr.io/henrygd/beszel/beszel-agent:0.12.12";
         volumes = [
           "${storage}/beszel_socket:/beszel_socket"
         ];
