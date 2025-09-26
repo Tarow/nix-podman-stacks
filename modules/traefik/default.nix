@@ -282,7 +282,7 @@ in {
     };
 
     services.podman.containers.${name} = rec {
-      image = "docker.io/traefik:v3.5.2";
+      image = "docker.io/traefik:v3.5.3";
 
       socketActivation = [
         {
