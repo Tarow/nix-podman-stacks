@@ -321,7 +321,7 @@ in {
       # lldap_config.toml will be attemped which fails
 
       # renovate: versioning=loose
-      image = "ghcr.io/lldap/lldap:2025-09-22-alpine-rootless";
+      image = "ghcr.io/lldap/lldap:2025-09-28-alpine-rootless";
       user = config.nps.defaultUid;
       volumes =
         [
