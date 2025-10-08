@@ -51,7 +51,7 @@ in {
     services.podman.containers.${name} = let
       configPath = "/etc/sshwifty.conf.json";
     in {
-      image = "docker.io/niruix/sshwifty:0.4.0-beta-release";
+      image = "docker.io/niruix/sshwifty:0.4.1-beta-release";
       user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
       environment = {
         SSHWIFTY_CONFIG = lib.mkIf (cfg.settings != null) configPath;
