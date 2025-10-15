@@ -27,7 +27,7 @@ in {
     adminProvisioning = {
       enable = lib.mkOption {
         type = lib.types.bool;
-        default = true;
+        default = !cfg.oidc.enable;
         description = ''
           Whether to automatically create an admin user on the first run.
           If set to false, you will be prompted to create an admin user when visiting the web ui.
@@ -128,10 +128,20 @@ in {
           <https://www.authelia.com/integration/openid-connect/frequently-asked-questions/#client-secret>
         '';
       };
-      userGroup = lib.mkOption {
+      adminGroup = lib.mkOption {
         type = lib.types.str;
-        default = "${name}_user";
+        default = "${name}_admin";
         description = "Users of this group will be able to log in";
+      };
+      editorGroup = lib.mkOption {
+        type = lib.types.str;
+        default = "${name}_editor";
+        description = "Users of this group will be assigned the 'editor' role";
+      };
+      viewerGroup = lib.mkOption {
+        type = lib.types.str;
+        default = "${name}_viewer";
+        description = "Users of this group will assigned the 'viewer' role";
       };
     };
     db = {
@@ -172,7 +182,9 @@ in {
     });
 
     nps.stacks.lldap.bootstrap.groups = lib.mkIf cfg.oidc.enable {
-      ${cfg.oidc.userGroup} = {};
+      ${cfg.oidc.adminGroup} = {};
+      ${cfg.oidc.editorGroup} = {};
+      ${cfg.oidc.viewerGroup} = {};
     };
 
     nps.stacks.authelia = lib.mkIf cfg.oidc.enable {
@@ -180,7 +192,7 @@ in {
         client_name = "Rom Manager";
         client_secret = cfg.oidc.clientSecretHash;
         public = false;
-        authorization_policy = name;
+        authorization_policy = config.nps.stacks.authelia.defaultAllowPolicy;
         require_pkce = false;
         pkce_challenge_method = "";
         pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
@@ -197,19 +209,8 @@ in {
         "alt_emails"
         "preferred_username"
         "name"
+        "groups"
       ];
-
-      # RomM doesn't have any Group/Claim based RBAC yet, so we have to do in on Authelia level
-      # See <https://github.com/rommapp/romm/issues/2346>
-      settings.identity_providers.oidc.authorization_policies.${name} = {
-        default_policy = "deny";
-        rules = [
-          {
-            policy = config.nps.stacks.authelia.defaultAllowPolicy;
-            subject = "group:${cfg.oidc.userGroup}";
-          }
-        ];
-      };
     };
 
     services.podman.containers = {
@@ -249,6 +250,11 @@ in {
               OIDC_CLIENT_ID = oidcClient.client_id;
               OIDC_REDIRECT_URI = lib.elemAt oidcClient.redirect_uris 0;
               OIDC_SERVER_APPLICATION_URL = authelia.containers.authelia.traefik.serviceUrl;
+              OIDC_CLAIM_ROLES = "groups";
+              OIDC_ROLE_ADMIN = cfg.oidc.adminGroup;
+              OIDC_ROLE_EDITOR = cfg.oidc.editorGroup;
+              OIDC_ROLE_VIEWER = cfg.oidc.viewerGroup;
+              DISABLE_SETUP_WIZARD = true;
             }
           )
           // cfg.extraEnv;
