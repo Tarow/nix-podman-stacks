@@ -18,7 +18,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/dgtlmoon/changedetection.io:0.50.25";
+        image = "ghcr.io/dgtlmoon/changedetection.io:0.50.26";
         volumes = [
           "${storage}:/datastore"
         ];
