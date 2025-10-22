@@ -531,7 +531,7 @@ in {
         configDst = "/etc/prometheus/prometheus.yml";
       in
         lib.mkIf cfg.prometheus.enable {
-          image = "docker.io/prom/prometheus:v3.7.1";
+          image = "docker.io/prom/prometheus:v3.7.2";
           exec = "--config.file=${configDst}";
           user = config.nps.defaultUid;
           volumes =
