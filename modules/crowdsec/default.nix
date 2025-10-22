@@ -182,7 +182,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/crowdsecurity/crowdsec:v1.7.0";
+      image = "docker.io/crowdsecurity/crowdsec:v1.7.2";
       volumes =
         [
           "${storage}/db:/var/lib/crowdsec/data"
