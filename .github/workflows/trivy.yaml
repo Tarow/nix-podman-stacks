@@ -140,7 +140,7 @@ jobs:
 
       - name: Upload scan results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: trivy-${{ steps.safe-name.outputs.safe_name }}
           path: trivy-results
@@ -162,7 +162,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Download all scan results
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: all-results
           merge-multiple: true
