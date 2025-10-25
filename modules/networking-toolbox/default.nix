@@ -16,7 +16,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/lissy93/networking-toolbox:1.4.0";
+      image = "ghcr.io/lissy93/networking-toolbox:1.5.0";
       environment = {
         NODE_ENV = "production";
         PORT = 3000;
