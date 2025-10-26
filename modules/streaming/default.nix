@@ -487,7 +487,7 @@ in {
       };
 
       ${prowlarrName} = lib.mkIf cfg.prowlarr.enable {
-        image = "lscr.io/linuxserver/prowlarr:2.0.5";
+        image = "lscr.io/linuxserver/prowlarr:2.1.5";
         volumes = [
           "${storage}/${prowlarrName}:/config"
         ];
