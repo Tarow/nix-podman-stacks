@@ -156,7 +156,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/paperless-ngx/paperless-ngx:2.19.3";
+        image = "ghcr.io/paperless-ngx/paperless-ngx:2.19.4";
         dependsOnContainer = [
           dbName
           brokerName
