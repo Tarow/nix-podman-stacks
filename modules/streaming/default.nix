@@ -397,7 +397,7 @@ in {
         };
 
       ${sonarrName} = lib.mkIf cfg.sonarr.enable {
-        image = "lscr.io/linuxserver/sonarr:4.0.15";
+        image = "lscr.io/linuxserver/sonarr:4.0.16";
         volumes = [
           "${storage}/${sonarrName}:/config"
           "${mediaStorage}:/media"
