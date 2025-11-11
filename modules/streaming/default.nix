@@ -516,7 +516,7 @@ in {
       };
 
       ${flaresolverrName} = lib.mkIf cfg.flaresolverr.enable {
-        image = "ghcr.io/flaresolverr/flaresolverr:v3.4.4";
+        image = "ghcr.io/flaresolverr/flaresolverr:v3.4.5";
         volumes = [
           "${storage}/${prowlarrName}:/config"
         ];
