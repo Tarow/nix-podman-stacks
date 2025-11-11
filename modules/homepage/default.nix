@@ -188,7 +188,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/gethomepage/homepage:v1.6.1";
+      image = "ghcr.io/gethomepage/homepage:v1.7.0";
       volumes = [
         "${externalStorage}:/ext:ro"
         "${docker}:/app/config/docker.yaml"
