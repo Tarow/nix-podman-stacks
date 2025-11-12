@@ -56,7 +56,7 @@ in {
     services.podman.containers = {
       ${name} = {
         # renovate: versioning=regex:^(?<compatibility>.*)-(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)$
-        image = "docker.io/kimai/kimai2:apache-2.41.0";
+        image = "docker.io/kimai/kimai2:apache-2.42.0";
         volumes = [
           "${storage}/data:/opt/kimai/var/data"
           "${storage}/plugins:/opt/kimai/var/plugins"
