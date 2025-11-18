@@ -39,7 +39,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/filebrowser/filebrowser:v2.48.1-s6";
+      image = "docker.io/filebrowser/filebrowser:v2.48.2-s6";
       volumes =
         [
           "${storage}/database:/database"
