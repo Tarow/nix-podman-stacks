@@ -215,7 +215,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/rommapp/romm:4.4.0";
+        image = "ghcr.io/rommapp/romm:4.4.1";
         volumes = [
           "${storage}/resources:/romm/resources"
           "${storage}/redis_data:/redis-data"
