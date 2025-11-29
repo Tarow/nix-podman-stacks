@@ -18,7 +18,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = lib.mkIf cfg.enable {
-      image = "ghcr.io/flaresolverr/flaresolverr:v3.4.5";
+      image = "ghcr.io/flaresolverr/flaresolverr:v3.4.6";
       environment = {
         LOG_LEVEL = "info";
         LOG_HTML = false;
