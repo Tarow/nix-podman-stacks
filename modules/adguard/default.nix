@@ -17,7 +17,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "docker.io/adguard/adguardhome:v0.107.69";
+      image = "docker.io/adguard/adguardhome:v0.107.70";
       volumes = [
         "${storage}/work:/opt/adguardhome/work"
         "${storage}/conf:/opt/adguardhome/conf"
