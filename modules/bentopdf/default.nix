@@ -16,7 +16,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/alam00000/bentopdf:v1.10.1";
+      image = "ghcr.io/alam00000/bentopdf:v1.10.4";
 
       port = 8080;
       traefik.name = name;
