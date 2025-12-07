@@ -12,7 +12,8 @@
     else builtins.elemAt (builtins.match "([0-9]+):([0-9]+)" port) index;
 
   knownReverseProxys = ["traefik" "tsbridge"];
-  reverseProxyEnabled = lib.any (name: config.nps.stacks.${name}.enable) knownReverseProxys;
+  enabledReverseProxy = lib.findFirst (name: config.nps.stacks.${name}.enable) null knownReverseProxys;
+  reverseProxyEnabled = enabledReverseProxy != null;
   stackCfg = config.nps.reverseProxy;
 in {
   # Internal abstraction. Only one proxy implementation can set these options.
@@ -188,12 +189,22 @@ in {
         message = "More than one reverse proxy stack is enabled. Please enable only one of: ${lib.concatStringsSep ", " knownReverseProxys}";
       }
     ];
-    services.podman.networks.${stackCfg.network.name} = {
-      driver = "bridge";
-      subnet = stackCfg.network.subnet;
-      gateway = stackCfg.network.gateway;
-      extraConfig = {
-        Network.IPRange = stackCfg.network.ipRange;
+
+    services.podman = {
+      # For every container that we manage, add a NetworkAlias, so that connections to the reverse proxy are possible
+      # trough the internal podman network (no host-gateway required)
+      containers.${enabledReverseProxy}.extraConfig.Container.NetworkAlias =
+        config.services.podman.containers
+        |> lib.attrValues
+        |> lib.filter (c: c.traefik.name != null)
+        |> lib.map (c: c.reverseProxy.serviceHost);
+      networks.${stackCfg.network.name} = {
+        driver = "bridge";
+        subnet = stackCfg.network.subnet;
+        gateway = stackCfg.network.gateway;
+        extraConfig = {
+          Network.IPRange = stackCfg.network.ipRange;
+        };
       };
     };
   };

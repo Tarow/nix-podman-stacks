@@ -123,7 +123,10 @@ in {
               labels =
                 {
                   "tsbridge.enabled" = "true";
-                  "tsbridge.service.name" = reverseProxyCfg.serviceName;
+                  "tsbridge.service.name" =
+                    if reverseProxyCfg.serviceName != ""
+                    then reverseProxyCfg.serviceName
+                    else ''\"\"'';
                   "tsbridge.service.port" = containerPort;
                 }
                 // (lib.optionalAttrs tsbridgeCfg.whoisEnabled {

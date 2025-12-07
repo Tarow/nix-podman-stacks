@@ -292,13 +292,6 @@ in {
       network = lib.mkForce reverseProxyCfg.network.name;
 
       ip4 = reverseProxyCfg.ip4;
-      # For every container that we manage, add a NetworkAlias, so that connections to Traefik are possible
-      # trough the internal podman network (no host-gateway required)
-      extraConfig.Container.NetworkAlias =
-        config.services.podman.containers
-        |> lib.attrValues
-        |> lib.filter (c: c.traefik.name != null)
-        |> lib.map (c: c.reverseProxy.serviceHost);
 
       traefik.name = name;
       alloy.enable = true;
