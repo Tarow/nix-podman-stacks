@@ -113,7 +113,7 @@ in {
           config = let
             tsbridgeCfg = config.tsbridge;
             reverseProxyCfg = config.reverseProxy;
-            port = config.port;
+            port = config.reverseProxy.port;
 
             enableTsbridge = stackCfg.enable && reverseProxyCfg.serviceName != null;
             containerPort = utils.reverseProxy.getPort port 1;

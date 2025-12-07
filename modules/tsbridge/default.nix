@@ -104,6 +104,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     nps.reverseProxy = {
+      domain = cfg.tailnetDomain;
       ip4 = "10.81.0.2";
       network = {
         name = "tsbridge-proxy";
@@ -134,7 +135,7 @@ in {
       labels =
         {
           "tsbridge.tailscale.oauth_client_id_env" = "TSBRIDGE_OAUTH_CLIENT_ID";
-          "tsbridge.tailscale.oauth_client_secret_env" = "TS_OAUTH_CLIENT_SECRET";
+          "tsbridge.tailscale.oauth_client_secret_env" = "TSBRIDGE_OAUTH_CLIENT_SECRET";
           "tsbridge.tailscale.state_dir" = "/state";
         }
         // (lib.optionalAttrs (cfg.defaultTags != []) {

@@ -18,17 +18,10 @@ in {
           imports = [
             (lib.mkRenamedOptionModule ["port"] ["reverseProxy" "port"])
             (lib.mkRenamedOptionModule ["expose"] ["reverseProxy" "expose"])
-            (lib.mkRenamedOptionModule ["traefik" "subDomain"] ["reverseProxy" "serviceName"])
-            #(lib.mkRemovedOptionModule ["traefik" "serviceUrl"] "use reverseProxy.serviceUrl instead")
+            (lib.mkRenamedOptionModule ["traefik" "name"] ["reverseProxy" "serviceName"])
           ];
           options = with lib; {
             traefik = with lib; {
-              name = mkOption {
-                type = types.nullOr types.str;
-                default = null;
-                visible = false;
-                description = "Deprecated. Please use reverseProxy.serviceName instead.";
-              };
               middleware = mkOption {
                 type = types.attrsOf (
                   types.submodule {

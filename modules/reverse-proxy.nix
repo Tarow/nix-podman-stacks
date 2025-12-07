@@ -11,7 +11,7 @@
     then builtins.toString port
     else builtins.elemAt (builtins.match "([0-9]+):([0-9]+)" port) index;
 
-  knownReverseProxys = ["traefik"];
+  knownReverseProxys = ["traefik" "tsbridge"];
   reverseProxyEnabled = lib.any (name: config.nps.stacks.${name}.enable) knownReverseProxys;
   stackCfg = config.nps.reverseProxy;
 in {
@@ -61,7 +61,7 @@ in {
           ...
         }: let
           proxyCfg = config.reverseProxy;
-          port = config.port;
+          port = proxyCfg.port;
         in {
           options = with lib; {
             reverseProxy = with lib; {
@@ -99,8 +99,7 @@ in {
                 description = ''
                   The subdomain the service will be reachable as. Defaults to the container name. If set to null, the service will not be registered.
                 '';
-                default = name;
-                defaultText = "<<container_name>>";
+                default = null;
               };
               serviceAddressInternal = mkOption {
                 type = lib.types.str;
@@ -113,7 +112,7 @@ in {
                     then ":${p}"
                     else ""
                   );
-                defaultText = lib.literalExpression ''"''${containerName}''${containerCfg.port}"'';
+                defaultText = lib.literalExpression ''"''${containerName}:''${containerCfg.port}"'';
                 description = ''
                   The internal main address of the service. Can be used for internal communication
                   without going through the reverse proxy, when inside the same Podman network.
@@ -183,6 +182,12 @@ in {
   };
 
   config = lib.mkIf reverseProxyEnabled {
+    assertions = [
+      {
+        assertion = (lib.count (name: config.nps.stacks.${name}.enable) knownReverseProxys) <= 1;
+        message = "More than one reverse proxy stack is enabled. Please enable only one of: ${lib.concatStringsSep ", " knownReverseProxys}";
+      }
+    ];
     services.podman.networks.${stackCfg.network.name} = {
       driver = "bridge";
       subnet = stackCfg.network.subnet;
