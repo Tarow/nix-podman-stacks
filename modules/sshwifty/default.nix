@@ -64,8 +64,7 @@ in {
 
       port = 8182;
       traefik = {
-        name = "sshwifty";
-        subDomain = "ssh";
+        name = "ssh";
       };
       homepage = {
         inherit category;

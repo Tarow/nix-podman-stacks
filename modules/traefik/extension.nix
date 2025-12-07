@@ -6,14 +6,6 @@
 }: let
   utils = pkgs.callPackage ../utils.nix {inherit config;};
   stackCfg = config.nps.stacks.traefik;
-  reverseProxyCfg = config.nps.reverseProxy;
-
-  getPort = port: index:
-    if port == null
-    then null
-    else if (builtins.isInt port)
-    then builtins.toString port
-    else builtins.elemAt (builtins.match "([0-9]+):([0-9]+)" port) index;
 in {
   options.services.podman.containers = lib.mkOption {
     type = lib.types.attrsOf (
@@ -22,25 +14,14 @@ in {
           name,
           config,
           ...
-        }: let
-          traefikCfg = config.traefik;
-          reverseProxyCfg = config.reverseProxy;
-          port = config.port;
-        in {
+        }: {
           imports = [
             (lib.mkRenamedOptionModule ["port"] ["reverseProxy" "port"])
             (lib.mkRenamedOptionModule ["expose"] ["reverseProxy" "expose"])
-            (lib.mkRenamedOptionModule ["traefik" "subDomain"] ["reverseProxy" "serviceName"])
-            #(lib.mkRemovedOptionModule ["traefik" "serviceUrl"] "use reverseProxy.serviceUrl instead")
+            (lib.mkRenamedOptionModule ["traefik" "name"] ["reverseProxy" "serviceName"])
           ];
           options = with lib; {
             traefik = with lib; {
-              name = mkOption {
-                type = types.nullOr types.str;
-                default = null;
-                visible = false;
-                description = "Deprecated. Please use reverseProxy.serviceName instead.";
-              };
               middleware = mkOption {
                 type = types.attrsOf (
                   types.submodule {
@@ -70,8 +51,13 @@ in {
           };
 
           config = let
+            traefikCfg = config.traefik;
+            reverseProxyCfg = config.reverseProxy;
+            port = config.port;
+
             enableTraefik = stackCfg.enable && reverseProxyCfg.serviceName != null;
-            containerPort = getPort port 1;
+            containerPort = utils.reverseProxy.getPort port 1;
+
             enabledMiddlewares =
               traefikCfg.middleware
               |> lib.filterAttrs (_: v: v.enable)

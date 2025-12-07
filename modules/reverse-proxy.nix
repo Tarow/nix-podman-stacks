@@ -11,8 +11,9 @@
     then builtins.toString port
     else builtins.elemAt (builtins.match "([0-9]+):([0-9]+)" port) index;
 
-  knownReverseProxys = ["traefik"];
-  reverseProxyEnabled = lib.any (name: config.nps.stacks.${name}.enable) knownReverseProxys;
+  knownReverseProxys = ["traefik" "tsbridge"];
+  enabledReverseProxy = lib.findFirst (name: config.nps.stacks.${name}.enable) null knownReverseProxys;
+  reverseProxyEnabled = enabledReverseProxy != null;
   stackCfg = config.nps.reverseProxy;
 in {
   # Internal abstraction. Only one proxy implementation can set these options.
@@ -24,38 +25,30 @@ in {
     };
     ip4 = lib.options.mkOption {
       type = lib.types.str;
-      readOnly = true;
       visible = false;
       description = "IPv4 address of the reverse proxy container in the Podman bridge network";
-      default = "10.80.0.2";
     };
     network = {
       name = lib.options.mkOption {
         type = lib.types.str;
         description = "Network name for Podman bridge network.";
-        default = "reverse-proxy";
         visible = false;
       };
       subnet = lib.options.mkOption {
         type = lib.types.str;
-        readOnly = true;
         visible = false;
         description = "Subnet of the Podman bridge network";
-        default = "10.80.0.0/24";
       };
       gateway = lib.options.mkOption {
         type = lib.types.str;
-        readOnly = true;
         visible = false;
         description = "Gateway of the Podman bridge network";
-        default = "10.80.0.1";
       };
       ipRange = lib.options.mkOption {
         type = lib.types.str;
-        readOnly = true;
+
         visible = false;
         description = "IP-Range of the Podman bridge network";
-        default = "10.80.0.10-10.80.0.255";
       };
     };
   };
@@ -69,7 +62,7 @@ in {
           ...
         }: let
           proxyCfg = config.reverseProxy;
-          port = config.port;
+          port = proxyCfg.port;
         in {
           options = with lib; {
             reverseProxy = with lib; {
@@ -107,8 +100,7 @@ in {
                 description = ''
                   The subdomain the service will be reachable as. Defaults to the container name. If set to null, the service will not be registered.
                 '';
-                default = name;
-                defaultText = "<<container_name>>";
+                default = null;
               };
               serviceAddressInternal = mkOption {
                 type = lib.types.str;
@@ -121,7 +113,7 @@ in {
                     then ":${p}"
                     else ""
                   );
-                defaultText = lib.literalExpression ''"''${containerName}''${containerCfg.port}"'';
+                defaultText = lib.literalExpression ''"''${containerName}:''${containerCfg.port}"'';
                 description = ''
                   The internal main address of the service. Can be used for internal communication
                   without going through the reverse proxy, when inside the same Podman network.
@@ -191,12 +183,28 @@ in {
   };
 
   config = lib.mkIf reverseProxyEnabled {
-    services.podman.networks.${stackCfg.network.name} = {
-      driver = "bridge";
-      subnet = stackCfg.network.subnet;
-      gateway = stackCfg.network.gateway;
-      extraConfig = {
-        Network.IPRange = stackCfg.network.ipRange;
+    assertions = [
+      {
+        assertion = (lib.count (name: config.nps.stacks.${name}.enable) knownReverseProxys) <= 1;
+        message = "More than one reverse proxy stack is enabled. Please enable only one of: ${lib.concatStringsSep ", " knownReverseProxys}";
+      }
+    ];
+
+    services.podman = {
+      # For every container that we manage, add a NetworkAlias, so that connections to the reverse proxy are possible
+      # trough the internal podman network (no host-gateway required)
+      containers.${enabledReverseProxy}.extraConfig.Container.NetworkAlias =
+        config.services.podman.containers
+        |> lib.attrValues
+        |> lib.filter (c: c.traefik.name != null)
+        |> lib.map (c: c.reverseProxy.serviceHost);
+      networks.${stackCfg.network.name} = {
+        driver = "bridge";
+        subnet = stackCfg.network.subnet;
+        gateway = stackCfg.network.gateway;
+        extraConfig = {
+          Network.IPRange = stackCfg.network.ipRange;
+        };
       };
     };
   };

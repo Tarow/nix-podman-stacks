@@ -96,8 +96,7 @@ in {
 
       port = 8080;
       traefik = {
-        name = name;
-        subDomain = "";
+        name = "";
       };
 
       homepage = {

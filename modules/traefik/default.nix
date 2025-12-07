@@ -242,7 +242,16 @@ in {
       };
     };
 
-    nps.reverseProxy.network.name = "traefik-proxy";
+    nps.reverseProxy = {
+      ip4 = "10.80.0.2";
+      network = {
+        name = "traefik-proxy";
+        subnet = "10.80.0.0/24";
+        gateway = "10.80.0.1";
+        ipRange = "10.80.0.10-10.80.0.255";
+      };
+    };
+
     services.podman.containers.${name} = rec {
       image = "docker.io/traefik:v3.6.2";
 
@@ -281,14 +290,8 @@ in {
       # Traefik should only be in a single network and not be added to others by integations (e.g. socket-proxy)
       # Otherwise we lose the ability to assign static ip (only works with single bridge network)
       network = lib.mkForce reverseProxyCfg.network.name;
+
       ip4 = reverseProxyCfg.ip4;
-      # For every container that we manage, add a NetworkAlias, so that connections to Traefik are possible
-      # trough the internal podman network (no host-gateway required)
-      extraConfig.Container.NetworkAlias =
-        config.services.podman.containers
-        |> lib.attrValues
-        |> lib.filter (c: c.traefik.name != null)
-        |> lib.map (c: c.reverseProxy.serviceHost);
 
       traefik.name = name;
       alloy.enable = true;

@@ -10,4 +10,11 @@
     if lib.versionAtLeast config.home.version.release "25.11"
     then str
     else lib.replaceStrings [''"'' ''`''] [''\"'' ''\`''] str;
+
+  reverseProxy.getPort = port: index:
+    if port == null
+    then null
+    else if (builtins.isInt port)
+    then builtins.toString port
+    else builtins.elemAt (builtins.match "([0-9]+):([0-9]+)" port) index;
 }

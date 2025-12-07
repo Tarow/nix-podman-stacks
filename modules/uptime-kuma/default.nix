@@ -29,8 +29,7 @@ in {
 
       port = 3001;
       traefik = {
-        inherit name;
-        subDomain = "uptime";
+        name = "uptime";
       };
       homepage = {
         inherit category;

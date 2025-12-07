@@ -207,8 +207,7 @@ in {
 
       port = 3000;
       traefik = {
-        inherit name;
-        subDomain = "";
+        name = "";
       };
 
       glance = {

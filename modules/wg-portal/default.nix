@@ -204,8 +204,7 @@ in {
 
       port = 8888;
       traefik = {
-        name = name;
-        subDomain = "wg";
+        name = "wg";
       };
       homepage = {
         inherit category;
