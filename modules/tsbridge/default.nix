@@ -131,6 +131,7 @@ in {
       volumes = [
         "${storage}/state:/state"
       ];
+      ip4 = reverseProxyCfg.ip4;
 
       labels =
         {
