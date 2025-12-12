@@ -120,7 +120,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/karakeep-app/karakeep:0.29.1";
+        image = "ghcr.io/karakeep-app/karakeep:0.29.3";
         volumes = [
           "${storage}/data:/data"
         ];
