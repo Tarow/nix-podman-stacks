@@ -62,6 +62,13 @@ in {
         container = alloyName;
         subPath = alloyName;
       })
+      # Create the `podman-exporter.useSocketProxy` option
+      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {
+        stack = stackName;
+        container = podmanExporterName;
+        subPath = podmanExporterName;
+        targetLocation = "/var/run/podman/podman.sock";
+      })
     ]
     ++ import ../mkAliases.nix config lib stackName [
       grafanaName
@@ -564,10 +571,10 @@ in {
 
       ${podmanExporterName} = lib.mkIf cfg.podmanExporter.enable {
         image = "quay.io/navidys/prometheus-podman-exporter:v1.19.0";
-        volumes = [
-          "${config.nps.socketLocation}:/var/run/podman/podman.sock"
-        ];
-        environment.CONTAINER_HOST = "unix:///var/run/podman/podman.sock";
+        environment.CONTAINER_HOST =
+          if cfg.${podmanExporterName}.useSocketProxy
+          then config.nps.stacks.docker-socket-proxy.address
+          else "unix:///var/run/podman/podman.sock";
         user = config.nps.defaultUid;
         extraPodmanArgs = ["--security-opt=label=disable"];
 
