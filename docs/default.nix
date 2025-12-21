@@ -14,149 +14,85 @@
       self.homeModules.nps
     ];
   };
-  gitHubDeclaration = user: repo: branch: subpath: {
-    url = "https://github.com/${user}/${repo}/blob/${branch}/${subpath}";
-    name = "<${repo}/${subpath}>";
-  };
-
-  nixPodmanStacksPath = toString self;
-  hmPath = toString inputs.home-manager;
-  hasAnyLocPrefix = prefixes: loc:
-    lib.any (prefix: hasLocPrefix prefix loc) prefixes;
-  hasLocPrefix = prefix: loc: lib.lists.take (lib.length prefix) loc == prefix;
-
-  mkOptionsDoc = {
-    options ? eval.options,
-    wantPrefix ? [],
-    excludePrefix ? [],
-  }:
-    pkgs.nixosOptionsDoc {
-      documentType = "none";
-      warningsAreErrors = false;
-
-      inherit options;
-
-      transformOptions = option:
-        option
-        // {
-          visible =
-            option.visible
-            && option.loc
-            != [
-              "services"
-              "podman"
-              "containers"
-            ]
-            && (lib.hasPrefix nixPodmanStacksPath (toString option.declarations))
-            && (wantPrefix == [] || hasAnyLocPrefix wantPrefix option.loc)
-            && !(excludePrefix != [] && hasAnyLocPrefix excludePrefix option.loc);
-        }
-        // {
-          declarations =
-            map (
-              decl:
-                if lib.hasPrefix nixPodmanStacksPath (toString decl)
-                then
-                  gitHubDeclaration "tarow" "nix-podman-stacks" "main" (
-                    lib.removePrefix "/" (lib.removePrefix nixPodmanStacksPath (toString decl))
-                  )
-                else if lib.hasPrefix hmPath (toString decl)
-                then
-                  gitHubDeclaration "nix-community" "home-manager" "master" (
-                    lib.removePrefix "/" (lib.removePrefix hmPath (toString decl))
-                  )
-                else null
-            )
-            option.declarations
-            |> lib.filter (d: d != null);
-        };
-    };
-  settingsOptions = mkOptionsDoc {
-    wantPrefix = [["nps"]];
-    excludePrefix = [
-      [
-        "nps"
-        "stacks"
-      ]
-      ["nps" "containers"]
-    ];
-  };
-  containerOptions = mkOptionsDoc {
-    wantPrefix = [
-      [
-        "services"
-        "podman"
-      ]
-    ];
-  };
-
-  stackDocs = let
-    stackNames = lib.attrNames eval.options.nps.stacks;
-  in
-    stackNames
-    |> lib.map (
-      stack: (lib.nameValuePair stack (mkOptionsDoc {
-        wantPrefix = [
-          [
-            "nps"
-            "stacks"
-            stack
-          ]
-        ];
-      }))
-    )
-    |> lib.listToAttrs;
 
   filteredOptions = pkgs.nixosOptionsDoc {
     documentType = "none";
     warningsAreErrors = false;
     inherit (eval) options;
   };
+
+  stackNames = lib.attrNames eval.options.nps.stacks;
+
+  mkStackOptionsFile = stack: ''
+    cat > ./stacks/${stack}.md <<'EOF'
+    ---
+    title: ${stack}
+    ---
+
+    # {{ $frontmatter.title }}
+
+    <script setup>
+    import { data } from "../nps.data.ts";
+    import { RenderDocs } from "easy-nix-documentation";
+    </script>
+
+    ## Stack Options
+
+    <RenderDocs :options="data" :include="/nps\.stacks\.${stack}\.*/" />
+    EOF
+  '';
+
+  mkVitepressConfig = pkgs.writeText "vitepress-config.mts" ''
+    import { defineConfig } from "vitepress";
+
+    // https://vitepress.dev/reference/site-config
+    export default defineConfig({
+      title: "Nix Podman Stacks",
+      description: "",
+      // base: "/mnw/", // Manually pass with --base
+      themeConfig: {
+        // https://vitepress.dev/reference/default-theme-config
+        search: {
+          provider: "local",
+        },
+        sidebar: [
+          {
+            items: [
+              { text: "Home", link: "/index" },
+            ],
+          },
+          {
+            text: 'Options',
+            items: [
+              { text: "Stacks", link: "/options" },
+              ${lib.concatMapStringsSep "\n" (stackName: ''
+        { text: "${stackName}", link: "/stacks/${stackName}" },
+      '')
+      stackNames}
+            ],
+          },
+        ],
+
+        socialLinks: [
+          { icon: "github", link: "https://github.com/Tarow/nix-podman-stacks" },
+        ],
+
+        outline: {
+          level: "deep",
+        },
+      },
+      vite: {
+        ssr: {
+          noExternal: "easy-nix-documentation",
+        },
+      },
+    });
+
+  '';
 in {
   inherit (filteredOptions) optionsJSON;
-  book = pkgs.stdenv.mkDerivation {
-    pname = "nix-podman-stacks-docs-book";
-    version = "0.0.1";
-    src = self;
 
-    nativeBuildInputs = with pkgs; [
-      mdbook
-      mdbook-alerts
-      mdbook-linkcheck
-    ];
-
-    dontConfigure = true;
-    dontFixup = true;
-
-    buildPhase = ''
-      runHook preBuild
-      mkdir -p src/images
-
-      cp docs/mdbook/book.toml .
-      cp docs/mdbook/src/* src/
-      cp ${self}/README.md src/introduction.md
-      cp ${self}/images/* src/images/
-      cat ${settingsOptions.optionsCommonMark} >> src/settings-options.md
-      cat ${containerOptions.optionsCommonMark} >> src/container-options.md
-
-      # Generate a subpage for each stack
-      ${lib.concatMapAttrsStringSep "\n" (stack: opts: ''
-          cat ${opts.optionsCommonMark} > src/stack-${stack}-options.md
-          echo "  - [${stack}](./stack-${stack}-options.md)" >> src/SUMMARY.md
-        '')
-        stackDocs}
-      mdbook build
-      runHook postBuild
-    '';
-
-    installPhase = ''
-      runHook preInstall
-      mv book/html $out
-      runHook postInstall
-    '';
-  };
-
-  vitepress = pkgs.buildNpmPackage {
+  book = pkgs.buildNpmPackage {
     name = "nps-docs";
     src = ./vitepress;
 
@@ -170,6 +106,12 @@ in {
     # VitePress hangs if you don't pipe the output into a file
     buildPhase = ''
       runHook preBuild
+
+        mkdir .vitepress
+        cp ${mkVitepressConfig} .vitepress/config.mts
+
+        mkdir -p ./stacks
+        ${lib.concatMapStrings mkStackOptionsFile stackNames}
 
         local exit_status=0
         npm run build > build.log 2>&1 || {
@@ -186,6 +128,8 @@ in {
       runHook preInstall
 
       mv .vitepress/dist $out
+      mkdir -p $out/.vitepress
+      mv .vitepress/config.mts $out/.vitepress/config.mts
 
       runHook postInstall
     '';
