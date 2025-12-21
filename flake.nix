@@ -63,6 +63,7 @@
             system
             lib
             ;
+          inherit (self.packages.${system}) optionsJSON;
         };
       in
         docs

@@ -4,3 +4,5 @@ template/flake.lock
 *.out
 *.tmp
 *.log
+
+node_modules/

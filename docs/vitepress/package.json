@@ -1,0 +1,12 @@
+{
+  "name": "nps-docs",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build"
+  },
+  "devDependencies": {
+    "easy-nix-documentation": "^1.1.0",
+    "vitepress": "^1.6.4"
+  }
+}
