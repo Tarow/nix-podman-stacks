@@ -758,8 +758,8 @@ in {
 
       wg-easy = {
         enable = true;
+        adminPasswordFile = dummySecretFile;
         extraEnv = {
-          INIT_PASSWORD.fromFile = dummySecretFile;
           DISABLE_IPV6 = true;
         };
       };

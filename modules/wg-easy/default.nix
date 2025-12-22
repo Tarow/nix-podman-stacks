@@ -15,6 +15,25 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
+    adminUsername = lib.mkOption {
+      type = lib.types.str;
+      default = "admin";
+      description = ''
+        Admin username.
+
+        Only has an effect during initial setup.
+        See <https://wg-easy.github.io/wg-easy/latest/advanced/config/unattended-setup/>
+      '';
+    };
+    adminPasswordFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to the file containing the admin password.
+
+        Only has an effect during initial setup.
+        See <https://wg-easy.github.io/wg-easy/latest/advanced/config/unattended-setup/>
+      '';
+    };
     host = lib.mkOption {
       type = lib.types.str;
       description = ''
@@ -22,7 +41,7 @@ in {
         Will be used as the 'endpoint' when generating client configurations.
 
         Only has an effect during initial setup.
-        See <https://wg-easy.github.io/wg-easy/v15.1/advanced/config/unattended-setup/>
+        See <https://wg-easy.github.io/wg-easy/latest/advanced/config/unattended-setup/>
       '';
       default =
         if config.nps.stacks.traefik.enable
@@ -35,8 +54,9 @@ in {
       description = ''
         The port on which the Wireguard server will listen.
         Will be passed as INIT_PORT during initial setup.
+
         Only has an effect during initial setup.
-        See <https://wg-easy.github.io/wg-easy/v15.1/advanced/config/unattended-setup/>
+        See <https://wg-easy.github.io/wg-easy/latest/advanced/config/unattended-setup/>
       '';
       default = 51820;
     };
@@ -50,9 +70,6 @@ in {
         See <https://wg-easy.github.io/wg-easy/latest/advanced/config/unattended-setup/>
       '';
       example = {
-        INIT_PASSWORD = {
-          fromFile = "/run/secrets/wg_easy_admin_password";
-        };
         INIT_DNS = "1.1.1.1";
       };
     };
@@ -82,7 +99,8 @@ in {
       environment = {
         INIT_ENABLED = true;
         INIT_HOST = cfg.host;
-        INIT_USERNAME = "admin";
+        INIT_USERNAME = cfg.adminUsername;
+        INIT_PASSWORD.fromFile = cfg.adminPasswordFile;
         INIT_PORT = cfg.port;
         INIT_IPV4_CIDR = "172.20.0.0/24";
         INIT_IPV6_CIDR = "2001:0DB8::/32";

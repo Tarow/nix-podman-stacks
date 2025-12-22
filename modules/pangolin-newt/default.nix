@@ -38,7 +38,6 @@ in {
         NEWT_SECRET = {
           fromFile = "/run/secrets/secret_name";
         };
-        NEWT_METRICS_PROMETHEUS_ENABLED = "true";
         NEWT_ADMIN_ADDR = ":2112";
         LOG_LEVEL = "INFO";
       };
@@ -67,6 +66,9 @@ in {
       extraEnv =
         {
           DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
+        }
+        // lib.optionalAttrs cfg.enablePrometheusExport {
+          NEWT_METRICS_PROMETHEUS_ENABLED = true;
         }
         // cfg.extraEnv;
       port = 2112;

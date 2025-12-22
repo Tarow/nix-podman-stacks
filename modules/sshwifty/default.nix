@@ -5,7 +5,6 @@
   ...
 }: let
   name = "sshwifty";
-  storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
 
   category = "Network & Administration";
