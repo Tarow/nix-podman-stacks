@@ -22,7 +22,7 @@ The following two configurations are equivalent:
     ];
   };
 
-  # The above configuration can also be set by setting the `forwardAuth` container options.
+  # The above configuration can also be achieved by setting the `forwardAuth` container options.
   # The domain will be automatically infered and defaults to the serviceHost registered in Traefik.
   # If forwardAuth is enabled, the Authelia middleware will also be applied automatically
   nps.stacks.homepage.containers.homepage = {
@@ -30,9 +30,8 @@ The following two configurations are equivalent:
       enable = true;
       rules = [
         {
+          # For a full list of available rule option see <https://www.authelia.com/configuration/security/access-control/>
           policy = "two_factor";
-          # For a full list of available rule options
-          # See <https://www.authelia.com/configuration/security/access-control/>
         }
       ];
     };
