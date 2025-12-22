@@ -24,88 +24,128 @@
   stackNames = lib.attrNames eval.options.nps.stacks;
 
   mkStackOptionsFile = stack: ''
-    cat > ./stacks/${stack}.md <<'EOF'
-    ---
-    title: ${stack}
-    ---
+    echo "# ${stack}" > ./stacks/${stack}.md
 
-    # {{ $frontmatter.title }}
+    if [ -d "${self}/modules/${stack}" ]; then
+      cat ${self}/modules/${stack}/*.md >> ./stacks/${stack}.md
+    fi
 
+    cat >> ./stacks/${stack}.md <<'EOF'
     <script setup>
-    import { data } from "../nps.data.ts";
-    import { RenderDocs } from "easy-nix-documentation";
+      import { data } from "../nps.data.ts";
+      import { RenderDocs } from "easy-nix-documentation";
     </script>
 
     ## Stack Options
-
     <RenderDocs :options="data" :include="/nps\.stacks\.${stack}\.*/" />
     EOF
   '';
+  stackItems =
+    map (stack: {
+      text = stack;
+      link = "/stacks/${stack}";
+    })
+    stackNames;
+
+  vitepressConfig = builtins.toJSON {
+    title = "Nix Podman Stacks";
+
+    description = "";
+    # base = "/nps/";
+
+    themeConfig = {
+      sidebar = [
+        {
+          items = [
+            {
+              text = "Home";
+              link = "/index";
+            }
+            {
+              text = "Getting Started";
+              link = "/getting-started";
+            }
+          ];
+        }
+        {
+          text = "Options";
+          items = [
+            {
+              text = "Settings";
+              link = "/settings-options";
+            }
+            {
+              text = "Container Options";
+              link = "/container-options";
+            }
+            {
+              text = "Stacks";
+              collapsed = false;
+              items = stackItems;
+            }
+          ];
+        }
+        {
+          items = [
+            {
+              text = "Examples";
+              link = "/examples";
+            }
+          ];
+        }
+      ];
+
+      socialLinks = [
+        {
+          icon = "github";
+          link = "https://github.com/Tarow/nix-podman-stacks";
+        }
+      ];
+
+      outline = {
+        level = "deep";
+      };
+    };
+
+    vite = {
+      ssr = {
+        noExternal = "easy-nix-documentation";
+      };
+    };
+  };
 
   mkVitepressConfig = pkgs.writeText "vitepress-config.mts" ''
     import { defineConfig } from "vitepress";
-
+    import { pagefindPlugin } from 'vitepress-plugin-pagefind'
     // https://vitepress.dev/reference/site-config
+    const baseConfig = ${vitepressConfig};
+
     export default defineConfig({
-      title: "Nix Podman Stacks",
-      description: "",
-      // base: "/mnw/", // Manually pass with --base
-      themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
-        search: {
-          provider: "local",
-        },
-        sidebar: [
-          {
-            items: [
-              { text: "Home", link: "/index" },
-            ],
-          },
-          {
-            text: 'Options',
-            items: [
-              { text: "Stacks", link: "/options" },
-              ${lib.concatMapStringsSep "\n" (stackName: ''
-        { text: "${stackName}", link: "/stacks/${stackName}" },
-      '')
-      stackNames}
-            ],
-          },
-        ],
-
-        socialLinks: [
-          { icon: "github", link: "https://github.com/Tarow/nix-podman-stacks" },
-        ],
-
-        outline: {
-          level: "deep",
-        },
-      },
+      ...baseConfig,
       vite: {
-        ssr: {
-          noExternal: "easy-nix-documentation",
-        },
+        ...baseConfig.vite,
+        plugins: [pagefindPlugin()],
       },
     });
-
   '';
 in {
   inherit (filteredOptions) optionsJSON;
 
   book = pkgs.buildNpmPackage {
     name = "nps-docs";
-    src = ./vitepress;
+    src = ./book;
 
     npmDeps = pkgs.importNpmLock {
-      npmRoot = ./vitepress;
+      npmRoot = ./book;
     };
 
     inherit (pkgs.importNpmLock) npmConfigHook;
     env.NPS_OPTIONS_JSON = optionsJSON;
 
-    # VitePress hangs if you don't pipe the output into a file
     buildPhase = ''
       runHook preBuild
+
+        cp -r ${self}/images .
 
         mkdir .vitepress
         cp ${mkVitepressConfig} .vitepress/config.mts
@@ -113,6 +153,7 @@ in {
         mkdir -p ./stacks
         ${lib.concatMapStrings mkStackOptionsFile stackNames}
 
+        # VitePress hangs if you don't pipe the output into a file
         local exit_status=0
         npm run build > build.log 2>&1 || {
             exit_status=$?
@@ -128,8 +169,6 @@ in {
       runHook preInstall
 
       mv .vitepress/dist $out
-      mkdir -p $out/.vitepress
-      mv .vitepress/config.mts $out/.vitepress/config.mts
 
       runHook postInstall
     '';

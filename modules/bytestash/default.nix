@@ -15,6 +15,12 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
+    jwtSecretFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to the file containing the JWT secret.
+      '';
+    };
     extraEnv = lib.mkOption {
       type = (import ../types.nix lib).extraEnv;
       default = {};
@@ -25,10 +31,7 @@ in {
         See <https://github.com/jordan-dalby/ByteStash/wiki/FAQ#environment-variables>
       '';
       example = {
-        SOME_SECRET = {
-          fromFile = "/run/secrets/secret_name";
-        };
-        FOO = "bar";
+        DISABLE_ACCOUNTS = true;
       };
     };
   };
@@ -47,7 +50,11 @@ in {
         ALLOW_PASSWORD_CHANGES = true;
         DEBUG = false;
       };
-      extraEnv = cfg.extraEnv;
+      extraEnv =
+        {
+          JWT_SECRET.fromFile = cfg.jwtSecretFile;
+        }
+        // cfg.extraEnv;
 
       port = 5000;
       traefik.name = name;

@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  name = "ittools";
+  name = "it-tools";
   cfg = config.nps.stacks.${name};
 
   category = "General";

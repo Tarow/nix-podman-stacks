@@ -15,6 +15,15 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
+    secretKeyFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to the file containing the secret key. Must be a 64-character hex string.
+        Can be generated using `openssl rand -hex 32`
+
+        See <https://github.com/outline/outline/blob/main/.env.sample>
+      '';
+    };
     extraEnv = lib.mkOption {
       type = (import ../types.nix lib).extraEnv;
       default = {};
@@ -50,7 +59,11 @@ in {
         PORT = 3000;
         BASE_URL = config.services.podman.containers.${name}.traefik.serviceUrl;
       };
-      extraEnv = cfg.extraEnv;
+      extraEnv =
+        {
+          SECRET_KEY.fromFile = cfg.secretKeyFile;
+        }
+        // cfg.extraEnv;
 
       port = 3000;
       traefik.name = name;

@@ -27,7 +27,7 @@ in {
         For a full list of options, refer to the [Blocky documentation](https://0xerr0r.github.io/blocky/main/configuration/)
 
         By default, if Traefik is enabled, the module will automatically setup a DNS override
-        pointing the Traefik domain to your host IP.
+        pointing the Traefik domain (and all subdomains) to your host IP.
       '';
     };
     enableGrafanaDashboard = lib.mkEnableOption "Grafana Dashboard";

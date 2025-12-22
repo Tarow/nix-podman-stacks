@@ -8,5 +8,9 @@
   "devDependencies": {
     "easy-nix-documentation": "^1.1.0",
     "vitepress": "^1.6.4"
+  },
+  "dependencies": {
+    "pagefind": "^1.4.0",
+    "vitepress-plugin-pagefind": "^0.4.18"
   }
 }

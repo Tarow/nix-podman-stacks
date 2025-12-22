@@ -1,15 +1,15 @@
 <p align="center">
-   <img src="images/nix-podman-logo.png" alt="logo" width="130"/>
-<p>
+   <img src="./images/nix-podman-logo.png" alt="logo" width="130"/>
+</p>
 <p align="center">
    <a href="https://builtwithnix.org"><img src="https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a" alt="built with nix"></a>
-   <img src="https://github.com/tarow/nix-podman-stacks/actions/workflows/build.yaml/badge.svg" alt="Build">
+   <img src="https://github.com/tarow/nix-podman-stacks/actions/workflows/build.yaml/badge.svg" alt="Build"/>
    <a href="https://renovatebot.com">
-   <img src="https://img.shields.io/badge/renovate-enabled-brightgreen.svg" alt="Renovate"></a>
+   <img src="https://img.shields.io/badge/renovate-enabled-brightgreen.svg" alt="Renovate"/></a>
    <a href="https://tarow.github.io/nix-podman-stacks/book">
-   <img src="https://img.shields.io/static/v1?logo=mdbook&label=&message=Docs&color=grey" alt="📘 Docs"></a>
+   <img src="https://img.shields.io/static/v1?logo=mdbook&label=&message=Docs&color=grey" alt="📘 Docs"/></a>
    <a href="https://tarow.github.io/nix-podman-stacks/search">
-   <img src="https://img.shields.io/static/v1?logo=searxng&label=&message=Option%20Search&color=grey" alt="🔍 Option Search"></a>
+   <img src="https://img.shields.io/static/v1?logo=searxng&label=&message=Option%20Search&color=grey" alt="🔍 Option Search"/></a>
 </p>
 
 # Nix Podman Stacks
@@ -38,6 +38,7 @@ For managing secrets, projects such as [sops-nix](https://github.com/Mic92/sops-
 Simple example of how to enable Traefik (including LetsEncrypt certificates & Geoblocking), Paperless & Homepage:
 
 ```nix
+{config, ...}:
 {
   nps.stacks = {
     homepage.enable = true;
@@ -60,7 +61,7 @@ Services will be automatially added to Homepage and are available via the Traefi
 
 ## 📔 Option Documentation
 
-Refer to the [documentation](https://tarow.github.io/nix-podman-stacks/book) for a full list of available options.
+Refer to the [documentation](https://tarow.github.io/nix-podman-stacks/book) to get a started and see a list of available options.
 
 There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/search) to easily explore existing options.
 
@@ -156,61 +157,6 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/wireguard.svg" style="width:1em;height:1em;" /> [wg-easy](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/wg-easy/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/wireguard.svg" style="width:1em;height:1em;" /> [wg-portal](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/wg-portal/default.nix)
 - <img src="https://repository-images.githubusercontent.com/16027367/5e148d00-d9f9-11e9-8fa7-04b02283d9af" style="width:1em;height:1em;" /> [Yopass](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/yopass/default.nix)
-
-## ⚙️ Prerequisites
-
-- [Nix Installation](https://nixos.org/download/#nix-install-linux)
-- `net.ipv4.ip_unprivileged_port_start=0` or any other way of allowing non-root processes to bind to ports below 1024
-
-## 🚀 Setup
-
-If you already have an existing flake setup, add this projects flake as an input and include the flake output `homeModules.nps` in your Home Manager modules.
-
----
-
-If you don't use Nix yet, you can use the projects template to get started:
-
-```sh
-nix flake init --template github:Tarow/nix-podman-stacks
-```
-
-Make sure to go through the `flake.nix`, `stacks.nix` & `sops.nix` files and adapt options as needed.
-Also make sure to generate your own encryption age key and encrypt your secrets with it!
-
-To apply your configuration, run:
-
-```sh
-nix run home-manager -- switch --experimental-features "nix-command flakes pipe-operators" -b bak --flake .#myhost
-```
-
-The template includes an example configuration of the following setup:
-
-- Authelia as an OIDC provider with LLDAP as the user backend
-- Immich & Paperless with OIDC login pre-configured
-- Traefik as a reverse proxy including a Geoblocking middleware. Wildcard certificates will be fetched from Let's Encrypt (DNS Challenge).
-- CrowdSec including a Traefik middleware setup
-- Blocky as DNS proxy
-- Monitoring stack with Alloy, Loki, Grafana & Prometheus. Comes with Grafana dashboards for Traefik & Blocky
-- All services are added to the Homepage dashboard
-- Podman Socket Access through a read-only proxy
-- Secrets are provisioned by sops-nix
-
-A basic overview of the templates architecture will look like this:
-
-<p align="center">
-<img src="./images/template-overview.excalidraw.svg" width="512" alt="template-overview">
-</p>
-
-## 🔧 Customize Settings
-
-The Podman stacks are mostly opinionated and configured to work out of the box.
-Refer to [option documentation](https://tarow.github.io/nix-podman-stacks/book) or the source code of each module to see which options are exposed on stack level and can be modified.
-An example would be [Traefik](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/traefik/default.nix), which requires a domain to be set.
-Also it ships with preconfigured static and dynamic configurations, but allows you to extend or customize those.
-
-If the exposed options are not enough, you can always refer to the container definition directly by using the `nps.stacks.<stackname>.containers.<containername>` options.
-
-Refer to the [examples](https://github.com/Tarow/nix-podman-stacks/tree/main/examples) to see different use cases of setting and overriding options.
 
 ## 💡 Missing a Stack / Option / Integration ?
 

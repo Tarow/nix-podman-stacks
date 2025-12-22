@@ -5,11 +5,11 @@ hero:
   name: "Nix Podman Stacks"
   actions:
     - theme: brand
-      text: Usage
-      link: /usage
+      text: Getting Started
+      link: /getting-started
     - theme: brand
       text: Options
-      link: /options
+      link: /settings-options
     - theme: brand
       text: Examples
       link: /examples
@@ -18,4 +18,4 @@ hero:
       link: https://github.com/Tarow/nix-podman-stacks
 ---
 
-## About
+<!--@include: ./intro.md-->
