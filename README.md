@@ -6,7 +6,7 @@
    <img src="https://github.com/tarow/nix-podman-stacks/actions/workflows/build.yaml/badge.svg" alt="Build"/>
    <a href="https://renovatebot.com">
    <img src="https://img.shields.io/badge/renovate-enabled-brightgreen.svg" alt="Renovate"/></a>
-   <a href="https://tarow.github.io/nix-podman-stacks/book">
+   <a href="https://tarow.github.io/nix-podman-stacks/docs">
    <img src="https://img.shields.io/static/v1?logo=mdbook&label=&message=Docs&color=grey" alt="📘 Docs"/></a>
    <a href="https://tarow.github.io/nix-podman-stacks/search">
    <img src="https://img.shields.io/static/v1?logo=searxng&label=&message=Option%20Search&color=grey" alt="🔍 Option Search"/></a>
@@ -61,7 +61,7 @@ Services will be automatially added to Homepage and are available via the Traefi
 
 ## 📔 Option Documentation
 
-Refer to the [documentation](https://tarow.github.io/nix-podman-stacks/book) to get a started and see a list of available options.
+Refer to the [documentation](https://tarow.github.io/nix-podman-stacks/docs) to get a started and see a list of available options.
 
 There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/search) to easily explore existing options.
 

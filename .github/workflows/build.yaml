@@ -64,7 +64,7 @@ jobs:
         with:
           extra_nix_config: "experimental-features = nix-command flakes pipe-operators"
       - name: Build docs
-        run: nix build .#book -o result/book
+        run: nix build .#book -o result/docs
       - name: Build search
         run: nix build .#search -o result/search
       - name: Upload docs

@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build"
+    "build": "vitepress build --base /docs/"
   },
   "devDependencies": {
     "easy-nix-documentation": "^1.1.0",

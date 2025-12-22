@@ -51,7 +51,6 @@
     title = "Nix Podman Stacks";
 
     description = "";
-    # base = "/nps/";
 
     themeConfig = {
       sidebar = [
