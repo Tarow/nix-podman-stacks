@@ -12,7 +12,7 @@
     defaultSopsFile = ./secrets.yaml;
     defaultSopsFormat = "yaml";
 
-    # Path to your age key. Typically places at ~/.config/sops/age/keys.txt
+    # Path to your age key. Typically placed at ~/.config/sops/age/keys.txt
     age.keyFile = "${config.home.homeDirectory}/.config/nps-demo/keys.txt";
 
     # Make sure to declare all secrets here that are part of your
