@@ -96,17 +96,17 @@ in {
         "--sysctl=net.ipv6.conf.default.forwarding=1"
       ];
 
-      environment = {
-        INIT_ENABLED = true;
-        INIT_HOST = cfg.host;
-        INIT_USERNAME = cfg.adminUsername;
-        INIT_PASSWORD.fromFile = cfg.adminPasswordFile;
-        INIT_PORT = cfg.port;
-        INIT_IPV4_CIDR = "172.20.0.0/24";
-        INIT_IPV6_CIDR = "2001:0DB8::/32";
-      };
-
-      extraEnv = cfg.extraEnv;
+      extraEnv =
+        {
+          INIT_ENABLED = true;
+          INIT_HOST = cfg.host;
+          INIT_USERNAME = cfg.adminUsername;
+          INIT_PASSWORD.fromFile = cfg.adminPasswordFile;
+          INIT_PORT = cfg.port;
+          INIT_IPV4_CIDR = "172.20.0.0/24";
+          INIT_IPV6_CIDR = "2001:0DB8::/32";
+        }
+        // cfg.extraEnv;
 
       port = 51821;
       traefik = {

@@ -10,7 +10,7 @@
   description = "Developer Tools";
   displayName = "IT-Tools";
 in {
-  imports = import ../mkAliases.nix config lib name [name];
+  imports = import ../mkAliases.nix config lib name [name] ++ [(lib.mkRenamedOptionModule ["nps" "stacks" "ittools"] ["nps" "stacks" "it-tools"])];
 
   options.nps.stacks.${name}.enable = lib.mkEnableOption name;
 

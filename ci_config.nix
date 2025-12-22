@@ -382,7 +382,7 @@ in {
         dbPasswordFile = dummySecretFile;
       };
 
-      ittools.enable = true;
+      it-tools.enable = true;
 
       jotty = {
         enable = true;
