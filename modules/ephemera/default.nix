@@ -58,7 +58,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/orwellianepilogue/ephemera:1.4.1";
+      image = "ghcr.io/orwellianepilogue/ephemera:1.4.2";
       volumes = [
         "${storage}/data:/app/data"
         "${storage}/downloads:/app/downloads"
