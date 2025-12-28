@@ -35,7 +35,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/dani-garcia/vaultwarden:1.34.3";
+      image = "ghcr.io/dani-garcia/vaultwarden:1.35.0";
       volumes = [
         "${storage}/data:/data"
       ];
