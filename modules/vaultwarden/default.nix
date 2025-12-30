@@ -85,7 +85,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/dani-garcia/vaultwarden:1.35.0";
+      image = "ghcr.io/dani-garcia/vaultwarden:1.35.1";
       volumes = [
         "${storage}/data:/data"
       ];
