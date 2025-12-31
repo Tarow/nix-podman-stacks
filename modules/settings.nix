@@ -5,8 +5,58 @@
   ...
 }: let
   cfg = config.nps;
+
+  anyStackEnabled =
+    config.nps.stacks
+    |> lib.attrValues
+    |> lib.any (s: s.enable or false);
+
+  keepHostIdContainers = [
+    {
+      match = "docker.io/(postgres|mysql|mariadb):.*";
+      uid = 999;
+      gid = 999;
+    }
+    {
+      match = "docker.io/kimai/kimai2:.*";
+      uid = 32; # www-data
+      gid = 32;
+    }
+    {
+      enable = false; # Can't handle rootless startup due to chowns and port 80
+      match = "ghcr.io/danielbrendel/hortusfox-web:.*";
+      uid = 32; # www-data
+      gid = 32;
+    }
+    {
+      enable = false; # Can't handle rootless startup? https://github.com/nginx/docker-nginx/issues/524
+      match = "docker.io/ckulka/baikal:.*";
+      uid = 101; # nginx
+      gid = 101;
+    }
+    {
+      enable = false; # Causes podman to freeze completely. Long running chown process? https://github.com/containers/podman/issues/16830
+      match = "docker.n8n.io/n8nio/n8n:.*";
+      uid = 1000; # node (1000:1000)
+      gid = 1000;
+    }
+  ];
 in {
-  imports = [./extension.nix];
+  imports = [
+    ./extension.nix
+    {
+      # Add user-ns mapping to all "whitelisted" containers
+      options.services.podman.containers = lib.mkOption {
+        type = lib.types.attrsOf (
+          lib.types.submodule ({config, ...}: let
+            keepIdSetting = lib.findFirst (c: (c.enable or true) && (lib.match c.match config.image != null)) null keepHostIdContainers;
+          in {
+            extraConfig.Container.UserNS = lib.mkIf (cfg.preferHostIds && keepIdSetting != null) "keep-id:uid=${toString keepIdSetting.uid},gid=${toString keepIdSetting.gid}";
+          })
+        );
+      };
+    }
+  ];
 
   options.nps = {
     package = lib.mkPackageOption pkgs "podman" {};
@@ -102,37 +152,52 @@ in {
         The IPv4 address which will be used in case explicit bindings are required.
       '';
     };
+    preferHostIds = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to prefer host user mapping over subuid/subgids.
+
+        Some containers will always run with a certain UID/GID. Popular examples are Postgres, MySQL and MariaDB (999/999).
+        When running those containers with rootless Podman, files created within volumes will be owned by subuids/subgids.
+        While this is generally not a problem and might even be desired, it can cause issues for example in combination with NFS shares.
+
+        Enabling this option will cause the container user (e.g. 999) to be mapped to the host user. Files created by the container will then be
+        owned be the host user running the containers. This achieved by using `userns=keep-id:uid=<container-user>,gid=<container-group>`.
+
+        For more infos, see <https://docs.podman.io/en/stable/markdown/podman-run.1.html#userns-mode>
+
+        Be aware that this option is not supported for all containers that run as a fixed user.
+        As the userns setting will also change the init user a container is started as, it would break containers that require being started as root
+        to chown files etc. before dropping permissions.
+      '';
+    };
   };
-  config = let
-    anyStackEnabled =
-      config.nps.stacks
-      |> lib.attrValues
-      |> lib.any (s: s.enable or false);
-  in
-    lib.mkIf anyStackEnabled {
-      services.podman = {
-        enable = true;
-        package = cfg.package;
 
-        settings.containers.network.dns_bind_port = 1153;
-      };
+  config = lib.mkIf anyStackEnabled {
+    services.podman = {
+      enable = true;
+      package = cfg.package;
 
-      systemd.user.sockets.podman = lib.mkIf cfg.enableSocket {
-        Install.WantedBy = ["sockets.target"];
-        Socket = {
-          SocketMode = "0660";
-          ListenStream = cfg.socketLocation;
-        };
-      };
-      systemd.user.services.podman = lib.mkIf cfg.enableSocket {
-        Install.WantedBy = ["default.target"];
-        Service = {
-          Delegate = true;
-          Type = "exec";
-          KillMode = "process";
-          Environment = ["LOGGING=--log-level=info"];
-          ExecStart = "${lib.getExe cfg.package} $LOGGING system service";
-        };
+      settings.containers.network.dns_bind_port = 1153;
+    };
+
+    systemd.user.sockets.podman = lib.mkIf cfg.enableSocket {
+      Install.WantedBy = ["sockets.target"];
+      Socket = {
+        SocketMode = "0660";
+        ListenStream = cfg.socketLocation;
       };
     };
+    systemd.user.services.podman = lib.mkIf cfg.enableSocket {
+      Install.WantedBy = ["default.target"];
+      Service = {
+        Delegate = true;
+        Type = "exec";
+        KillMode = "process";
+        Environment = ["LOGGING=--log-level=info"];
+        ExecStart = "${lib.getExe cfg.package} $LOGGING system service";
+      };
+    };
+  };
 }
