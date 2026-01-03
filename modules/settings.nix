@@ -13,32 +13,27 @@
 
   keepHostIdContainers = [
     {
-      match = "docker.io/(postgres|mysql|mariadb):.*";
-      uid = 999;
-      gid = 999;
+      match = "docker.io/(postgres|mysql|mariadb|redis):.*";
+      userNS = "keep-id:uid=999,gid=999";
     }
     {
       match = "docker.io/kimai/kimai2:.*";
-      uid = 32; # www-data
-      gid = 32;
+      userNS = "keep-id:uid=33,gid=33";
     }
     {
-      enable = false; # Can't handle rootless startup due to chowns and port 80
       match = "ghcr.io/danielbrendel/hortusfox-web:.*";
-      uid = 32; # www-data
-      gid = 32;
+      user = "0:0";
+      userNS = "keep-id:uid=33,gid=33";
     }
     {
-      enable = false; # Can't handle rootless startup? https://github.com/nginx/docker-nginx/issues/524
       match = "docker.io/ckulka/baikal:.*";
-      uid = 101; # nginx
-      gid = 101;
+      user = "0:0";
+      userNS = "keep-id:uid=101,gid=101";
     }
     {
       enable = false; # Causes podman to freeze completely. Long running chown process? https://github.com/containers/podman/issues/16830
       match = "docker.n8n.io/n8nio/n8n:.*";
-      uid = 1000; # node (1000:1000)
-      gid = 1000;
+      userNS = "keep-id:uid=1000,gid=1000";
     }
   ];
 in {
@@ -48,11 +43,15 @@ in {
       # Add user-ns mapping to all "whitelisted" containers
       options.services.podman.containers = lib.mkOption {
         type = lib.types.attrsOf (
-          lib.types.submodule ({config, ...}: let
-            keepIdSetting = lib.findFirst (c: (c.enable or true) && (lib.match c.match config.image != null)) null keepHostIdContainers;
-          in {
-            extraConfig.Container.UserNS = lib.mkIf (cfg.preferHostIds && keepIdSetting != null) "keep-id:uid=${toString keepIdSetting.uid},gid=${toString keepIdSetting.gid}";
-          })
+          lib.types.submodule (
+            {config, ...}: let
+              settings = lib.findFirst (c: (c.enable or true) && (lib.match c.match config.image != null)) null keepHostIdContainers;
+            in
+              lib.mkIf (cfg.preferHostIds && settings != null) {
+                user = lib.mkIf ((settings.user or null) != null) settings.user;
+                extraConfig.Container.UserNS = lib.mkIf ((settings.userNS or null) != null) settings.userNS;
+              }
+          )
         );
       };
     }
