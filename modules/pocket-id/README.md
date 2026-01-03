@@ -4,7 +4,7 @@
 {config, ...}: {
   nps.stacks.pocketid = {
     enable = true;
-
+    encryptionKeyFile = config.sops.secrets."pocketid/encryptionKey".path;
     # Sync users from LLDAP
     ldap.enableSynchronisation = true;
 
