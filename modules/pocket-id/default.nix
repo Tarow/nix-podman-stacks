@@ -16,12 +16,11 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    env = lib.mkOption {
-      type = (options.services.podman.containers.type.getSubOptions []).environment.type;
-      default = {};
+    encryptionKeyFile = lib.mkOption {
+      type = lib.types.path;
       description = ''
-        Additional environment variables passed to the Pocket ID container
-        See <https://pocket-id.org/docs/configuration/environment-variables>
+        Path to the file containing the encryption key.
+        You can generate a secure random string using `openssl rand -base64 32`.
       '';
     };
     extraEnv = lib.mkOption {
@@ -40,6 +39,7 @@ in {
         FOO = "bar";
       };
     };
+
     traefikIntegration = {
       enable = lib.mkOption {
         type = lib.types.bool;
@@ -99,6 +99,13 @@ in {
           The password for the LDAP user that is used when connecting to the LDAP backend.
         '';
       };
+      adminGroup = lib.mkOption {
+        type = lib.types.str;
+        default = "${name}_admin";
+        description = ''
+          Users of this group will be assigned Pocket-ID admin rights.
+        '';
+      };
     };
   };
 
@@ -135,18 +142,21 @@ in {
       };
     };
 
+    nps.stacks.lldap.bootstrap.groups = lib.mkIf cfg.ldap.enableSynchronisation {
+      ${cfg.ldap.adminGroup} = {};
+    };
+
     services.podman.containers.${name} = {
       image = "ghcr.io/pocket-id/pocket-id:v2.0.2";
-      volumes =
-        [
-          "${storage}/data:/app/data"
-        ]
-        ++ lib.optional cfg.ldap.enableSynchronisation "${cfg.ldap.passwordFile}:/secrets/ldap_password";
+      volumes = [
+        "${storage}/data:/app/data"
+      ];
 
-      environment =
+      extraEnv =
         {
           PUID = config.nps.defaultUid;
           PGID = config.nps.defaultGid;
+          ENCRYPTION_KEY.fromFile = cfg.encryptionKeyFile;
           TRUST_PROXY = true;
           APP_URL = cfg.containers.${name}.traefik.serviceUrl;
           ANALYTICS_DISABLED = true;
@@ -169,10 +179,11 @@ in {
             LDAP_ATTRIBUTE_GROUP_MEMBER = "member";
             LDAP_ATTRIBUTE_GROUP_UNIQUE_IDENTIFIER = "uuid";
             LDAP_ATTRIBUTE_GROUP_NAME = "cn";
-            LDAP_BIND_PASSWORD_FILE = "/secrets/ldap_password";
+            LDAP_BIND_PASSWORD.fromFile = cfg.ldap.passwordFile;
+            LDAP_ADMIN_GROUP_NAME = cfg.ldap.adminGroup;
           }
-        );
-      extraEnv = cfg.extraEnv;
+        )
+        // cfg.extraEnv;
 
       port = 1411;
       traefik.name = name;
