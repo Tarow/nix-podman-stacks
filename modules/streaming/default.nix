@@ -447,7 +447,7 @@ in {
       };
 
       ${bazarrName} = lib.mkIf cfg.bazarr.enable {
-        image = "lscr.io/linuxserver/bazarr:1.5.3";
+        image = "lscr.io/linuxserver/bazarr:1.5.4";
         volumes = [
           "${storage}/${bazarrName}:/config"
           "${mediaStorage}:/media"
