@@ -34,13 +34,13 @@ in {
         Extra environment variables to set for the container.
         Variables can be either set directly or sourced from a file (e.g. for secrets).
 
-        See <https://github.com/OrwellianEpilogue/ephemera?tab=readme-ov-file#optional-environment-variables>
+        See <https://github.com/OrwellianEpilogue/ephemera?tab=readme-ov-file#environment-variables>
       '';
       example = {
-        AA_API_KEY = {
+        SOME_SECRET = {
           fromFile = "/run/secrets/secret_name";
         };
-        LG_BASE_URL = "https://some-gen.li";
+        SOME_VALUE = "some_value";
       };
     };
     flaresolverr.enable =
@@ -76,8 +76,7 @@ in {
         {
           PUID = config.nps.defaultUid;
           PGID = config.nps.defaultGid;
-          AA_BASE_URL = lib.mkDefault "https://annas-archive.org";
-          LG_BASE_URL = lib.mkDefault "https://libgen.bz";
+          BASE_URL = cfg.containers.${name}.traefik.serviceUrl;
         }
         // lib.optionalAttrs cfg.flaresolverr.enable {
           FLARESOLVERR_URL = "http://${config.nps.containers.flaresolverr.traefik.serviceAddressInternal}";
