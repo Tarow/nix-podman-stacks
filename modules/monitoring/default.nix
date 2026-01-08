@@ -488,7 +488,7 @@ in {
         configDst = "/etc/alloy/config.alloy";
       in
         lib.mkIf cfg.alloy.enable {
-          image = "docker.io/grafana/alloy:v1.12.1";
+          image = "docker.io/grafana/alloy:v1.12.2";
           volumes = [
             "${cfg.alloy.config}:${configDst}"
           ];
