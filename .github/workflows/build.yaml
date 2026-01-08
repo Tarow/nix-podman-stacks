@@ -32,7 +32,7 @@ jobs:
         with:
           extra_nix_config: "experimental-features = nix-command flakes pipe-operators"
       - name: Restore and cache Nix store
-        uses: nix-community/cache-nix-action@v6
+        uses: nix-community/cache-nix-action@v7
         with:
           primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
