@@ -62,7 +62,7 @@ in {
       port = 8084;
       ingestDir = "/books";
     in {
-      image = "ghcr.io/calibrain/shelfmark-lite:v1.0.0";
+      image = "ghcr.io/calibrain/shelfmark-lite:v1.0.1";
       environment = {
         FLASK_PORT = port;
         INGEST_DIR = ingestDir;
