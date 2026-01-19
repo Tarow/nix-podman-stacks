@@ -564,7 +564,7 @@ in {
           '';
         in
           lib.mkIf cfg.jellyfin.enable {
-            image = "lscr.io/linuxserver/jellyfin:10.11.5";
+            image = "lscr.io/linuxserver/jellyfin:10.11.6";
             volumes =
               [
                 "${storage}/${jellyfinName}:/config"
