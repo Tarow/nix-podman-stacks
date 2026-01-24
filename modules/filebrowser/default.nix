@@ -32,7 +32,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "docker.io/filebrowser/filebrowser:v2.55.0-s6";
+      image = "docker.io/filebrowser/filebrowser:v2.56.0-s6";
       volumes =
         [
           "${storage}/database:/database"
