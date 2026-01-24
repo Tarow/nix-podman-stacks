@@ -45,7 +45,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/home-assistant/home-assistant:2026.1.2";
+      image = "ghcr.io/home-assistant/home-assistant:2026.1.3";
       volumes =
         [
           "${storage}/config:/config"
