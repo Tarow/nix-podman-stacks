@@ -19,7 +19,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/arabcoders/watchstate:v1.0.5";
+      image = "ghcr.io/arabcoders/watchstate:v1.0.6";
       user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
       volumes = [
         "${storage}/data:/config"
