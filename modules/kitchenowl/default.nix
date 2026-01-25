@@ -94,7 +94,7 @@ in {
 
     services.podman.containers = {
       ${frontendName} = {
-        image = "docker.io/tombursch/kitchenowl-web:v0.7.5";
+        image = "docker.io/tombursch/kitchenowl-web:v0.7.6";
         environment.BACK_URL = "${backendName}:5000";
 
         stack = stackName;
@@ -111,7 +111,7 @@ in {
       };
 
       ${backendName} = {
-        image = "docker.io/tombursch/kitchenowl-backend:v0.7.5";
+        image = "docker.io/tombursch/kitchenowl-backend:v0.7.6";
         volumes = [
           "${storage}/data:/data"
         ];
