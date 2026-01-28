@@ -504,7 +504,7 @@ in {
         };
 
         ${quiName} = lib.mkIf cfg.qui.enable {
-          image = "ghcr.io/autobrr/qui:v1.13.0";
+          image = "ghcr.io/autobrr/qui:v1.13.1";
           volumes =
             [
               "${storage}/${quiName}:/config"
