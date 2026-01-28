@@ -124,7 +124,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/outlinewiki/outline:1.3.0";
+        image = "docker.io/outlinewiki/outline:1.4.0";
         volumes = ["${storage}/data:/var/lib/outline/data"];
         extraEnv = let
           utils = import ../utils.nix {inherit lib config;};
