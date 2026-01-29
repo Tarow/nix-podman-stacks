@@ -649,7 +649,7 @@ in {
         };
 
         ${profilarrName} = lib.mkIf cfg.profilarr.enable {
-          image = "docker.io/santiagosayshey/profilarr:v1.1.3";
+          image = "docker.io/santiagosayshey/profilarr:v1.1.4";
           volumes = [
             "${storage}/${profilarrName}/config:/config"
           ];
