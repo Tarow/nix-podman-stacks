@@ -90,7 +90,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/tandoorrecipes/recipes:2.4.0";
+        image = "ghcr.io/tandoorrecipes/recipes:2.4.1";
         volumes = [
           "${storage}/staticfiles:/opt/recipes/staticfiles"
           "${storage}/mediafiles:/opt/recipes/mediafiles"
