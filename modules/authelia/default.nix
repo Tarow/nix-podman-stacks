@@ -29,7 +29,7 @@
   container = cfg.containers.${name};
   lldap = config.nps.stacks.lldap;
 
-  mkClientSecretEnvName = clientName: "OIDC_CLIENT_SECRET_HASH_${lib.toUpper clientName}";
+  mkClientSecretEnvName = clientName: "OIDC_CLIENT_SECRET_HASH_${lib.toUpper (lib.replaceStrings ["-"] ["_"] clientName)}";
 
   fromFileClientSecrets =
     cfg.oidc.clients

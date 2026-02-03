@@ -59,6 +59,7 @@ let
     pangolin-newt = ./pangolin-newt;
     paperless = ./paperless;
     papra = ./papra;
+    reactive-resume = ./reactive-resume;
     romm = ./romm;
     searxng = ./searxng;
     shelfmark = ./shelfmark;
