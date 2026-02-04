@@ -11,3 +11,9 @@
   };
 }
 ```
+
+## About
+
+- Self-hosted audiobook and podcast server
+- [Github](https://github.com/advplyr/audiobookshelf)
+- [Website](https://www.audiobookshelf.org/)

@@ -11,3 +11,9 @@
   };
 }
 ```
+
+## About
+
+- Personal subscription tracker
+- [Github](https://github.com/ellite/Wallos)
+- [Website](https://wallosapp.com/)

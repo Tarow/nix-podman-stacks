@@ -13,3 +13,9 @@
   };
 }
 ```
+
+## About
+
+- News feed agregator
+- [Github](https://github.com/FreshRSS/FreshRSS)
+- [Website](https://freshrss.org/)

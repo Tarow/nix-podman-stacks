@@ -24,3 +24,9 @@
   };
 }
 ```
+
+## About
+
+- Collaborative plant management and tracking system
+- [Github](https://github.com/danielbrendel/hortusfox-web)
+- [Website](https://www.hortusfox.com/)

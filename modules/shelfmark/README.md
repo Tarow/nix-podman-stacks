@@ -8,3 +8,8 @@
   };
 }
 ```
+
+## About
+
+- Unified web interface for searching and aggregating books and audiobook downloads
+- [Github](https://github.com/calibrain/shelfmark)

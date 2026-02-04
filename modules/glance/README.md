@@ -29,3 +29,8 @@
   };
 }
 ```
+
+## About
+
+- Highly customizable dashboard
+- [Github](https://github.com/glanceapp/glance)

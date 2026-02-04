@@ -13,3 +13,9 @@
   };
 }
 ```
+
+## About
+
+- Lightweight server monitoring platform
+- [Github](https://github.com/henrygd/beszel)
+- [Website](https://beszel.dev/)

@@ -19,3 +19,8 @@
   };
 }
 ```
+
+## About
+
+- To-do app
+- [Github](https://github.com/go-vikunja/vikunja)

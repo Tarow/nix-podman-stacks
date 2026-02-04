@@ -20,3 +20,9 @@
   };
 }
 ```
+
+## About
+
+- Bookmark-everything app
+- [Github](https://github.com/karakeep-app/karakeep)
+- [Website](https://karakeep.app/)

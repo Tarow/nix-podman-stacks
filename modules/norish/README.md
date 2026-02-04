@@ -15,3 +15,8 @@
   };
 }
 ```
+
+## About
+
+- Shared recipe app
+- [Github](https://github.com/norish-recipes/norish)

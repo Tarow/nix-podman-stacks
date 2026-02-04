@@ -11,3 +11,10 @@
   };
 }
 ```
+
+## About
+
+- This service is in maintence mode, it's reccommended to use -quantum version!!!
+- A file browser for your server
+- [Github](https://github.com/filebrowser/filebrowser)
+- [Website](https://filebrowser.org/)

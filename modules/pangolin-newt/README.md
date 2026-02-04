@@ -17,3 +17,8 @@
   };
 }
 ```
+
+## About
+
+- User space WireGuard tunnel client and TCP/UDP proxy, designed to securely expose private resources controlled by Pangolin
+- [Github](https://github.com/fosrl/newt)

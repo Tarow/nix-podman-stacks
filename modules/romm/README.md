@@ -26,3 +26,9 @@
   };
 }
 ```
+
+## About
+
+- Retro games ROM manager
+- [Github](https://github.com/rommapp/romm)
+- [Website](https://romm.app/)

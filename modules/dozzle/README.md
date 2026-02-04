@@ -5,3 +5,9 @@
   nps.stacks.dozzle.enable = true;
 }
 ```
+
+## About
+
+- lightweight, real-time log viewer for containers
+- [Github](https://github.com/amir20/dozzle)
+- [Website](https://dozzle.dev/)

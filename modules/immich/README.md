@@ -19,3 +19,9 @@
   };
 }
 ```
+
+## About
+
+- Photo and video management solution
+- [Github](https://github.com/immich-app/immich)
+- [Website](https://immich.app/)

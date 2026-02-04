@@ -12,3 +12,8 @@
   };
 }
 ```
+
+## About
+
+- Self hosted password manager compatible with bitwarden
+- [Github](https://github.com/dani-garcia/vaultwarden)

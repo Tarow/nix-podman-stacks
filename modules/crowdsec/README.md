@@ -15,3 +15,9 @@
   };
 }
 ```
+
+## About
+
+- Crowdsourced server detection and protection against malicious IPs
+- [Github](https://github.com/crowdsecurity/crowdsec)
+- [Website](https://www.crowdsec.net/)

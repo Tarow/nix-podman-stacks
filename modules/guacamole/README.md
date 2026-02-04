@@ -38,3 +38,9 @@
   };
 }
 ```
+
+## About
+
+- Clientless remote desktop gateway
+- [Github](https://github.com/apache/guacamole-client)
+- [Website](https://freshrss.org/)

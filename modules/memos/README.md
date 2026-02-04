@@ -12,3 +12,9 @@
   };
 }
 ```
+
+## About
+
+- Note-taking service
+- [Github](https://github.com/usememos/memos)
+- [Website](https://usememos.com/)

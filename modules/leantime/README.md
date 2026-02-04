@@ -16,3 +16,9 @@
   };
 }
 ```
+
+## About
+
+- Goals focused project management system
+- [Github](https://github.com/Leantime/leantime)
+- [Website](https://leantime.io/)

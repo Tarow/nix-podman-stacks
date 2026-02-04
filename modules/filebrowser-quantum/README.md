@@ -23,3 +23,9 @@
   };
 }
 ```
+
+## About
+
+- A file browser for your server
+- [Github](https://github.com/gtsteffaniak/filebrowser)
+- [Website](https://filebrowserquantum.com/en/)

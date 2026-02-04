@@ -17,3 +17,9 @@
   };
 }
 ```
+
+## About
+
+- App designed to help you organize tasks and chores effectively
+- [Github](https://github.com/donetick/donetick)
+- [Website](https://donetick.com/)

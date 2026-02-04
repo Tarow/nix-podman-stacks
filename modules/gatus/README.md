@@ -29,3 +29,8 @@
   };
 }
 ```
+
+## About
+
+- Health dashboard for containers
+- [Github](https://github.com/TwiN/gatus)

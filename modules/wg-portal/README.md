@@ -25,3 +25,9 @@
   };
 }
 ```
+
+## About
+
+- GUI to manage your WireGuard peers and interfaces
+- [Github](https://github.com/h44z/wg-portal)
+- [Website](https://wgportal.org/latest/)

@@ -12,3 +12,9 @@
   };
 }
 ```
+
+## About
+
+- Text and file sharing pastebin
+- [Github](https://github.com/szabodanika/microbin)
+- [Website](https://microbin.eu/)

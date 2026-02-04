@@ -12,3 +12,9 @@
   };
 }
 ```
+
+## About
+
+- Minimalist Map tracker and Trip planner
+- [Github](https://github.com/itskovacs/trip)
+- [Website](https://itskovacs-trip.netlify.app/)

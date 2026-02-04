@@ -13,3 +13,9 @@
   };
 }
 ```
+
+## About
+
+- Minimalistic document archiving platform. 
+- [Github](https://github.com/papra-hq/papra)
+- [Website](https://papra.app/en/)

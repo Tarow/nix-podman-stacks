@@ -8,3 +8,9 @@
   };
 }
 ```
+
+## About
+
+- Self-hosted meta-search engine
+- [Github](https://github.com/searxng/searxng)
+- [Website](https://docs.searxng.org/)

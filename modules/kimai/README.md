@@ -14,3 +14,9 @@
   };
 }
 ```
+
+## About
+
+- Time tracking application
+- [Github](https://github.com/kimai/kimai)
+- [Website](https://www.kimai.org/)

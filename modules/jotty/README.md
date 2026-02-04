@@ -12,3 +12,9 @@
   };
 }
 ```
+
+## About
+
+- App for checklists and notes
+- [Github](https://github.com/fccview/jotty)
+- [Website](https://jotty.page/)

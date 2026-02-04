@@ -76,3 +76,9 @@
   };
 }
 ```
+
+## About
+
+- Self-hosted Git server 
+- [Forgejo](https://codeberg.org/forgejo/forgejo)
+- [Website](https://forgejo.org/)

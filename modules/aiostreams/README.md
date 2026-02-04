@@ -11,3 +11,9 @@
   };
 }
 ```
+
+## About
+
+- Stremio meta addon
+- [Github](https://github.com/Viren070/aiostreams)
+- [Website](https://aiostreams.elfhosted.com/stremio/configure)

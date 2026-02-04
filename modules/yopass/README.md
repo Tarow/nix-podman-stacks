@@ -5,3 +5,9 @@
   nps.stacks.yopass.enable = true;
 }
 ```
+
+## About
+
+- Project for sharing secrets
+- [Github](https://github.com/jhaals/yopass)
+- [Website](https://yopass.se/)
