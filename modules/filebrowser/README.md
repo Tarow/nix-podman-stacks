@@ -1,3 +1,11 @@
+A file browser for your server
+
+- [Github](https://github.com/filebrowser/filebrowser)
+- [Website](https://filebrowser.org/)
+
+> [!WARNING]
+> This service is in maintence mode, it's recommended to use -quantum version
+
 ## Example
 
 ```nix
@@ -11,10 +19,3 @@
   };
 }
 ```
-
-## About
-
-- This service is in maintence mode, it's reccommended to use -quantum version!!!
-- A file browser for your server
-- [Github](https://github.com/filebrowser/filebrowser)
-- [Website](https://filebrowser.org/)

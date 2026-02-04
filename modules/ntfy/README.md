@@ -1,3 +1,8 @@
+Notification service
+
+- [Github](https://github.com/binwiederhier/ntfy)
+- [Website](https://ntfy.sh/)
+
 ## Examples
 
 ### Simple
@@ -32,9 +37,3 @@
   };
 }
 ```
-
-## About
-
-- Notification service
-- [Github](https://github.com/binwiederhier/ntfy)
-- [Website](https://ntfy.sh/)

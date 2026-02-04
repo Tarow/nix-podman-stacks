@@ -1,3 +1,8 @@
+Modern HTTP reverse proxy
+
+- [Github](https://github.com/traefik/traefik)
+- [Website](https://traefik.io/)
+
 ## Examples
 
 ### Simple (Cloudflare)
@@ -48,9 +53,3 @@
   };
 }
 ```
-
-## About
-
-- Modern HTTP reverse proxy 
-- [Github](https://github.com/traefik/traefik)
-- [Website](https://traefik.io/)

@@ -1,4 +1,32 @@
-## Overview
+Full streaming and automation stack containing:
+
+- Gluetun: VPN client for containers
+  - [Github](https://github.com/qdm12/gluetun)
+  - [Website](https://github.com/qdm12/gluetun-wiki)
+- qBittorrent: BitTorrent client
+  - [Github](https://github.com/qbittorrent/qBittorrent)
+  - [Website](https://www.qbittorrent.org)
+- Sonarr: TV series PVR (automated episode downloads)
+  - [Github](https://github.com/Sonarr/Sonarr)
+  - [Website](https://sonarr.tv)
+- Radarr: Movie manager/automator
+  - [Github](https://github.com/Radarr/Radarr)
+  - [Website](https://radarr.video)
+- Bazarr: Subtitle downloader for Sonarr/Radarr
+  - [Github](https://github.com/morpheus65535/bazarr)
+  - [Website](https://www.bazarr.media)
+- Prowlarr: Indexer manager / proxy for the \*arr apps
+  - [Github](https://github.com/Prowlarr/Prowlarr)
+  - [Website](https://prowlarr.com)
+- Seerr: Media request/management UI
+  - [Github](https://github.com/seerr-team/seerr)
+  - [Website](https://seerr.dev)
+- qui: Optional companion web service
+  - [Github](https://github.com/autobrr/qui)
+  - [Website](https://getqui.com)
+- Profilarr: Optional companion/metadata tool
+  - [Github](https://github.com/Dictionarry-Hub/profilarr)
+  - [Website](https://dictionarry.dev/)
 
 By default, the following services are enabled:
 

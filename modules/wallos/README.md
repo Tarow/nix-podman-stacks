@@ -1,3 +1,8 @@
+Personal subscription tracker
+
+- [Github](https://github.com/ellite/Wallos)
+- [Website](https://wallosapp.com/)
+
 ## Example
 
 ```nix
@@ -11,9 +16,3 @@
   };
 }
 ```
-
-## About
-
-- Personal subscription tracker
-- [Github](https://github.com/ellite/Wallos)
-- [Website](https://wallosapp.com/)

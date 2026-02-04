@@ -1,3 +1,23 @@
+Full monitoring and alerting stack containing:
+
+- Alloy: Log and metric collector
+  - [Github](https://github.com/grafana/alloy)
+  - [Website](https://grafana.com/docs/alloy/latest/)
+- Loki: Log aggregation
+  - [Github](https://github.com/grafana/loki)
+  - [Website](https://grafana.com/oss/loki/)
+- Grafana: Query and visualize metrics
+  - [Github](https://github.com/grafana/grafana)
+  - [Website](https://grafana.com/)
+- Prometheus: Metric collection
+  - [Github](https://github.com/prometheus/prometheus)
+  - [Website](https://prometheus.io/)
+- AlertManager: Sending alerts
+  - [Github](https://github.com/prometheus/alertmanager)
+  - [Website](https://prometheus.io/docs/alerting/latest/alertmanager/)
+- AlertManager-ntfy: Forward alerts to ntfy
+  - [Github](https://github.com/alexbakker/alertmanager-ntfy)
+
 ## Examples
 
 ### Simple

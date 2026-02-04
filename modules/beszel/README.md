@@ -1,3 +1,8 @@
+Lightweight server monitoring platform
+
+- [Github](https://github.com/henrygd/beszel)
+- [Website](https://beszel.dev/)
+
 ## Example
 
 ```nix
@@ -13,9 +18,3 @@
   };
 }
 ```
-
-## About
-
-- Lightweight server monitoring platform
-- [Github](https://github.com/henrygd/beszel)
-- [Website](https://beszel.dev/)

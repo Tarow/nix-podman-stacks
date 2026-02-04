@@ -1,3 +1,8 @@
+Recipe management app
+
+- [Github](https://github.com/mealie-recipes/mealie)
+- [Website](https://mealie.io/)
+
 ## Example
 
 ```nix
@@ -12,9 +17,3 @@
   };
 }
 ```
-
-## About
-
-- Recipe management app
-- [Github](https://github.com/mealie-recipes/mealie)
-- [Website](https://mealie.io/)

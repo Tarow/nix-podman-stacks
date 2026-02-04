@@ -1,3 +1,8 @@
+Document management system
+
+- [Github](https://github.com/paperless-ngx/paperless-ngx)
+- [Website](https://docs.paperless-ngx.com/)
+
 ## Example
 
 ```nix
@@ -25,9 +30,3 @@
   };
 }
 ```
-
-## About
-
-- Document management system
-- [Github](https://github.com/paperless-ngx/paperless-ngx)
-- [Website](https://docs.paperless-ngx.com/)

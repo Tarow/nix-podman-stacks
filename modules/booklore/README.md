@@ -1,3 +1,8 @@
+Self-hosted, multi-user digital library
+
+- [Github](https://github.com/booklore-app/booklore)
+- [Website](https://booklore.org/)
+
 ## Example
 
 ```nix
@@ -12,9 +17,3 @@
   };
 }
 ```
-
-## About
-
-- Self-hosted, multi-user digital library
-- [Github](https://github.com/booklore-app/booklore)
-- [Website](https://booklore.org/)

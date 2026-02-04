@@ -1,3 +1,8 @@
+Cron job & task monitoring
+
+- [Github](https://github.com/healthchecks/healthchecks)
+- [Website](https://healthchecks.io/)
+
 ## Example
 
 ```nix
@@ -10,9 +15,3 @@
   };
 }
 ```
-
-## About
-
-- Cron job monitoring
-- [Github](https://github.com/healthchecks/healthchecks)
-- [Website](https://healthchecks.io/)

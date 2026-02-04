@@ -1,3 +1,7 @@
+Self-hosted service to sync your plex, jellyfin and emby play state
+
+- [Github](https://github.com/healthchecks/healthchecks)
+
 ## Example
 
 ```nix
@@ -5,8 +9,3 @@
   nps.stacks.watchstate.enable = true;
 }
 ```
-
-## About
-
-- Self-hosted service to sync your plex, jellyfin and emby play state
-- [Github](https://github.com/healthchecks/healthchecks)

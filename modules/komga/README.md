@@ -1,3 +1,8 @@
+A media server for comics, mangas, BDs, magazines and eBooks
+
+- [Github](https://github.com/gotson/komga)
+- [Website](https://komga.org/)
+
 ## Example
 
 ```nix
@@ -13,9 +18,3 @@
   };
 }
 ```
-
-## About
-
-- A media server for comics, mangas, BDs, magazines and eBooks
-- [Github](https://github.com/gotson/komga)
-- [Website](https://komga.org/)

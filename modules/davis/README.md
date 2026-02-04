@@ -1,3 +1,7 @@
+Self-hosted server for managing calendars and contacts
+
+- [Github](https://github.com/tchapi/davis)
+
 ## Example
 
 ```nix
@@ -16,8 +20,3 @@
   };
 }
 ```
-
-## About
-
-- Self-hosted server for managing calendars and contacts
-- [Github](https://github.com/tchapi/davis)

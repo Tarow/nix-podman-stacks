@@ -1,3 +1,7 @@
+Containers containing full desktop environments
+
+- [Github](https://github.com/linuxserver/docker-webtop)
+
 ## Example
 
 ```nix
@@ -12,8 +16,3 @@
   };
 }
 ```
-
-## About
-
-- Containers containing full desktop environments
-- [Github](https://github.com/linuxserver/docker-webtop)

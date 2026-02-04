@@ -1,3 +1,7 @@
+Shared recipe app
+
+- [Github](https://github.com/norish-recipes/norish)
+
 ## Example
 
 ```nix
@@ -15,8 +19,3 @@
   };
 }
 ```
-
-## About
-
-- Shared recipe app
-- [Github](https://github.com/norish-recipes/norish)

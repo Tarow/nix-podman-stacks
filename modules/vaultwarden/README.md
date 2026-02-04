@@ -1,3 +1,7 @@
+Self hosted password manager compatible with Bitwarden
+
+- [Github](https://github.com/dani-garcia/vaultwarden)
+
 ## Example
 
 ```nix
@@ -12,8 +16,3 @@
   };
 }
 ```
-
-## About
-
-- Self hosted password manager compatible with bitwarden
-- [Github](https://github.com/dani-garcia/vaultwarden)

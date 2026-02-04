@@ -1,3 +1,8 @@
+Customizable application dashboard
+
+- [Github](https://github.com/gethomepage/homepage)
+- [Website](https://gethomepage.dev/)
+
 ## Example
 
 ```nix
@@ -24,9 +29,3 @@
   };
 }
 ```
-
-## About
-
-- Customizable application dashboard
-- [Github](https://github.com/gethomepage/homepage)
-- [Website](https://gethomepage.dev/)

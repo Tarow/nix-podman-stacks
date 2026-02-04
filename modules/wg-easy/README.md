@@ -1,3 +1,8 @@
+All-in-one solution for WireGuard
+
+- [Github](https://github.com/wg-easy/wg-easy)
+- [Website](https://wg-easy.github.io/wg-easy/latest/getting-started/)
+
 ## Example
 
 ```nix
@@ -12,9 +17,3 @@
   };
 }
 ```
-
-## About
-
-- All-in-one solution for WireGuard
-- [Github](https://github.com/wg-easy/wg-easy)
-- [Website](https://wg-easy.github.io/wg-easy/latest/getting-started/)

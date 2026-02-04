@@ -1,3 +1,8 @@
+Goals focused project management system
+
+- [Github](https://github.com/Leantime/leantime)
+- [Website](https://leantime.io/)
+
 ## Example
 
 ```nix
@@ -16,9 +21,3 @@
   };
 }
 ```
-
-## About
-
-- Goals focused project management system
-- [Github](https://github.com/Leantime/leantime)
-- [Website](https://leantime.io/)

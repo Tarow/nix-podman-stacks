@@ -1,3 +1,8 @@
+SSO and OIDC provider
+
+- [Github](https://github.com/authelia/authelia)
+- [Website](https://www.authelia.com/)
+
 ## Example
 
 ```nix
@@ -16,9 +21,3 @@
   };
 }
 ```
-
-## About
-
-- SSO and OIDC provider 
-- [Github](https://github.com/authelia/authelia)
-- [Website](https://www.authelia.com/)

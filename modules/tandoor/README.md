@@ -1,3 +1,8 @@
+Recipe management and meal planning application
+
+- [Github](https://github.com/TandoorRecipes/recipes)
+- [Website](https://tandoor.dev/)
+
 ## Example
 
 ```nix
@@ -22,9 +27,3 @@
   };
 }
 ```
-
-## About
-
-- Recipe management and meal planning application
-- [Github](https://github.com/TandoorRecipes/recipes)
-- [Website](https://tandoor.dev/)

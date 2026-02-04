@@ -1,3 +1,8 @@
+Grocery list and recipe manager
+
+- [Github](https://github.com/TomBursch/kitchenowl)
+- [Website](https://kitchenowl.org/)
+
 ## Example
 
 ```nix
@@ -14,9 +19,3 @@
   };
 }
 ```
-
-## About
-
-- Grocery list and recipe manager
-- [Github](https://github.com/TomBursch/kitchenowl)
-- [Website](https://kitchenowl.org/)

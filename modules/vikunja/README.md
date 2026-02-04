@@ -1,3 +1,7 @@
+To-do app
+
+- [Github](https://github.com/go-vikunja/vikunja)
+
 ## Example
 
 ```nix
@@ -19,8 +23,3 @@
   };
 }
 ```
-
-## About
-
-- To-do app
-- [Github](https://github.com/go-vikunja/vikunja)

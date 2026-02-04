@@ -1,3 +1,9 @@
+Self-hosted platform for creating and reading ebooks with
+synced narration
+
+- [Gitlab](https://gitlab.com/storyteller-platform/storyteller)
+- [Website](https://storyteller-platform.gitlab.io/storyteller/)
+
 ## Example
 
 ```nix
@@ -14,10 +20,3 @@
   };
 }
 ```
-
-## About
-
-- Self-hosted platform for creating and reading ebooks with
-synced narration
-- [Gitlab](https://gitlab.com/storyteller-platform/storyteller)
-- [Website](https://storyteller-platform.gitlab.io/storyteller/)

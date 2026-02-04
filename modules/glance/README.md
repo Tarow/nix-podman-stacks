@@ -1,3 +1,7 @@
+Highly customizable dashboard
+
+- [Github](https://github.com/glanceapp/glance)
+
 ## Example
 
 ```nix
@@ -29,8 +33,3 @@
   };
 }
 ```
-
-## About
-
-- Highly customizable dashboard
-- [Github](https://github.com/glanceapp/glance)

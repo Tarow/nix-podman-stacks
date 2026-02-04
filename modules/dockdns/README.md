@@ -1,3 +1,7 @@
+Dynamic DNS client specifically designed to work with Cloudflare
+
+- [Github](https://github.com/Tarow/dockdns)
+
 ## Example
 
 ```nix
@@ -16,8 +20,3 @@
   };
 }
 ```
-
-## About
-
-- Dynamic DNS client specifically designed to work with Cloudflare
-- [Github](https://github.com/Tarow/dockdns)

@@ -1,3 +1,8 @@
+Self-hosted time tracking
+
+- [Github](https://github.com/DRYTRIX/TimeTracker)
+- [Website](https://timetracker.drytrix.com/)
+
 ## Example
 
 ```nix
@@ -16,9 +21,3 @@
   };
 }
 ```
-
-## About
-
-- Self-hosted time tracking
-- [Github](https://github.com/DRYTRIX/TimeTracker)
-- [Website](https://timetracker.drytrix.com/)
