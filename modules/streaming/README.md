@@ -21,10 +21,10 @@ Full streaming and automation stack containing:
 - Seerr: Media request/management UI
   - [Github](https://github.com/seerr-team/seerr)
   - [Website](https://seerr.dev)
-- qui: Optional companion web service
+- qui: Alternative qBittorrent interfacew
   - [Github](https://github.com/autobrr/qui)
   - [Website](https://getqui.com)
-- Profilarr: Optional companion/metadata tool
+- Profilarr: Configuration Management Platform for Radarr/Sonarr
   - [Github](https://github.com/Dictionarry-Hub/profilarr)
   - [Website](https://dictionarry.dev/)
 
