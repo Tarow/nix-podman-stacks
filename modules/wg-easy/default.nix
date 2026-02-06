@@ -77,7 +77,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/wg-easy/wg-easy:15.2.1";
+      image = "ghcr.io/wg-easy/wg-easy:15.2.2";
       volumeMap.data = "${storage}/config:/etc/wireguard";
 
       ports = ["${toString cfg.port}:${toString cfg.port}/udp"];
