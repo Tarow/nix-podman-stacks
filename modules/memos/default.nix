@@ -107,7 +107,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/usememos/memos:0.26.0";
+        image = "ghcr.io/usememos/memos:0.26.1";
         volumeMap.data = "${storage}/data:/var/opt/memos";
         environment = {
           MEMOS_MODE = "prod";
