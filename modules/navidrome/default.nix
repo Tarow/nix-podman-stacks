@@ -33,7 +33,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "docker.io/deluan/navidrome:0.60.2";
+      image = "docker.io/deluan/navidrome:0.60.3";
       volumeMap = {
         data = "${storage}/data:/data";
         music = "${mediaStorage}/music:/music:ro";
