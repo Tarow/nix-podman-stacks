@@ -418,7 +418,7 @@ in {
     services.podman.containers =
       {
         ${gluetunName} = lib.mkIf cfg.gluetun.enable {
-          image = "docker.io/qmcgaw/gluetun:v3.41.0";
+          image = "docker.io/qmcgaw/gluetun:v3.41.1";
           addCapabilities = ["NET_ADMIN" "NET_RAW"];
           devices = ["/dev/net/tun:/dev/net/tun"];
           volumeMap = {
