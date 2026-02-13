@@ -29,7 +29,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "docker.io/amir20/dozzle:v10.0.0";
+      image = "docker.io/amir20/dozzle:v10.0.1";
       environment = {
         DOZZLE_REMOTE_HOST = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
       };
