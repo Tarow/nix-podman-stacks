@@ -183,6 +183,7 @@ in {
     prowlarrName
     quiName
     seerrName
+    profilarrName
   ];
 
   options.nps.stacks.${stackName} =
@@ -659,7 +660,7 @@ in {
           };
 
           port = 6868;
-          traefik.name = seerrName;
+          traefik.name = profilarrName;
           stack = stackName;
           homepage = {
             inherit category;
