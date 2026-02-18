@@ -62,7 +62,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/fosrl/newt:1.9.0";
+      image = "ghcr.io/fosrl/newt:1.9.1";
       extraEnv =
         {
           DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
