@@ -320,7 +320,7 @@ in {
       # Always use rootless images here with root-user, because otherwise chown on the read-only
       # lldap_config.toml will be attemped which fails
       # renovate: versioning=loose
-      image = "ghcr.io/lldap/lldap:2026-01-31-alpine-rootless";
+      image = "ghcr.io/lldap/lldap:2026-02-24-alpine-rootless";
       user = config.nps.defaultUid;
       volumeMap = {
         db = "${storage}/db:/db";
