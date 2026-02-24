@@ -109,7 +109,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/booklore-app/booklore:v1.18.5";
+        image = "ghcr.io/booklore-app/booklore:v2.0.1";
         volumeMap = {
           data = "${storage}/data:/app/data";
           books = "${storage}/books:/books";
