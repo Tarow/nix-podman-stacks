@@ -16,6 +16,8 @@
 in {
   imports = import ../mkAliases.nix config lib name [
     name
+    dbName
+    chromeName
   ];
 
   options.nps.stacks.${name} = {
@@ -111,7 +113,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/amruthpillai/reactive-resume:v5.0.5";
+        image = "ghcr.io/amruthpillai/reactive-resume:v5.0.10";
         volumeMap = {
           data = "${storage}/data:/app/data";
         };
