@@ -67,6 +67,7 @@ let
     romm = ./romm;
     searxng = ./searxng;
     shelfmark = ./shelfmark;
+    sparky-fitness = ./sparky-fitness;
     sshwifty = ./sshwifty;
     stirling-pdf = ./stirling-pdf;
     storyteller = ./storyteller;
