@@ -108,7 +108,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/itskovacs/trip:1.41.0";
+        image = "ghcr.io/itskovacs/trip:1.41.1";
         exec = "fastapi run /app/trip/main.py --host 0.0.0.0";
         volumeMap.storage = "${storage}/storage:/app/storage";
 
