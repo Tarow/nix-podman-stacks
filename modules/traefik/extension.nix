@@ -188,13 +188,13 @@ in {
 
             labels = lib.optionalAttrs enableTraefik (
               {
-                "traefik.enable" = "true";
-                "traefik.http.routers.${name}.rule" = utils.escapeOnDemand ''Host(`${traefikCfg.serviceHost}`)'';
+                "traefik.enable" = lib.mkDefault "true";
+                "traefik.http.routers.${name}.rule" = lib.mkDefault (utils.escapeOnDemand ''Host(`${traefikCfg.serviceHost}`)'');
                 # "traefik.http.routers.${name}.entrypoints" = "websecure,websecure-internal";
                 "traefik.http.routers.${name}.service" = lib.mkDefault name;
               }
               // lib.optionalAttrs (containerPort != null) {
-                "traefik.http.services.${name}.loadbalancer.server.port" = containerPort;
+                "traefik.http.services.${name}.loadbalancer.server.port" = lib.mkDefault containerPort;
               }
               // {
                 "traefik.http.routers.${name}.middlewares" = builtins.concatStringsSep "," (
