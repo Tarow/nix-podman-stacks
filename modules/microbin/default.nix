@@ -29,7 +29,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "docker.io/danielszabo99/microbin:2.1.2";
+      image = "docker.io/danielszabo99/microbin:2.1.4";
       volumeMap.data = "${storage}/data:/app/microbin_data";
       environment = {
         MICROBIN_PUBLIC_PATH = cfg.containers.${name}.traefik.serviceUrl;
