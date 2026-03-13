@@ -196,7 +196,7 @@ jobs:
           echo -e "$BODY" > comment.md
 
       - name: Comment PR with Trivy results
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           path: comment.md
 
