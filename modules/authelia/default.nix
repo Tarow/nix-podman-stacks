@@ -335,7 +335,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/authelia/authelia:4.39.15";
+        image = "ghcr.io/authelia/authelia:4.39.16";
         environment =
           {
             AUTHELIA_STORAGE_LOCAL_PATH = "/data/db.sqlite3";
