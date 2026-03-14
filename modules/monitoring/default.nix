@@ -547,7 +547,7 @@ in {
         };
 
       ${podmanExporterName} = lib.mkIf cfg.podmanExporter.enable {
-        image = "quay.io/navidys/prometheus-podman-exporter:v1.20.0";
+        image = "quay.io/navidys/prometheus-podman-exporter:v1.21.0";
         volumeMap.socket = "${config.nps.socketLocation}:/var/run/podman/podman.sock";
 
         environment.CONTAINER_HOST = "unix:///var/run/podman/podman.sock";
