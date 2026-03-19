@@ -681,7 +681,7 @@ in {
 
         ${sonarrName} = lib.mkIf cfg.sonarr.enable (mkArrBase sonarrName
           // {
-            image = "lscr.io/linuxserver/sonarr:4.0.16";
+            image = "lscr.io/linuxserver/sonarr:4.0.17";
             port = 8989;
 
             homepage = {
