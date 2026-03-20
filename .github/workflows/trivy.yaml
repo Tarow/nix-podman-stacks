@@ -112,7 +112,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.2.5
+        uses: aquasecurity/setup-trivy@v0.2.6
 
       - name: Generate safe name for artifacts
         id: safe-name
