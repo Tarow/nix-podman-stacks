@@ -68,7 +68,7 @@ in {
         redirect_uris = [
           "${cfg.containers.${name}.traefik.serviceUrl}/oauth2-callback"
         ];
-        scopes = ["openid" "offline_access" "profile" "email"];
+        scopes = ["openid" "offline_access" "profile" "email" "groups"];
         claims_policy = name;
         response_types = ["code"];
         grant_types = ["authorization_code" "refresh_token"];
@@ -91,6 +91,7 @@ in {
         "email_verified"
         "preferred_username"
         "name"
+        "groups"
       ];
 
       # Booklore doesn't support blocking access to users that aren't part of a group, so we have to do it on Authelia level
@@ -109,7 +110,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/booklore-app/booklore:v2.0.4";
+        image = "ghcr.io/booklore-app/booklore:v2.2.1";
         volumeMap = {
           data = "${storage}/data:/app/data";
           books = "${storage}/books:/books";

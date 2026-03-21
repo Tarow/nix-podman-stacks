@@ -29,7 +29,7 @@
   container = cfg.containers.${name};
   lldap = config.nps.stacks.lldap;
 
-  mkClientSecretEnvName = clientName: "OIDC_CLIENT_SECRET_HASH_${lib.toUpper (lib.replaceStrings ["-"] ["_"] clientName)}";
+  mkClientSecretEnvName = clientName: "OIDC_CLIENT_SECRET_HASH_${lib.toUpper clientName |> lib.replaceStrings ["-"] ["_"]}";
 
   fromFileClientSecrets =
     cfg.oidc.clients
@@ -326,14 +326,16 @@ in {
         address = "http://authelia:9091/api/authz/forward-auth?authelia_url=https%3A%2F%2F${
           cfg.containers.${name}.traefik.serviceHost
         }%2F";
-        trustForwardHeader = true;
+        trustForwardHeader = lib.mkDefault true;
         authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name";
+        maxBodySize = lib.mkDefault 10485760; # 10 MiB
+        maxResponseBodySize = lib.mkDefault 10485760; # 10 MiB
       };
     };
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/authelia/authelia:4.39.15";
+        image = "ghcr.io/authelia/authelia:4.39.16";
         environment =
           {
             AUTHELIA_STORAGE_LOCAL_PATH = "/data/db.sqlite3";
@@ -367,7 +369,7 @@ in {
             jwksKeyConfig = "${writeOidcJwksConfigFile "/secrets/oidc/jwks/rsa.key"}:/config/jwks_key_config.yml";
           };
 
-        wantsContainer = lib.optional (cfg.sessionProvider == "redis") redisName;
+        wantsContainer = ["lldap"] ++ lib.optional (cfg.sessionProvider == "redis") redisName;
         stack = name;
         port = 9091;
         traefik.name = name;

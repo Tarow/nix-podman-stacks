@@ -123,7 +123,8 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/outlinewiki/outline:1.5.0";
+        image = "docker.io/outlinewiki/outline:1.6.1";
+        user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap.data = "${storage}/data:/var/lib/outline/data";
         extraEnv = let
           utils = import ../utils.nix {inherit lib config;};
@@ -136,6 +137,9 @@ in {
             PGSSLMODE = "disable";
             SECRET_KEY.fromFile = cfg.secretKeyFile;
             UTILS_SECRET.fromFile = cfg.utilsSecretFile;
+
+            FILE_STORAGE = "local";
+            FILE_STORAGE_UPLOAD_MAX_SIZE = 26214400;
           }
           // lib.optionalAttrs cfg.oidc.enable {
             OIDC_ISSUER_URL = config.nps.containers.authelia.traefik.serviceUrl;

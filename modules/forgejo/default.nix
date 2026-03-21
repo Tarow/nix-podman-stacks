@@ -12,6 +12,8 @@
 
   ini = pkgs.formats.ini {};
 
+  sshHostPort = "2222";
+
   category = "General";
   displayName = "Forgejo";
   description = "Git Server";
@@ -206,6 +208,13 @@ in {
         For a full list of options, refer to the [Forgejo documentation](https://forgejo.org/docs/latest/admin/config-cheat-sheet/).
       '';
     };
+    ssh.proxied = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to proxy SSH connections through Traefik. This will setup a TCP router in Traefik which forwards all traffic to the Forgejo container.
+      '';
+    };
     db = {
       type = lib.mkOption {
         type = lib.types.enum [
@@ -299,6 +308,24 @@ in {
       };
     };
 
+    nps.stacks.traefik = let
+      sshName = "${name}-ssh";
+    in
+      lib.mkIf cfg.ssh.proxied {
+        containers.traefik.ports = lib.mkAfter ["${sshHostPort}:${sshHostPort}"];
+        staticConfig.entrypoints.${sshName}.address = ":${sshHostPort}";
+        dynamicConfig.tcp = {
+          routers.${sshName} = {
+            entryPoints = [sshName];
+            rule = "HostSNI(`*`)";
+            service = sshName;
+          };
+          services."${sshName}".loadbalancer.servers = [
+            {address = "${name}:22";}
+          ];
+        };
+      };
+
     nps.stacks.${name}.settings = lib.mkMerge [
       (import ./settings.nix config)
       {
@@ -339,7 +366,7 @@ in {
       ${name} = {
         image = "codeberg.org/forgejo/forgejo:14";
         volumeMap.data = "${storage}/data:/data";
-        ports = ["2222:22"];
+        ports = lib.mkIf (!cfg.ssh.proxied) ["${sshHostPort}:22"];
 
         extraConfig.Container = {
           Notify = "healthy";

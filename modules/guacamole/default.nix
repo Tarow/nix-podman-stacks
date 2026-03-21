@@ -63,6 +63,11 @@ in {
           - <https://guacamole.apache.org/doc/gug/openid-auth.html>
         '';
       };
+      userGroup = lib.mkOption {
+        type = lib.types.str;
+        default = "${name}_user";
+        description = "Users of this group will be able to log in";
+      };
     };
     db = {
       enable = lib.mkOption {
@@ -98,12 +103,14 @@ in {
         message = "Guacamole: when OIDC is enabled, the database option must also be enabled.";
       }
     ];
-
+    nps.stacks.lldap.bootstrap.groups = lib.mkIf cfg.oidc.enable {
+      ${cfg.oidc.userGroup} = {};
+    };
     nps.stacks.authelia = lib.mkIf cfg.oidc.enable {
       oidc.clients.${name} = {
         client_name = "Guacamole";
         public = true;
-        authorization_policy = config.nps.stacks.authelia.defaultAllowPolicy;
+        authorization_policy = name;
         require_pkce = false;
         pkce_challenge_method = "";
         pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
@@ -112,6 +119,16 @@ in {
         ];
         response_types = "id_token";
         grant_types = "implicit";
+      };
+      # No real RBAC control based on custom claims / groups yet. Restrict user-access on Authelia level
+      settings.identity_providers.oidc.authorization_policies.${name} = {
+        default_policy = "deny";
+        rules = [
+          {
+            policy = config.nps.stacks.authelia.defaultAllowPolicy;
+            subject = "group:${cfg.oidc.userGroup}";
+          }
+        ];
       };
     };
 

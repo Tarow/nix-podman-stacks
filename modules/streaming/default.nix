@@ -510,7 +510,7 @@ in {
         };
 
         ${quiName} = lib.mkIf cfg.qui.enable {
-          image = "ghcr.io/autobrr/qui:v1.14.1";
+          image = "ghcr.io/autobrr/qui:v1.15.0";
           volumeMap = {
             config = "${storage}/${quiName}:/config";
             media = "${mediaStorage}:/media";
@@ -681,7 +681,7 @@ in {
 
         ${sonarrName} = lib.mkIf cfg.sonarr.enable (mkArrBase sonarrName
           // {
-            image = "lscr.io/linuxserver/sonarr:4.0.16";
+            image = "lscr.io/linuxserver/sonarr:4.0.17";
             port = 8989;
 
             homepage = {

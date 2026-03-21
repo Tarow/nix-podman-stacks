@@ -18,7 +18,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/jhaals/yopass:13.0.0";
+        image = "docker.io/jhaals/yopass:13.1.0";
         exec = "--memcached=${dbName}:11211 --port 8080";
 
         wantsContainer = [dbName];
@@ -42,7 +42,7 @@ in {
       };
 
       ${dbName} = {
-        image = "docker.io/memcached:1.6.40";
+        image = "docker.io/memcached:1.6.41";
         stack = name;
 
         glance = {

@@ -54,7 +54,8 @@
         "/pgvecto-rs/",
         "/redis/",
         "/valkey/",
-        "/meilisearch/"
+        "/meilisearch/",
+        "docker.io/example/image"
       ],
       "enabled": false
     },

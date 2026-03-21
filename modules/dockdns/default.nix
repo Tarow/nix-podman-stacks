@@ -74,7 +74,7 @@ in {
     ];
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/tarow/dockdns:v0.8.1";
+      image = "ghcr.io/tarow/dockdns:v0.8.2";
       volumeMap.settings = "${cfg.settings}:/app/config.yaml";
 
       extraEnv =
