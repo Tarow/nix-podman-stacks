@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  name = "booklore";
+  name = "grimmory";
   dbName = "${name}-db";
 
   storage = "${config.nps.storageBaseDir}/${name}";
@@ -12,12 +12,14 @@
 
   category = "Media & Downloads";
   description = "Book Collection Manager";
-  displayName = "Booklore";
+  displayName = "Grimmory";
 in {
-  imports = import ../mkAliases.nix config lib name [
-    name
-    dbName
-  ];
+  imports =
+    import ../mkAliases.nix config lib name [
+      name
+      dbName
+    ]
+    ++ [(lib.mkRenamedOptionModule ["nps" "stacks" "booklore"] ["nps" "stacks" "grimmory"])];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
@@ -59,7 +61,7 @@ in {
 
     nps.stacks.authelia = lib.mkIf cfg.oidc.registerClient {
       oidc.clients.${name} = {
-        client_name = "Booklore";
+        client_name = displayName;
         public = true;
         authorization_policy = name;
         require_pkce = true;
@@ -110,7 +112,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/booklore-app/booklore:v2.2.1";
+        image = "ghcr.io/grimmory-tools/grimmory:v2.3.0";
         volumeMap = {
           data = "${storage}/data:/app/data";
           books = "${storage}/books:/books";
