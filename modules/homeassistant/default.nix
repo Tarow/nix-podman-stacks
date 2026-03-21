@@ -45,7 +45,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/home-assistant/home-assistant:2026.3.2";
+      image = "ghcr.io/home-assistant/home-assistant:2026.3.3";
       volumeMap = {
         config = "${storage}/config:/config";
         # User should be in 'dialout' group for HA to access bluetooth module
