@@ -8,7 +8,7 @@ Unified web interface for searching and aggregating books and audiobook download
 {config, ...}: {
   nps.stacks.shelfmark = {
     enable = true;
-    downloadDirectory = "${config.nps.storageBaseDir}/booklore/bookdrop";
+    downloadDirectory = "${config.nps.storageBaseDir}/grimmory/bookdrop";
   };
 }
 ```

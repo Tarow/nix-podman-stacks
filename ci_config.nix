@@ -122,17 +122,6 @@ in {
         jwtSecretFile = dummySecretFile;
       };
 
-      booklore = {
-        enable = true;
-        oidc = {
-          registerClient = true;
-        };
-        db = {
-          userPasswordFile = dummySecretFile;
-          rootPasswordFile = dummySecretFile;
-        };
-      };
-
       calibre.enable = true;
 
       changedetection.enable = true;
@@ -335,6 +324,17 @@ in {
               }
             ];
           };
+        };
+      };
+
+      grimmory = {
+        enable = true;
+        oidc = {
+          registerClient = true;
+        };
+        db = {
+          userPasswordFile = dummySecretFile;
+          rootPasswordFile = dummySecretFile;
         };
       };
 
@@ -661,7 +661,7 @@ in {
 
       shelfmark = {
         enable = true;
-        downloadDirectory = "${config.nps.storageBaseDir}/booklore/bookdrop";
+        downloadDirectory = "${config.nps.storageBaseDir}/grimmory/bookdrop";
       };
 
       sshwifty = {
