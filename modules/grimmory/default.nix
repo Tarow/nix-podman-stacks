@@ -14,12 +14,10 @@
   description = "Book Collection Manager";
   displayName = "Grimmory";
 in {
-  imports =
-    import ../mkAliases.nix config lib name [
-      name
-      dbName
-    ]
-    ++ [(lib.mkRenamedOptionModule ["nps" "stacks" "booklore"] ["nps" "stacks" "grimmory"])];
+  imports = import ../mkAliases.nix config lib name [
+    name
+    dbName
+  ];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
@@ -28,8 +26,8 @@ in {
         type = lib.types.bool;
         default = false;
         description = ''
-          Whether to register a Booklore OIDC client in Authelia.
-          To enable OIDC Login for Booklore, you will have to enable it in the Web UI.
+          Whether to register a Grimmory OIDC client in Authelia.
+          To enable OIDC Login for Grimmory, you will have to enable it in the Web UI.
 
           For details, see:
           - <https://www.authelia.com/integration/openid-connect/clients/booklore/>
@@ -45,7 +43,7 @@ in {
     db = {
       userPasswordFile = lib.mkOption {
         type = lib.types.path;
-        description = "Path to the file containing the password for the romm database user";
+        description = "Path to the file containing the password for the database user";
       };
       rootPasswordFile = lib.mkOption {
         type = lib.types.path;
@@ -96,7 +94,7 @@ in {
         "groups"
       ];
 
-      # Booklore doesn't support blocking access to users that aren't part of a group, so we have to do it on Authelia level
+      # Grimmory doesn't support blocking access to users that aren't part of a group, so we have to do it on Authelia level
       settings.identity_providers.oidc.authorization_policies.${name} = {
         default_policy = "deny";
         rules = [
@@ -155,8 +153,8 @@ in {
         image = "docker.io/mariadb:11";
         volumeMap.data = "${storage}/db:/var/lib/mysql";
         extraEnv = {
-          MARIADB_DATABASE = "booklore";
-          MARIADB_USER = "booklore";
+          MARIADB_DATABASE = "grimmory";
+          MARIADB_USER = "grimmory";
           MARIADB_ROOT_PASSWORD.fromFile = cfg.db.rootPasswordFile;
           MARIADB_PASSWORD.fromFile = cfg.db.userPasswordFile;
         };

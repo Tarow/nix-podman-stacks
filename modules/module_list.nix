@@ -10,7 +10,6 @@ let
     bentopdf = ./bentopdf;
     beszel = ./beszel;
     blocky = ./blocky;
-    booklore = ./booklore;
     bytestash = ./bytestash;
     calibre = ./calibre;
     changedetection = ./changedetection;
@@ -29,6 +28,7 @@ let
     freshrss = ./freshrss;
     gatus = ./gatus;
     glance = ./glance;
+    grimmory = ./grimmory;
     guacamole = ./guacamole;
     healthchecks = ./healthchecks;
     homeassistant = ./homeassistant;
