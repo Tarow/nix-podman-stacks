@@ -603,7 +603,7 @@ in {
       };
 
       ${alertmanagerNtfyName} = lib.mkIf (cfg.alertmanager.enable && cfg.alertmanager.ntfy.enable) {
-        image = "ghcr.io/alexbakker/alertmanager-ntfy:1.2.0";
+        image = "ghcr.io/alexbakker/alertmanager-ntfy:1.2.1";
         volumeMap.settings = "${cfg.alertmanager.ntfy.settings}:/etc/config.yml";
         templateMount = lib.optional (cfg.alertmanager.ntfy.tokenFile != null) {
           templatePath = yaml.generate "auth.yaml" {ntfy.auth.token = "{{file.Read `${cfg.alertmanager.ntfy.tokenFile}`}}";};
