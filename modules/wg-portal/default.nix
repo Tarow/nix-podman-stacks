@@ -165,7 +165,7 @@ in {
       };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/h44z/wg-portal:v2.2.1";
+      image = "ghcr.io/h44z/wg-portal:v2.2.2";
       volumeMap = {
         data = "${storage}/data:/app/data";
         settings = "${cfg.settings}:/app/config/config.yaml";
