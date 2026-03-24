@@ -204,7 +204,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/immich-app/immich-server:v2.6.1";
+        image = "ghcr.io/immich-app/immich-server:v2.6.2";
         volumeMap = {
           pictures = "${mediaStorage}/pictures/immich:${env.UPLOAD_LOCATION}";
           settings = lib.mkIf (cfg.settings != null && (!cfg.oidc.enable)) "${cfg.settings}:${env.IMMICH_CONFIG_FILE}";
@@ -276,7 +276,7 @@ in {
       };
 
       ${mlName} = {
-        image = "ghcr.io/immich-app/immich-machine-learning:v2.6.1";
+        image = "ghcr.io/immich-app/immich-machine-learning:v2.6.2";
         volumeMap.cache = "${storage}/model-cache:/cache";
 
         stack = name;
