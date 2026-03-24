@@ -270,7 +270,7 @@ in {
       };
 
       ${tikaName} = lib.mkIf cfg.enableTika {
-        image = "docker.io/apache/tika:3.2.3.0";
+        image = "docker.io/apache/tika:3.3.0.0";
 
         stack = name;
         glance = {
