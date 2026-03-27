@@ -1,9 +1,11 @@
 {
+  name ? "adventurelog",
+  displayName ? name,
+}: {
   config,
   lib,
   ...
 }: let
-  name = "adventurelog";
   webName = "${name}-web";
   backendName = "${name}-backend";
   dbName = "${name}-db";
@@ -13,7 +15,6 @@
 
   category = "General";
   description = "Travel Companion";
-  displayName = "AdventureLog";
 in {
   imports = import ../mkAliases.nix config lib name [
     webName

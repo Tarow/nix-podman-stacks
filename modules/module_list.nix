@@ -1,8 +1,12 @@
 let
+  moduleFunctions = {
+    mkAdventureLog = import ./adventurelog/default.nix;
+  };
+
   modules = {
     settings = ./settings.nix;
     adguard = ./adguard;
-    adventurelog = ./adventurelog;
+    adventurelog = moduleFunctions.mkAdventureLog {displayName = "AdventureLog";};
     aiostreams = ./aiostreams;
     audiobookshelf = ./audiobookshelf;
     authelia = ./authelia;
@@ -82,6 +86,7 @@ let
   };
 in
   modules
+  // moduleFunctions
   // {
     nps = {
       imports = builtins.attrValues modules;
