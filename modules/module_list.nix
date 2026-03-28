@@ -52,6 +52,7 @@ let
     n8n = ./n8n;
     navidrome = ./navidrome;
     networking-toolbox = ./networking-toolbox;
+    nomad = ./nomad;
     norish = ./norish;
     ntfy = ./ntfy;
     omnitools = ./omnitools;

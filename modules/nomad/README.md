@@ -1,12 +1,11 @@
 Network-wide software for blocking ads and tracking
 
-- [Github](https://github.com/AdguardTeam/AdGuardHome)
-- [Website](https://adguard.com/en/adguard-home/overview.html)
+- [Github](https://github.com/mauriceboe/NOMAD)
 
 ## Example
 
 ```nix
 {
-  nps.stacks.adguard.enable = true;
+  nps.stacks.nomad.enable = true;
 }
 ```

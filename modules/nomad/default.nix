@@ -34,15 +34,14 @@ in {
         name = displayName;
         settings = {
           inherit description;
-          icon = "adguard-home";
-          widget.type = "adguard";
+          icon = "nomad";
         };
       };
       glance = {
         inherit category description;
         name = displayName;
         id = name;
-        icon = "di:adguard-home";
+        icon = "di:nomad";
       };
     };
   };
