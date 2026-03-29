@@ -128,7 +128,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/henrygd/beszel/beszel:0.18.5";
+        image = "ghcr.io/henrygd/beszel/beszel:0.18.6";
         volumeMap =
           {
             data = "${storage}/data:/beszel_data";
@@ -163,7 +163,7 @@ in {
       };
 
       ${agentName} = {
-        image = "ghcr.io/henrygd/beszel/beszel-agent:0.18.5";
+        image = "ghcr.io/henrygd/beszel/beszel-agent:0.18.6";
         volumeMap.socket = "${storage}/beszel_socket:/beszel_socket";
 
         fileEnvMount.KEY_FILE = lib.mkIf (cfg.ed25519PublicKeyFile != null) cfg.ed25519PublicKeyFile;
