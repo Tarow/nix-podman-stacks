@@ -93,14 +93,14 @@ in {
         name = displayName;
         settings = {
           inherit description;
-          icon = "nomad";
+          icon = "sh-trek";
         };
       };
       glance = {
         inherit category description;
         name = displayName;
         id = name;
-        icon = "di:nomad";
+        icon = "sh:trek";
       };
     };
   };
