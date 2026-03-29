@@ -84,6 +84,7 @@ in {
           OIDC_CLIENT_ID = name;
           OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
           OIDC_DISPLAY_NAME = "Authelia";
+          OIDC_ONLY = lib.mkDefault true;
         };
 
       port = 3000;
