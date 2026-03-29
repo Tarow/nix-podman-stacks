@@ -52,7 +52,6 @@ let
     n8n = ./n8n;
     navidrome = ./navidrome;
     networking-toolbox = ./networking-toolbox;
-    nomad = ./nomad;
     norish = ./norish;
     ntfy = ./ntfy;
     omnitools = ./omnitools;
@@ -70,6 +69,7 @@ let
     tandoor = ./tandoor;
     timetracker = ./timetracker;
     traefik = ./traefik;
+    trek = ./trek;
     trip = ./trip;
     uptime-kuma = ./uptime-kuma;
     vaultwarden = ./vaultwarden;
