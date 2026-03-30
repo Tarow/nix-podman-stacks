@@ -774,6 +774,15 @@ in {
         crowdsec.middleware.bouncerKeyFile = dummySecretFile;
       };
 
+      trek = {
+        enable = true;
+        oidc = {
+          enable = true;
+          clientSecretHash = dummyHash;
+          clientSecretFile = dummySecretFile;
+        };
+      };
+
       trip = {
         enable = true;
         oidc = {

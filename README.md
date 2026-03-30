@@ -157,6 +157,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tandoor-recipes.svg" style="width:1em;height:1em;" /> [Tandoor](https://tarow.github.io/nix-podman-stacks/docs/stacks/tandoor.html)
 - <img src="https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/book-clock.svg" style="width:1em;height:1em;" /> [TimeTracker](https://tarow.github.io/nix-podman-stacks/docs/stacks/timetracker.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/traefik.svg" style="width:1em;height:1em;" /> [Traefik](https://tarow.github.io/nix-podman-stacks/docs/stacks/traefik.html)
+- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/trek.webp" style="height:1em;" /> [Trek](https://tarow.github.io/nix-podman-stacks/docs/stacks/trek.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/trip.webp" style="height:1em;" /> [Trip](https://tarow.github.io/nix-podman-stacks/docs/stacks/trip.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg" style="width:1em;height:1em;" /> [Uptime-Kuma](https://tarow.github.io/nix-podman-stacks/docs/stacks/uptime-kuma.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vaultwarden.svg" style="width:1em;height:1em;" /> [Vaultwarden](https://tarow.github.io/nix-podman-stacks/docs/stacks/vaultwarden.html)
