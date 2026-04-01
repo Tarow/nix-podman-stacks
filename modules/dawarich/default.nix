@@ -17,19 +17,29 @@
   description = "Location History Tracker";
   displayName = "Dawarich";
 
-  env = {
-    RAILS_ENV = "production";
-    REDIS_URL = "redis://${redisName}:6379";
-    DATABASE_HOST = dbName;
-    DATABASE_PORT = 5432;
-    DATABASE_USERNAME = cfg.db.username;
-    DATABASE_PASSWORD.fromFile = cfg.db.passwordFile;
-    DATABASE_NAME = "dawarich";
-    APPLICATION_HOSTS = cfg.containers.${name}.traefik.serviceHost;
-    SELF_HOSTED = true;
-    STORE_GEODATA = true;
-    SECRET_KEY_BASE.fromFile = cfg.secretKeyFile;
-  };
+  env =
+    {
+      RAILS_ENV = "production";
+      REDIS_URL = "redis://${redisName}:6379";
+      DATABASE_HOST = dbName;
+      DATABASE_PORT = 5432;
+      DATABASE_USERNAME = cfg.db.username;
+      DATABASE_PASSWORD.fromFile = cfg.db.passwordFile;
+      DATABASE_NAME = "dawarich";
+      APPLICATION_HOSTS = cfg.containers.${name}.traefik.serviceHost;
+      SELF_HOSTED = true;
+      STORE_GEODATA = true;
+      SECRET_KEY_BASE.fromFile = cfg.secretKeyFile;
+    }
+    // lib.optionalAttrs cfg.oidc.enable {
+      OIDC_CLIENT_ID = name;
+      OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
+      OIDC_ISSUER = config.nps.containers.authelia.traefik.serviceUrl;
+      OIDC_REDIRECT_URI = "${cfg.containers.${name}.traefik.serviceUrl}/users/auth/openid_connect/callback";
+      OIDC_PROVIDER_NAME = "Authelia";
+      OIDC_AUTO_REGISTER = lib.mkDefault true;
+      ALLOW_EMAIL_PASSWORD_REGISTRATION = lib.mkDefault false;
+    };
 in {
   imports = import ../mkAliases.nix config lib name [
     name
@@ -106,7 +116,7 @@ in {
     };
     nps.stacks.authelia = lib.mkIf cfg.oidc.enable {
       oidc.clients.${name} = {
-        client_name = "Gatus";
+        client_name = displayName;
         client_secret = cfg.oidc.clientSecretHash;
         public = false;
         authorization_policy = name;
@@ -114,12 +124,11 @@ in {
         pkce_challenge_method = "";
         pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
         redirect_uris = [
-          "${cfg.containers.${name}.traefik.serviceUrl}/authorization-code/callback"
+          env.OIDC_REDIRECT_URI
         ];
       };
 
       # No real RBAC control based on custom claims / groups yet. Restrict user-access on Authelia level for now
-      # See <https://github.com/TwiN/gatus/issues/638>
       settings.identity_providers.oidc.authorization_policies.${name} = {
         default_policy = "deny";
         rules = [
