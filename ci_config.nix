@@ -144,6 +144,16 @@ in {
         };
       };
 
+      dawarich = {
+        enable = true;
+        secretKeyFile = dummySecretFile;
+        db.passwordFile = dummySecretFile;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+        };
+      };
+
       ddns-updater = {
         enable = true;
         settings = [

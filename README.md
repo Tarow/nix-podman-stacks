@@ -84,6 +84,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/chrome.svg" style="width:1em;height:1em;" /> Sock Puppet Browser
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/crowdsec.svg" style="width:1em;height:1em;" /> [CrowdSec](https://tarow.github.io/nix-podman-stacks/docs/stacks/crowdsec.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/davis.png" style="width:1em;height:1em;" /> [Davis](https://tarow.github.io/nix-podman-stacks/docs/stacks/davis.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dawarich.svg" style="width:1em;height:1em;" /> [Dawarich](https://tarow.github.io/nix-podman-stacks/docs/stacks/dawarich.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ddns-updater.svg" style="width:1em;height:1em;" /> [DDNS-Updater](https://tarow.github.io/nix-podman-stacks/docs/stacks/ddns-updater.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/azure-dns.svg" style="width:1em;height:1em;" /> [DockDNS](https://tarow.github.io/nix-podman-stacks/docs/stacks/dockdns.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/haproxy.svg" style="width:1em;height:1em;" /> [Docker Socket Proxy](https://tarow.github.io/nix-podman-stacks/docs/stacks/docker-socket-proxy.html)
