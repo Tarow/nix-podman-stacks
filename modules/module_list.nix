@@ -4,6 +4,7 @@ let
     adguard = ./adguard;
     adventurelog = ./adventurelog;
     aiostreams = ./aiostreams;
+    anchor = ./anchor;
     audiobookshelf = ./audiobookshelf;
     authelia = ./authelia;
     baikal = ./baikal;
