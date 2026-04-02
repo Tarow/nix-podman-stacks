@@ -142,7 +142,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/freikin/dawarich:1.6.0";
+        image = "docker.io/freikin/dawarich:1.6.1";
         volumeMap = {
           public = "${storage}/public:/var/app/public";
           watched = "${storage}/watched:/var/app/tmp/imports/watched";
@@ -179,7 +179,7 @@ in {
       };
 
       ${sidekiqName} = {
-        image = "docker.io/freikin/dawarich:1.6.0";
+        image = "docker.io/freikin/dawarich:1.6.1";
         volumeMap = {
           public = "${storage}/public:/var/app/public";
           watched = "${storage}/watched:/var/app/tmp/imports/watched";
