@@ -131,7 +131,8 @@ in {
             HBOX_OPTIONS_ALLOW_REGISTRATION = lib.mkDefault false;
           });
 
-        wantsContainer = lib.optional (cfg.db.type == "postgres") dbName;
+        # Authelia is necessary when Homebox starts as well-known endpoint is queried at startup
+        wantsContainer = ["authelia"] ++ lib.optional (cfg.db.type == "postgres") dbName;
 
         port = 7745;
         traefik.name = name;
