@@ -386,6 +386,19 @@ in {
 
       homeassistant.enable = true;
 
+      homebox = {
+        enable = true;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyHash;
+        };
+        db = {
+          type = "postgres";
+          passwordFile = dummySecretFile;
+        };
+      };
+
       homepage = {
         enable = true;
         widgets = [

@@ -215,7 +215,8 @@ Keep modules minimal. For details, see:
 
 ## Documentation & Testing
 
-- Update `modules/<name>/README.md` when adding options
+- Update `modules/<name>/README.md` when adding options with short description, reference to Github and website (if present) and a short usage example
+- Add new module to root level README.md
 - Test: add to `module_list.nix` and `ci_config.nix`, then run:
   ```bash
   nix flake check --keep-going

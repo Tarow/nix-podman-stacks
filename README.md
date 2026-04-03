@@ -103,6 +103,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/guacamole.svg" style="width:1em;height:1em;" /> [Guacamole](https://tarow.github.io/nix-podman-stacks/docs/stacks/guacamole.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/healthchecks.svg" style="width:1em;height:1em;" /> [Healthchecks](https://tarow.github.io/nix-podman-stacks/docs/stacks/healthchecks.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg" style="width:1em;height:1em;" /> [Home Assistant](https://tarow.github.io/nix-podman-stacks/docs/stacks/homeassistant.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homebox.svg" style="width:1em;height:1em;" /> [Homebox](https://tarow.github.io/nix-podman-stacks/docs/stacks/homebox.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png" style="width:1em;height:1em;" /> [Homepage](https://tarow.github.io/nix-podman-stacks/docs/stacks/homepage.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/hortusfox.webp" style="width:1em;height:1em;" /> [HortusFox](https://tarow.github.io/nix-podman-stacks/docs/stacks/hortusfox.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg" style="width:1em;height:1em;" /> [Immich](https://tarow.github.io/nix-podman-stacks/docs/stacks/immich.html)

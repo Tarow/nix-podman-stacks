@@ -34,6 +34,7 @@ let
     guacamole = ./guacamole;
     healthchecks = ./healthchecks;
     homeassistant = ./homeassistant;
+    homebox = ./homebox;
     homepage = ./homepage;
     hortusfox = ./hortusfox;
     immich = ./immich;
