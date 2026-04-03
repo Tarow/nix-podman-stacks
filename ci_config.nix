@@ -40,11 +40,7 @@ in {
 
       anchor = {
         enable = true;
-        oidc = {
-          enable = true;
-          clientSecretFile = dummySecretFile;
-          clientSecretHash = dummyHash;
-        };
+        oidc.enable = true;
         db = {
           type = "postgres";
           passwordFile = dummySecretFile;

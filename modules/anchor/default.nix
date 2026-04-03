@@ -9,7 +9,7 @@
   cfg = config.nps.stacks.${name};
 
   category = "General";
-  description = "Offline-first, self-hostable note-taking application";
+  description = "Offline-first note-taking Application";
   displayName = "Anchor";
 in {
   imports = import ../mkAliases.nix config lib name [name dbName];
@@ -24,10 +24,10 @@ in {
         description = ''
           Whether to enable OIDC login with Authelia. This will register an OIDC client in Authelia
           and setup the necessary configuration.
+
+          See <https://github.com/zhfahim/anchor?tab=readme-ov-file#oidc-authentication>
         '';
       };
-      clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;
-      clientSecretHash = (import ../authelia/options.nix lib).derivableClientSecretHash cfg.oidc.clientSecretFile;
       userGroup = lib.mkOption {
         type = lib.types.str;
         default = "${name}_user";
@@ -68,14 +68,14 @@ in {
     nps.stacks.authelia = lib.mkIf cfg.oidc.enable {
       oidc.clients.${name} = {
         client_name = displayName;
-        client_secret = cfg.oidc.clientSecretHash;
-        public = false;
+        public = true;
         authorization_policy = name;
         require_pkce = true;
         pkce_challenge_method = "S256";
         pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
         redirect_uris = [
           "${cfg.containers.${name}.traefik.serviceUrl}/api/auth/oidc/callback"
+          "anchor://oidc/callback"
         ];
       };
 
@@ -92,15 +92,14 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/zhfahim/anchor:v0.10.0";
+        image = "ghcr.io/zhfahim/anchor:0.10.0";
         volumeMap.data = "${storage}/data:/data";
 
-        environment = {
-          APP_URL = cfg.containers.${name}.traefik.serviceUrl;
-        };
-
         extraEnv =
-          lib.optionalAttrs (cfg.db.type == "postgres") {
+          {
+            APP_URL = cfg.containers.${name}.traefik.serviceUrl;
+          }
+          // lib.optionalAttrs (cfg.db.type == "postgres") {
             PG_HOST = dbName;
             PG_PORT = 5432;
             PG_USER = name;
@@ -112,10 +111,13 @@ in {
             OIDC_PROVIDER_NAME = "Authelia";
             OIDC_ISSUER_URL = config.nps.containers.authelia.traefik.serviceUrl;
             OIDC_CLIENT_ID = name;
-            OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
-            DISABLE_INTERNAL_AUTH = true;
+            DISABLE_INTERNAL_AUTH = lib.mkDefault true;
+            USER_SIGNUP = lib.mkDefault "disabled";
           }
           // cfg.extraEnv;
+
+        wantsContainer = lib.optional (cfg.db.type == "postgres") dbName;
+        stack = name;
 
         port = 3000;
         traefik.name = name;
@@ -133,14 +135,11 @@ in {
           id = name;
           icon = "di:anchor";
         };
-
-        dependsOnContainer = lib.optional (cfg.db.type == "postgres") dbName;
-        stack = name;
       };
 
       ${dbName} = lib.mkIf (cfg.db.type == "postgres") {
-        image = "docker.io/postgres:17";
-        volumeMap.data = "${storage}/postgres:/var/lib/postgresql/data";
+        image = "docker.io/postgres:18";
+        volumeMap.data = "${storage}/postgres:/var/lib/postgresql";
         extraEnv = {
           POSTGRES_DB = name;
           POSTGRES_USER = name;
