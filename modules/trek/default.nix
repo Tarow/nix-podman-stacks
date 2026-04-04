@@ -78,7 +78,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/mauriceboe/trek:2.7.2";
+      image = "docker.io/mauriceboe/trek:2.8.0";
       volumeMap = {
         data = "${storage}/data:/app/data";
         uploads = "${storage}/uploads:/app/uploads";
