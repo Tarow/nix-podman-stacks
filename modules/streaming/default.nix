@@ -750,7 +750,7 @@ in {
 
         ${prowlarrName} = lib.mkIf cfg.prowlarr.enable (mkArrBase prowlarrName
           // {
-            image = "lscr.io/linuxserver/prowlarr:2.3.0";
+            image = "lscr.io/linuxserver/prowlarr:2.3.5";
             port = 9696;
 
             homepage = {
