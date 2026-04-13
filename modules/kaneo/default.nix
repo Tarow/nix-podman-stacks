@@ -101,7 +101,7 @@ in {
 
     services.podman.containers = {
       ${webName} = {
-        image = "ghcr.io/usekaneo/web:2.3.11";
+        image = "ghcr.io/usekaneo/web:2.6.5";
 
         environment = {
           KANEO_CLIENT_URL = cfg.containers.${webName}.traefik.serviceUrl;
@@ -131,7 +131,7 @@ in {
       };
 
       ${apiName} = {
-        image = "ghcr.io/usekaneo/api:2.3.11";
+        image = "ghcr.io/usekaneo/api:2.6.5";
 
         extraEnv =
           {
@@ -146,6 +146,7 @@ in {
             CUSTOM_OAUTH_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
             CUSTOM_OAUTH_DISCOVERY_URL = "${config.nps.containers.authelia.traefik.serviceUrl}/.well-known/openid-configuration";
             CUSTOM_OAUTH_SCOPES = "openid,profile,email";
+            DISABLE_PASSWORD_REGISTRATION = lib.mkDefault true;
           };
 
         wantsContainer = [dbName];

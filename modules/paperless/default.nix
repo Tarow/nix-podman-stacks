@@ -270,7 +270,7 @@ in {
       };
 
       ${tikaName} = lib.mkIf cfg.enableTika {
-        image = "docker.io/apache/tika:3.2.3.0";
+        image = "docker.io/apache/tika:3.3.0.0";
 
         stack = name;
         glance = {
@@ -282,7 +282,7 @@ in {
       };
 
       ${gotenbergName} = lib.mkIf cfg.enableTika {
-        image = "docker.io/gotenberg/gotenberg:8.28.0";
+        image = "docker.io/gotenberg/gotenberg:8.30.1";
         exec = "gotenberg --chromium-disable-javascript=true --chromium-allow-list=file:///tmp/.*";
 
         stack = name;

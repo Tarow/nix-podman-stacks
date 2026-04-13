@@ -335,7 +335,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/authelia/authelia:4.39.16";
+        image = "ghcr.io/authelia/authelia:4.39.19";
         environment =
           {
             AUTHELIA_STORAGE_LOCAL_PATH = "/data/db.sqlite3";
@@ -368,6 +368,16 @@ in {
             rsaKey = "${cfg.oidc.jwksRsaKeyFile}:/secrets/oidc/jwks/rsa.key";
             jwksKeyConfig = "${writeOidcJwksConfigFile "/secrets/oidc/jwks/rsa.key"}:/config/jwks_key_config.yml";
           };
+
+        extraConfig.Container = {
+          Notify = "healthy";
+          HealthCmd = "/app/healthcheck.sh";
+          HealthInterval = "10s";
+          HealthTimeout = "10s";
+          HealthRetries = 5;
+          HealthStartPeriod = "20s";
+          HealthOnFailure = "kill";
+        };
 
         wantsContainer = ["lldap"] ++ lib.optional (cfg.sessionProvider == "redis") redisName;
         stack = name;
