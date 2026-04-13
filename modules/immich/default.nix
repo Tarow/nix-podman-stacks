@@ -204,7 +204,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/immich-app/immich-server:v2.7.4";
+        image = "ghcr.io/immich-app/immich-server:v2.7.5";
         volumeMap = {
           pictures = "${mediaStorage}/pictures/immich:${env.UPLOAD_LOCATION}";
           settings = lib.mkIf (cfg.settings != null && (!cfg.oidc.enable)) "${cfg.settings}:${env.IMMICH_CONFIG_FILE}";
