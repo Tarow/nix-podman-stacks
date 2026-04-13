@@ -122,6 +122,7 @@ in {
           {
             APP_URL = cfg.containers.${name}.traefik.serviceUrl;
             PRINTER_ENDPOINT = "http://${chromeName}:9222";
+            PRINTER_APP_URL = "http://${name}:3000";
             AUTH_SECRET.fromFile = cfg.authSecretFile;
             DATABASE_URL.fromTemplate = "postgres://${cfg.db.username}:{{ file.Read `${cfg.db.passwordFile}` }}@${dbName}/rxresume?sslmode=disable";
           }
