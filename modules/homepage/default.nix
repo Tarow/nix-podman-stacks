@@ -201,7 +201,11 @@ in {
       environment = {
         PUID = config.nps.defaultUid;
         PGID = config.nps.defaultGid;
-        HOMEPAGE_ALLOWED_HOSTS = config.services.podman.containers.${name}.traefik.serviceHost;
+        HOMEPAGE_ALLOWED_HOSTS = 
+          config.services.podman.containers.${name}.traefik.serviceHost
+          + lib.optionalString 
+              (config.nps.stacks.tsbridge.enable or false)
+              ",${config.services.podman.containers.${name}.tsbridge.serviceHost}";
       };
       fileEnvMount = pathEntries;
 

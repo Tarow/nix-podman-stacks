@@ -75,6 +75,7 @@ let
     traefik = ./traefik;
     trek = ./trek;
     trip = ./trip;
+    tsbridge = ./tsbridge;
     uptime-kuma = ./uptime-kuma;
     vaultwarden = ./vaultwarden;
     vikunja = ./vikunja;
