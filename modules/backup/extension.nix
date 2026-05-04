@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   backupOpts = import ./options.nix lib;
-in {
+in
+{
   options.services.podman.containers = lib.mkOption {
     type = lib.types.attrsOf (
       lib.types.submodule (
@@ -13,9 +15,11 @@ in {
           name,
           config,
           ...
-        }: let
+        }:
+        let
           resticCfg = config.restic;
-        in {
+        in
+        {
           options = with lib; {
             restic = {
               enable = mkEnableOption ''
@@ -24,7 +28,7 @@ in {
 
               paths = mkOption {
                 type = types.listOf types.str;
-                default = [];
+                default = [ ];
                 description = ''
                   Directories to back up. Set this to the service's storage dir,
                   media dir, and any external volumes.
@@ -60,12 +64,16 @@ in {
               };
 
               timerConfig = mkOption {
-                type = types.nullOr (types.attrsOf (types.oneOf [
-                  types.str
-                  types.int
-                  types.bool
-                  (types.listOf types.str)
-                ]));
+                type = types.nullOr (
+                  types.attrsOf (
+                    types.oneOf [
+                      types.str
+                      types.int
+                      types.bool
+                      (types.listOf types.str)
+                    ]
+                  )
+                );
                 default = null;
                 description = ''
                   Override global timer configuration. Set to null to inherit global default.
@@ -106,7 +114,9 @@ in {
                 exclude
                 environmentFile
                 dynamicFilesFrom
-                initialize;
+                initialize
+                ;
+
             };
           };
         }

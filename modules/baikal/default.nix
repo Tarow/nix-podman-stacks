@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   name = "baikal";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
@@ -10,12 +11,9 @@
   category = "General";
   displayName = "Baikal";
   description = "DAV Server";
-        backup_paths = [
-        "${storage}/config"
-        "${storage}/data"
-        ];
-in {
-  imports = import ../mkAliases.nix config lib name [name];
+in
+{
+  imports = import ../mkAliases.nix config lib name [ name ];
 
   options.nps.stacks.${name}.enable = lib.mkEnableOption name;
 
@@ -44,10 +42,7 @@ in {
         id = name;
         icon = "di:baikal";
       };
-      restic = lib.mkIf cfg.containers.${name}.restic.enable {
-          inherit backup_paths;
-          paths = backup_paths;
-        };
+      restic.paths = [ storage ];
     };
 
   };

@@ -3,37 +3,25 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   name = "backup";
   cfg = config.nps.stacks.${name};
 
   allContainers = config.services.podman.containers;
   backupContainers = lib.filterAttrs (_: c: c.restic.enable or false) allContainers;
 
-  mkBackupEntry = containerName: container: let
-    rc = container.restic;
-  in
+  mkBackupEntry =
+    containerName: container:
+    let
+      rc = container.restic;
+    in
     lib.nameValuePair containerName {
       repository =
-        if rc.repository != null
-        then rc.repository
-        else "${cfg.backupStorageRepository}/${containerName}";
-      passwordFile =
-        if rc.passwordFile != null
-        then rc.passwordFile
-        else cfg.restic.passwordFile;
-      paths =
-        if rc.paths != []
-        then rc.paths
-        else ["${config.nps.storageBaseDir}/${container.stack or containerName}"];
-      pruneOpts =
-        if rc.pruneOpts != null
-        then rc.pruneOpts
-        else cfg.restic.pruneOpts;
-      timerConfig =
-        if rc.timerConfig != null
-        then rc.timerConfig
-        else cfg.restic.timerConfig;
+        if rc.repository != null then rc.repository else "${cfg.backupStorageRepository}/${containerName}";
+      passwordFile = if rc.passwordFile != null then rc.passwordFile else cfg.restic.passwordFile;
+      pruneOpts = if rc.pruneOpts != null then rc.pruneOpts else cfg.restic.pruneOpts;
+      timerConfig = if rc.timerConfig != null then rc.timerConfig else cfg.restic.timerConfig;
       inherit (rc)
         initialize
         backupPrepareCommand
@@ -46,9 +34,11 @@
         exclude
         environmentFile
         dynamicFilesFrom
+        paths
         ;
     };
-in {
+in
+{
   imports = [
     ./extension.nix
   ];
@@ -68,14 +58,13 @@ in {
     restic = (import ./options.nix lib).resticBackupOptions // {
       enable = lib.mkEnableOption "restic";
     };
-    
 
     rclone = {
       enable = lib.mkEnableOption "rclone";
-      package = lib.mkPackageOption pkgs "rclone" {};
+      package = lib.mkPackageOption pkgs "rclone" { };
       remotes = lib.mkOption {
         type = lib.types.attrsOf (import ./options.nix lib).rcloneRemoteSubmodule;
-        default = {};
+        default = { };
         description = "Rclone remote configurations (e.g., Backblaze B2, S3).";
       };
     };
@@ -83,8 +72,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.restic.enable = lib.mkDefault true;
-    services.restic.backups =
-      builtins.listToAttrs (lib.mapAttrsToList mkBackupEntry backupContainers);
+    services.restic.backups = builtins.listToAttrs (lib.mapAttrsToList mkBackupEntry backupContainers);
 
     programs.rclone = lib.mkIf cfg.rclone.enable {
       enable = true;

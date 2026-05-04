@@ -32,7 +32,10 @@ in rec {
         types.bool
         (types.listOf types.str)
       ]));
-      default = null;
+      default = {
+        OnCalendar = "daily";
+        Persistent = true;
+      };
       description = ''
         Systemd timer configuration for scheduling backups.
         See systemd.timer(5) for details. If null, no timer is created.
