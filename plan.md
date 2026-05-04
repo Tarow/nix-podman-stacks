@@ -34,17 +34,19 @@ nps.stacks = {
   backups = {
     enable = true;
     backupBaseRepository = "/nas/backups/";
-    passwordFile = config.sops.secrets.restic_global_password.path;
-    pruneOpts = [
-      "--keep-daily 7"
-      "--keep-weekly 5"
-      "--keep-monthly 12"
-      "--keep-yearly 75"
-    ];
-    timerConfig = {
-      OnCalendar = "00:05";
-      Persistent = true;
-      RandomizedDelaySec = "5h";
+    restic = {
+      passwordFile = config.sops.secrets.restic_global_password.path;
+      pruneOpts = [
+        "--keep-daily 7"
+        "--keep-weekly 5"
+        "--keep-monthly 12"
+        "--keep-yearly 75"
+      ];
+      timerConfig = {
+        OnCalendar = "00:05";
+        Persistent = true;
+        RandomizedDelaySec = "5h";
+      };
     };
     rclone = {
       enable = true;

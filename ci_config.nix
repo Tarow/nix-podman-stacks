@@ -882,6 +882,35 @@ in {
       };
 
       yopass.enable = true;
+
+      backup = {
+        enable = true;
+        backupStorageRepository = "${config.home.homeDirectory}/backups";
+        restic = {
+          enable = true;
+          passwordFile = dummySecretFile;
+          pruneOpts = [
+            "--keep-daily 7"
+            "--keep-weekly 5"
+          ];
+          timerConfig = {
+            OnCalendar = "00:05";
+            Persistent = true;
+            RandomizedDelaySec = "5h";
+          };
+        };
+      };
+
+      # Example: Baikal opts into backups
+      baikal.containers.baikal.restic.enable = true;
+
+      # Example: Blocky opts into backups with custom paths
+      blocky.containers.blocky.restic = {
+        enable = true;
+        paths = [
+          "${config.nps.storageBaseDir}/blocky"
+        ];
+      };
     };
   };
 }

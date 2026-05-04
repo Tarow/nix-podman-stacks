@@ -7,6 +7,7 @@ let
     anchor = ./anchor;
     audiobookshelf = ./audiobookshelf;
     authelia = ./authelia;
+    backup = ./backup;
     baikal = ./baikal;
     bentopdf = ./bentopdf;
     beszel = ./beszel;
