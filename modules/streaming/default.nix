@@ -510,7 +510,7 @@ in {
         };
 
         ${quiName} = lib.mkIf cfg.qui.enable {
-          image = "ghcr.io/autobrr/qui:v1.17.0";
+          image = "ghcr.io/autobrr/qui:v1.18.0";
           volumeMap = {
             config = "${storage}/${quiName}:/config";
             media = "${mediaStorage}:/media";
