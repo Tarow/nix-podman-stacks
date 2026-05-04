@@ -10,12 +10,17 @@
   category = "General";
   displayName = "Baikal";
   description = "DAV Server";
+        backup_paths = [
+        "${storage}/config"
+        "${storage}/data"
+        ];
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
   options.nps.stacks.${name}.enable = lib.mkEnableOption name;
 
   config = lib.mkIf cfg.enable {
+
     services.podman.containers.${name} = {
       image = "docker.io/ckulka/baikal:0.10.1-nginx";
       volumeMap = {
@@ -39,6 +44,11 @@ in {
         id = name;
         icon = "di:baikal";
       };
+      restic = lib.mkIf cfg.containers.${name}.restic.enable {
+          inherit backup_paths;
+          paths = backup_paths;
+        };
     };
+
   };
 }
