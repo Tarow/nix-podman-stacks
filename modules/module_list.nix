@@ -7,7 +7,7 @@ let
     anchor = ./anchor;
     audiobookshelf = ./audiobookshelf;
     authelia = ./authelia;
-    backup = ./backup;
+    backups = ./backups;
     baikal = ./baikal;
     bentopdf = ./bentopdf;
     beszel = ./beszel;
@@ -87,9 +87,9 @@ let
     yopass = ./yopass;
   };
 in
-  modules
-  // {
-    nps = {
-      imports = builtins.attrValues modules;
-    };
-  }
+modules
+// {
+  nps = {
+    imports = builtins.attrValues modules;
+  };
+}
