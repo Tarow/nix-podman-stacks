@@ -14,28 +14,30 @@ let
   splitBackupContainers = lib.filterAttrs (_: c: c.backups.split == true) backupContainers;
   globalBackupContainers = lib.filterAttrs (_: c: c.backups.split == false) backupContainers;
 
-  globalBackupPaths = lib.sort builtins.lessThan (
-    lib.unique (
-      lib.flatten (
-        lib.mapAttrsToList (
-          name: c:
-          let
-            volumes = c.volumeMap or { };
-          in
-          lib.filter (
-            p:
-            (lib.hasPrefix "${config.nps.storageBaseDir}" p)
-            || (lib.hasPrefix "${config.nps.mediaStorageBaseDir}" p)
-          ) (map (v: builtins.head (lib.splitString ":" v)) (lib.attrValues volumes))
-        ) globalBackupContainers
+  backupPaths =
+    c:
+    lib.sort builtins.lessThan (
+      lib.unique (
+        lib.flatten (
+          lib.mapAttrsToList (
+            name: c:
+            let
+              volumes = c.volumeMap or { };
+            in
+            lib.filter (
+              p:
+              (lib.hasPrefix "${config.nps.storageBaseDir}" p)
+              || (lib.hasPrefix "${config.nps.mediaStorageBaseDir}" p)
+            ) (map (v: builtins.head (lib.splitString ":" v)) (lib.attrValues volumes))
+          ) c
+        )
       )
-    )
-  );
+    );
 
   mkGlobalResticBackup = {
-    repository = cfg.backupStorageRepository;
+    repository = "${cfg.backupStorageRepository}/global";
     passwordFile = cfg.restic.passwordFile;
-    paths = globalBackupPaths;
+    paths = backupPaths globalBackupContainers;
     inherit (cfg.restic)
       pruneOpts
       timerConfig
@@ -64,6 +66,7 @@ let
       passwordFile = rc.passwordFile;
       pruneOpts = if rc.pruneOpts != null then rc.pruneOpts else cfg.restic.pruneOpts;
       timerConfig = if rc.timerConfig != null then rc.timerConfig else cfg.restic.timerConfig;
+      paths = if rc.paths != [ ] then rc.paths else backupPaths { "${containerName}" = container; };
       inherit (rc)
         initialize
         backupPrepareCommand
@@ -76,7 +79,6 @@ let
         exclude
         environmentFile
         dynamicFilesFrom
-        paths
         ;
     };
 in
