@@ -1,6 +1,8 @@
-lib: let
+lib:
+let
   inherit (lib) types;
-in rec {
+in
+rec {
   # Options shared by both global defaults and per-container backup configs.
   # Mirrors the shape of services.restic.backups.<name> options.
   resticBackupOptions = {
@@ -13,7 +15,7 @@ in rec {
     };
     pruneOpts = lib.mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = ''
         Retention policy for 'restic forget --prune'.
         See https://restic.readthedocs.io/en/latest/060_forget.html
@@ -26,12 +28,16 @@ in rec {
       ];
     };
     timerConfig = lib.mkOption {
-      type = types.nullOr (types.attrsOf (types.oneOf [
-        types.str
-        types.int
-        types.bool
-        (types.listOf types.str)
-      ]));
+      type = types.nullOr (
+        types.attrsOf (
+          types.oneOf [
+            types.str
+            types.int
+            types.bool
+            (types.listOf types.str)
+          ]
+        )
+      );
       default = {
         OnCalendar = "daily";
         Persistent = true;
@@ -46,6 +52,49 @@ in rec {
         RandomizedDelaySec = "5h";
       };
     };
+    backupPrepareCommand = lib.mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Shell command to run before backup. Useful for dumping a database
+        to a file before backing it up.
+      '';
+      example = ''
+        pg_dump -U myapp myappdb > /tmp/myapp-db-dump.sql
+      '';
+    };
+    backupCleanupCommand = lib.mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Shell command to run after backup completes. Useful for removing
+        temporary files created by backupPrepareCommand.
+      '';
+      example = ''
+        rm /tmp/myapp-db-dump.sql
+      '';
+    };
+
+    paths = lib.mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = ''
+        Directories to back up. Set this to the service's storage dir,
+        media dir, and any external volumes.
+      '';
+      example = lib.literalExpression ''
+        ["''${config.nps.storageBaseDir}/myservice"]
+      '';
+    };
+
+    repository = lib.mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Restic repository URL. Defaults to <backupBaseRepository>/<container-name>.
+      '';
+    };
+
     initialize = lib.mkOption {
       type = types.bool;
       default = true;
@@ -53,17 +102,22 @@ in rec {
     };
     extraBackupArgs = lib.mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "Extra arguments passed to restic backup.";
     };
     extraOptions = lib.mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "Extra extended options to be passed to restic -o flag.";
     };
     rcloneOptions = lib.mkOption {
-      type = types.attrsOf (types.oneOf [types.str types.bool]);
-      default = {};
+      type = types.attrsOf (
+        types.oneOf [
+          types.str
+          types.bool
+        ]
+      );
+      default = { };
       description = ''
         Options to pass to rclone. Strip leading "--", use hyphens.
       '';
@@ -79,12 +133,12 @@ in rec {
     };
     checkOpts = lib.mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "Options for restic check.";
     };
     exclude = lib.mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "Patterns to exclude when backing up.";
     };
     environmentFile = lib.mkOption {
@@ -107,18 +161,22 @@ in rec {
         description = "Rclone remote type (e.g., b2, s3, webdav).";
       };
       config = lib.mkOption {
-        type = types.attrsOf (types.nullOr (types.oneOf [
-          types.bool
-          types.int
-          types.float
-          types.str
-        ]));
-        default = {};
+        type = types.attrsOf (
+          types.nullOr (
+            types.oneOf [
+              types.bool
+              types.int
+              types.float
+              types.str
+            ]
+          )
+        );
+        default = { };
         description = "Rclone remote configuration options.";
       };
       secrets = lib.mkOption {
         type = types.attrsOf types.str;
-        default = {};
+        default = { };
         description = ''
           Secret files for the rclone remote. Values are file paths read at runtime.
           Use for passwords, API keys, tokens, etc.
