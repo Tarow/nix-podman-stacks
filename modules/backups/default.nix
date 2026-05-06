@@ -14,10 +14,47 @@ let
   splitBackupContainers = lib.filterAttrs (_: c: c.backups.split == true) backupContainers;
   globalBackupContainers = lib.filterAttrs (_: c: c.backups.split == false) backupContainers;
 
+  globalBackupPaths = lib.sort builtins.lessThan (
+    lib.unique (
+      lib.flatten (
+        lib.mapAttrsToList (
+          name: c:
+          let
+            volumes = c.volumeMap or { };
+          in
+          lib.filter (
+            p: lib.hasPrefix "/${config.nps.storageBaseDir}" p "/${config.nps.mediaStorageBaseDir}" p
+          ) (map (v: builtins.head (lib.splitString ":" v)) (lib.attrValues volumes))
+        ) globalBackupContainers
+      )
+    )
+  );
+
+  mkGlobalResticBackup = {
+    repository = cfg.backupStorageRepository;
+    passwordFile = cfg.restic.passwordFile;
+    paths = globalBackupPaths;
+    inherit (cfg.restic)
+      pruneOpts
+      timerConfig
+      initialize
+      backupPrepareCommand
+      backupCleanupCommand
+      extraBackupArgs
+      extraOptions
+      rcloneOptions
+      inhibitsSleep
+      checkOpts
+      exclude
+      environmentFile
+      dynamicFilesFrom
+      ;
+  };
+
   mkSplitResticBackupEntry =
     containerName: container:
     let
-      rc = container.restic;
+      rc = container.backups.restic;
     in
     lib.nameValuePair containerName {
       repository =
@@ -75,9 +112,9 @@ in
 
   config = lib.mkIf cfg.enable {
     services.restic.enable = lib.mkDefault true;
-    services.restic.backups = builtins.listToAttrs (
-      lib.mapAttrsToList mkSplitResticBackupEntry splitBackupContainers
-    );
+    services.restic.backups = (lib.mapAttrs' mkSplitResticBackupEntry splitBackupContainers) // {
+      global = mkGlobalResticBackup;
+    };
 
     programs.rclone = lib.mkIf cfg.rclone.enable {
       enable = true;
