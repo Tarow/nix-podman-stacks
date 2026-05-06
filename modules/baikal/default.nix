@@ -42,7 +42,6 @@ in
         id = name;
         icon = "di:baikal";
       };
-      restic.paths = [ storage ];
     };
 
   };

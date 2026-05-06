@@ -5,13 +5,16 @@
   ...
 }:
 let
-  name = "backup";
+  name = "backups";
   cfg = config.nps.stacks.${name};
 
   allContainers = config.services.podman.containers;
-  backupContainers = lib.filterAttrs (_: c: c.restic.enable or false) allContainers;
+  backupContainers = lib.filterAttrs (_: c: c.backups.enable or false) allContainers;
 
-  mkBackupEntry =
+  splitBackupContainers = lib.filterAttrs (_: c: c.backups.split == true) backupContainers;
+  globalBackupContainers = lib.filterAttrs (_: c: c.backups.split == false) backupContainers;
+
+  mkSplitResticBackupEntry =
     containerName: container:
     let
       rc = container.restic;
@@ -19,7 +22,7 @@ let
     lib.nameValuePair containerName {
       repository =
         if rc.repository != null then rc.repository else "${cfg.backupStorageRepository}/${containerName}";
-      passwordFile = if rc.passwordFile != null then rc.passwordFile else cfg.restic.passwordFile;
+      passwordFile = rc.passwordFile;
       pruneOpts = if rc.pruneOpts != null then rc.pruneOpts else cfg.restic.pruneOpts;
       timerConfig = if rc.timerConfig != null then rc.timerConfig else cfg.restic.timerConfig;
       inherit (rc)
@@ -72,7 +75,9 @@ in
 
   config = lib.mkIf cfg.enable {
     services.restic.enable = lib.mkDefault true;
-    services.restic.backups = builtins.listToAttrs (lib.mapAttrsToList mkBackupEntry backupContainers);
+    services.restic.backups = builtins.listToAttrs (
+      lib.mapAttrsToList mkSplitResticBackupEntry splitBackupContainers
+    );
 
     programs.rclone = lib.mkIf cfg.rclone.enable {
       enable = true;
