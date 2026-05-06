@@ -23,7 +23,9 @@ let
             volumes = c.volumeMap or { };
           in
           lib.filter (
-            p: lib.hasPrefix "/${config.nps.storageBaseDir}" p "/${config.nps.mediaStorageBaseDir}" p
+            p:
+            (lib.hasPrefix "${config.nps.storageBaseDir}" p)
+            || (lib.hasPrefix "${config.nps.mediaStorageBaseDir}" p)
           ) (map (v: builtins.head (lib.splitString ":" v)) (lib.attrValues volumes))
         ) globalBackupContainers
       )
