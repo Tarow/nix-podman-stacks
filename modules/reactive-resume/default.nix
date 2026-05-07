@@ -113,7 +113,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/amruthpillai/reactive-resume:v5.0.20";
+        image = "ghcr.io/amruthpillai/reactive-resume:v5.1.0";
         volumeMap = {
           data = "${storage}/data:/app/data";
         };
