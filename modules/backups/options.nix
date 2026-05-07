@@ -87,6 +87,11 @@ rec {
       '';
     };
 
+    # package = lib.mkOption {
+    #   type = types.package;
+    #
+    # };
+    #
     repository = lib.mkOption {
       type = types.nullOr types.str;
       default = null;

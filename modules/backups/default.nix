@@ -33,11 +33,15 @@ let
         )
       )
     );
+  resticWrapper = pkgs.writeShellScriptBin "restic-podman-unshare" ''
+    exec ${lib.getExe pkgs.podman} unshare ${lib.getExe pkgs.restic} "$@"
+  '';
 
   mkGlobalResticBackup = {
     repository = "${cfg.backupStorageRepository}/global";
     passwordFile = cfg.restic.passwordFile;
     paths = backupPaths globalBackupContainers;
+    package = resticWrapper;
     inherit (cfg.restic)
       pruneOpts
       timerConfig
