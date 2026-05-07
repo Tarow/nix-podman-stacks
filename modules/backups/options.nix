@@ -157,36 +157,4 @@ rec {
       description = "Script that produces a list of files to back up.";
     };
   };
-
-  # Rclone remote submodule matching programs.rclone.remotes.<name>.
-  rcloneRemoteSubmodule = types.submodule {
-    options = {
-      type = lib.mkOption {
-        type = types.str;
-        description = "Rclone remote type (e.g., b2, s3, webdav).";
-      };
-      config = lib.mkOption {
-        type = types.attrsOf (
-          types.nullOr (
-            types.oneOf [
-              types.bool
-              types.int
-              types.float
-              types.str
-            ]
-          )
-        );
-        default = { };
-        description = "Rclone remote configuration options.";
-      };
-      secrets = lib.mkOption {
-        type = types.attrsOf types.str;
-        default = { };
-        description = ''
-          Secret files for the rclone remote. Values are file paths read at runtime.
-          Use for passwords, API keys, tokens, etc.
-        '';
-      };
-    };
-  };
 }

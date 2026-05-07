@@ -106,16 +106,6 @@ in
     restic = (import ./options.nix lib).resticBackupOptions // {
       enable = lib.mkEnableOption "restic";
     };
-
-    rclone = {
-      enable = lib.mkEnableOption "rclone";
-      package = lib.mkPackageOption pkgs "rclone" { };
-      remotes = lib.mkOption {
-        type = lib.types.attrsOf (import ./options.nix lib).rcloneRemoteSubmodule;
-        default = { };
-        description = "Rclone remote configurations (e.g., Backblaze B2, S3).";
-      };
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -123,15 +113,10 @@ in
     services.restic.backups = (lib.mapAttrs' mkSplitResticBackupEntry splitBackupContainers) // {
       global = mkGlobalResticBackup;
     };
-
-    programs.rclone = lib.mkIf cfg.rclone.enable {
-      enable = true;
-      package = cfg.rclone.package;
-      remotes = lib.mapAttrs (_: remote: {
-        type = remote.type;
-        config = remote.config;
-        secrets = remote.secrets;
-      }) cfg.rclone.remotes;
+    systemd.user.services."restic-backups-global" = {
+      Service = {
+        PrivateTmp = lib.mkForce false;
+      };
     };
   };
 }
