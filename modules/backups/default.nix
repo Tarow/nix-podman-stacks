@@ -14,6 +14,30 @@ let
   splitBackupContainers = lib.filterAttrs (_: c: c.backups.split == true) backupContainers;
   globalBackupContainers = lib.filterAttrs (_: c: c.backups.split == false) backupContainers;
 
+  prepareCommand =
+    c:
+    lib.concatStringsSep "\n" (
+      lib.sort builtins.lessThan (
+        lib.unique (
+          lib.mapAttrsToList (
+            name: _: "${lib.getExe' pkgs.systemd "systemctl"} --user stop podman-${name}.service"
+          ) c
+        )
+      )
+    );
+
+  cleanupCommand =
+    c:
+    lib.concatStringsSep "\n" (
+      lib.sort builtins.lessThan (
+        lib.unique (
+          lib.mapAttrsToList (
+            name: _: "${lib.getExe' pkgs.systemd "systemctl"} --user start podman-${name}.service"
+          ) c
+        )
+      )
+    );
+
   backupPaths =
     c:
     lib.sort builtins.lessThan (
@@ -40,14 +64,24 @@ let
   mkGlobalResticBackup = {
     repository = "${cfg.backupStorageRepository}/global";
     passwordFile = cfg.restic.passwordFile;
-    paths = backupPaths globalBackupContainers;
+    paths = if cfg.restic.paths != [ ] then cfg.restic.paths else backupPaths globalBackupContainers;
+
+    backupPrepareCommand =
+      if cfg.restic.backupPrepareCommand != null then
+        cfg.restic.backupPrepareCommand
+      else
+        prepareCommand globalBackupContainers;
+    backupCleanupCommand =
+      if cfg.restic.backupCleanupCommand != null then
+        cfg.restic.backupCleanupCommand
+      else
+        cleanupCommand globalBackupContainers;
+
     package = resticWrapper;
     inherit (cfg.restic)
       pruneOpts
       timerConfig
       initialize
-      backupPrepareCommand
-      backupCleanupCommand
       extraBackupArgs
       extraOptions
       rcloneOptions
@@ -71,10 +105,18 @@ let
       pruneOpts = if rc.pruneOpts != null then rc.pruneOpts else cfg.restic.pruneOpts;
       timerConfig = if rc.timerConfig != null then rc.timerConfig else cfg.restic.timerConfig;
       paths = if rc.paths != [ ] then rc.paths else backupPaths { "${containerName}" = container; };
+      backupPrepareCommand =
+        if rc.backupPrepareCommand != null then
+          rc.backupPrepareCommand
+        else
+          prepareCommand { "${containerName}" = container; };
+      backupCleanupCommand =
+        if rc.backupCleanupCommand != null then
+          rc.backupCleanupCommand
+        else
+          cleanupCommand { "${containerName}" = container; };
       inherit (rc)
         initialize
-        backupPrepareCommand
-        backupCleanupCommand
         extraBackupArgs
         extraOptions
         rcloneOptions
