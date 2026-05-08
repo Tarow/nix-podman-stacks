@@ -3,11 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   backupOpts = import ./options.nix lib;
-in
-{
+in {
   options.services.podman.containers = lib.mkOption {
     type = lib.types.attrsOf (
       lib.types.submodule (
@@ -15,11 +13,9 @@ in
           name,
           config,
           ...
-        }:
-        let
+        }: let
           backupsCfg = config.backups;
-        in
-        {
+        in {
           options = with lib; {
             backups = {
               enable = mkEnableOption ''
@@ -38,7 +34,8 @@ in
                 '';
 
                 # Pass-through options inherited from the global defaults
-                inherit (backupOpts.resticBackupOptions)
+                inherit
+                  (backupOpts.resticBackupOptions)
                   paths
                   repository
                   passwordFile

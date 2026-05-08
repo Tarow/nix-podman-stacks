@@ -1,8 +1,6 @@
-lib:
-let
+lib: let
   inherit (lib) types;
-in
-rec {
+in rec {
   # Options shared by both global defaults and per-container backup configs.
   # Mirrors the shape of services.restic.backups.<name> options.
   resticBackupOptions = {
@@ -15,7 +13,7 @@ rec {
     };
     pruneOpts = lib.mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
       description = ''
         Retention policy for 'restic forget --prune'.
         See https://restic.readthedocs.io/en/latest/060_forget.html
@@ -77,7 +75,7 @@ rec {
 
     paths = lib.mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
       description = ''
         Directories to back up. Set this to the service's storage dir,
         media dir, and any external volumes.
@@ -107,12 +105,12 @@ rec {
     };
     extraBackupArgs = lib.mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
       description = "Extra arguments passed to restic backup.";
     };
     extraOptions = lib.mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
       description = "Extra extended options to be passed to restic -o flag.";
     };
     rcloneOptions = lib.mkOption {
@@ -122,7 +120,7 @@ rec {
           types.bool
         ]
       );
-      default = { };
+      default = {};
       description = ''
         Options to pass to rclone. Strip leading "--", use hyphens.
       '';
@@ -138,12 +136,12 @@ rec {
     };
     checkOpts = lib.mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
       description = "Options for restic check.";
     };
     exclude = lib.mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
       description = "Patterns to exclude when backing up.";
     };
     environmentFile = lib.mkOption {

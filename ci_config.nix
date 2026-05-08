@@ -5,16 +5,14 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   dummyId = "dummy";
   dummySecret = "insecure_secret";
   dummySecretFile = "${pkgs.writeText "insecure_secret" dummySecret}";
   dummyHash = "$argon2id$v=19$m=65536,t=3,p=4$8USywQgWNhOf4drzlVTieA$Rm8SlHy+ipThtIa/6nMMir2QkoXESCr4uCB2aAdvlmo";
   dummyUser = "admin";
   dummyEmail = "admin@example.com";
-in
-{
+in {
   config.nps = rec {
     hostIP4Address = "192.168.178.2";
     hostUid = 1000;
@@ -78,7 +76,7 @@ in
           clients.dummy = {
             public = true;
             authorization_policy = "two_factor";
-            redirect_uris = [ ];
+            redirect_uris = [];
           };
         };
         settings.access_control.rules = [
@@ -181,20 +179,18 @@ in
         enable = true;
         extraEnv.EXAMPLE_COM_API_TOKEN.fromFile = dummySecretFile;
         settings.dns.purgeUnknown = true;
-        settings.domains =
-          let
-            domain = config.nps.stacks.traefik.domain;
-          in
-          [
-            {
-              name = domain;
-              a = hostIP4Address;
-            }
-            {
-              name = "*.${domain}";
-              a = hostIP4Address;
-            }
-          ];
+        settings.domains = let
+          domain = config.nps.stacks.traefik.domain;
+        in [
+          {
+            name = domain;
+            a = hostIP4Address;
+          }
+          {
+            name = "*.${domain}";
+            a = hostIP4Address;
+          }
+        ];
       };
 
       docker-socket-proxy.enable = true;
@@ -546,29 +542,27 @@ in
 
       monitoring = {
         enable = true;
-        prometheus.rules.groups =
-          let
-            cpuThresh = 90;
-          in
-          [
-            {
-              name = "resource.usage";
-              rules = [
-                {
-                  alert = "HighCpuUsage";
-                  expr = ''100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > ${toString cpuThresh}'';
-                  for = "20m";
-                  labels = {
-                    severity = "warning";
-                  };
-                  annotations = {
-                    summary = "High CPU usage";
-                    description = "CPU usage is above ${toString cpuThresh}% (current value: {{ $value }}%)";
-                  };
-                }
-              ];
-            }
-          ];
+        prometheus.rules.groups = let
+          cpuThresh = 90;
+        in [
+          {
+            name = "resource.usage";
+            rules = [
+              {
+                alert = "HighCpuUsage";
+                expr = ''100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > ${toString cpuThresh}'';
+                for = "20m";
+                labels = {
+                  severity = "warning";
+                };
+                annotations = {
+                  summary = "High CPU usage";
+                  description = "CPU usage is above ${toString cpuThresh}% (current value: {{ $value }}%)";
+                };
+              }
+            ];
+          }
+        ];
 
         alertmanager = {
           enable = true;
@@ -734,44 +728,45 @@ in
         };
       };
 
-      streaming = {
-        enable = true;
-        gluetun = {
-          vpnProvider = "airvpn";
-          wireguardPrivateKeyFile = dummySecretFile;
-          wireguardPresharedKeyFile = dummySecretFile;
-          wireguardAddressesFile = dummySecretFile;
-
-          extraEnv = {
-            FIREWALL_VPN_INPUT_PORTS.fromFile = dummySecretFile;
-            SERVER_NAMES.fromFile = dummySecretFile;
-            HTTP_CONTROL_SERVER_LOG = "off";
-          };
-        };
-        qbittorrent.extraEnv = {
-          TORRENTING_PORT.fromFile = dummySecretFile;
-        };
-        jellyfin = {
-          oidc = {
-            enable = true;
-            clientSecretFile = dummySecretFile;
-            clientSecretHash = dummyHash;
-          };
-        };
-        qui = {
+      streaming =
+        {
           enable = true;
-          oidc = {
-            enable = true;
-            clientSecretFile = dummySecretFile;
-            clientSecretHash = dummyHash;
+          gluetun = {
+            vpnProvider = "airvpn";
+            wireguardPrivateKeyFile = dummySecretFile;
+            wireguardPresharedKeyFile = dummySecretFile;
+            wireguardAddressesFile = dummySecretFile;
+
+            extraEnv = {
+              FIREWALL_VPN_INPUT_PORTS.fromFile = dummySecretFile;
+              SERVER_NAMES.fromFile = dummySecretFile;
+              HTTP_CONTROL_SERVER_LOG = "off";
+            };
           };
-        };
-        seerr.enable = true;
-        profilarr.enable = true;
-      }
-      // lib.genAttrs [ "sonarr" "radarr" "bazarr" "prowlarr" ] (name: {
-        extraEnv."${lib.toUpper name}__AUTH__APIKEY".fromFile = dummySecretFile;
-      });
+          qbittorrent.extraEnv = {
+            TORRENTING_PORT.fromFile = dummySecretFile;
+          };
+          jellyfin = {
+            oidc = {
+              enable = true;
+              clientSecretFile = dummySecretFile;
+              clientSecretHash = dummyHash;
+            };
+          };
+          qui = {
+            enable = true;
+            oidc = {
+              enable = true;
+              clientSecretFile = dummySecretFile;
+              clientSecretHash = dummyHash;
+            };
+          };
+          seerr.enable = true;
+          profilarr.enable = true;
+        }
+        // lib.genAttrs ["sonarr" "radarr" "bazarr" "prowlarr"] (name: {
+          extraEnv."${lib.toUpper name}__AUTH__APIKEY".fromFile = dummySecretFile;
+        });
 
       tandoor = {
         enable = true;
@@ -804,7 +799,7 @@ in
         enable = true;
         domain = "example.com";
         extraEnv.CF_DNS_API_TOKEN.fromFile = dummySecretFile;
-        geoblock.allowedCountries = [ "DE" ];
+        geoblock.allowedCountries = ["DE"];
         enablePrometheusExport = true;
         enableGrafanaMetricsDashboard = true;
         enableGrafanaAccessLogDashboard = true;
@@ -890,7 +885,9 @@ in
 
       backups = {
         enable = true;
-        backupStorageRepository = "${config.home.homeDirectory}/backups";
+        repositories = {
+          local = "${config.home.homeDirectory}/backups";
+        };
         restic = {
           enable = true;
           passwordFile = dummySecretFile;
