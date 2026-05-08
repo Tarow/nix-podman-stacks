@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   name = "backups";
   cfg = config.nps.stacks.${name};
 
@@ -13,45 +14,46 @@
   splitBackupContainers = lib.filterAttrs (_: c: c.backups.split == true) backupContainers;
   globalBackupContainers = lib.filterAttrs (_: c: c.backups.split == false) backupContainers;
 
-  prepareCommand = c:
+  prepareCommand =
+    c:
     lib.concatStringsSep "\n" (
       lib.sort builtins.lessThan (
         lib.unique (
           lib.mapAttrsToList (
             name: _: "${lib.getExe' pkgs.systemd "systemctl"} --user stop podman-${name}.service"
-          )
-          c
+          ) c
         )
       )
     );
 
-  cleanupCommand = c:
+  cleanupCommand =
+    c:
     lib.concatStringsSep "\n" (
       lib.sort builtins.lessThan (
         lib.unique (
           lib.mapAttrsToList (
             name: _: "${lib.getExe' pkgs.systemd "systemctl"} --user start podman-${name}.service"
-          )
-          c
+          ) c
         )
       )
     );
 
-  backupPaths = c:
+  backupPaths =
+    c:
     lib.sort builtins.lessThan (
       lib.unique (
         lib.flatten (
           lib.mapAttrsToList (
-            name: c: let
-              volumes = c.volumeMap or {};
+            name: c:
+            let
+              volumes = c.volumeMap or { };
             in
-              lib.filter (
-                p:
-                  (lib.hasPrefix "${config.nps.storageBaseDir}" p)
-                  || (lib.hasPrefix "${config.nps.mediaStorageBaseDir}" p)
-              ) (map (v: builtins.head (lib.splitString ":" v)) (lib.attrValues volumes))
-          )
-          c
+            lib.filter (
+              p:
+              (lib.hasPrefix "${config.nps.storageBaseDir}" p)
+              || (lib.hasPrefix "${config.nps.mediaStorageBaseDir}" p)
+            ) (map (v: builtins.head (lib.splitString ":" v)) (lib.attrValues volumes))
+          ) c
         )
       )
     );
@@ -60,28 +62,27 @@
     exec ${lib.getExe pkgs.podman} unshare ${lib.getExe pkgs.restic} "$@"
   '';
 
-  mkGlobalResticBackup = label: repository:
+  mkGlobalResticBackup =
+    label: repository:
     lib.nameValuePair "global-${label}" {
       repository = "${repository}/global";
       # repository = "${cfg.backupStorageRepository}/global";
       passwordFile = cfg.restic.passwordFile;
-      paths =
-        if cfg.restic.paths != []
-        then cfg.restic.paths
-        else backupPaths globalBackupContainers;
+      paths = if cfg.restic.paths != [ ] then cfg.restic.paths else backupPaths globalBackupContainers;
 
       backupPrepareCommand =
-        if cfg.restic.backupPrepareCommand != null
-        then cfg.restic.backupPrepareCommand
-        else prepareCommand globalBackupContainers;
+        if cfg.restic.backupPrepareCommand != null then
+          cfg.restic.backupPrepareCommand
+        else
+          prepareCommand globalBackupContainers;
       backupCleanupCommand =
-        if cfg.restic.backupCleanupCommand != null
-        then cfg.restic.backupCleanupCommand
-        else cleanupCommand globalBackupContainers;
+        if cfg.restic.backupCleanupCommand != null then
+          cfg.restic.backupCleanupCommand
+        else
+          cleanupCommand globalBackupContainers;
 
       package = resticWrapper;
-      inherit
-        (cfg.restic)
+      inherit (cfg.restic)
         pruneOpts
         timerConfig
         initialize
@@ -96,38 +97,30 @@
         ;
     };
 
-  mkSplitResticBackupEntry = containerName: container: label: repository: let
-    rc = container.backups.restic;
-  in
+  mkSplitResticBackupEntry =
+    containerName: container: label: repository:
+    let
+      rc = container.backups.restic;
+    in
     lib.nameValuePair "${containerName}-${label}" {
       repository =
         # if rc.repository != null then rc.repository else "${cfg.backupStorageRepository}/${containerName}";
-        if rc.repository != null
-        then rc.repository
-        else "${repository}/${containerName}";
+        if rc.repository != null then rc.repository else "${repository}/${containerName}";
       passwordFile = rc.passwordFile;
-      pruneOpts =
-        if rc.pruneOpts != null
-        then rc.pruneOpts
-        else cfg.restic.pruneOpts;
-      timerConfig =
-        if rc.timerConfig != null
-        then rc.timerConfig
-        else cfg.restic.timerConfig;
-      paths =
-        if rc.paths != []
-        then rc.paths
-        else backupPaths {"${containerName}" = container;};
+      pruneOpts = if rc.pruneOpts != null then rc.pruneOpts else cfg.restic.pruneOpts;
+      timerConfig = if rc.timerConfig != null then rc.timerConfig else cfg.restic.timerConfig;
+      paths = if rc.paths != [ ] then rc.paths else backupPaths { "${containerName}" = container; };
       backupPrepareCommand =
-        if rc.backupPrepareCommand != null
-        then rc.backupPrepareCommand
-        else prepareCommand {"${containerName}" = container;};
+        if rc.backupPrepareCommand != null then
+          rc.backupPrepareCommand
+        else
+          prepareCommand { "${containerName}" = container; };
       backupCleanupCommand =
-        if rc.backupCleanupCommand != null
-        then rc.backupCleanupCommand
-        else cleanupCommand {"${containerName}" = container;};
-      inherit
-        (rc)
+        if rc.backupCleanupCommand != null then
+          rc.backupCleanupCommand
+        else
+          cleanupCommand { "${containerName}" = container; };
+      inherit (rc)
         initialize
         extraBackupArgs
         extraOptions
@@ -140,49 +133,47 @@
         ;
     };
 
-  mkContainers = splitContainers: repos:
+  mkContainers =
+    splitContainers: repos:
     lib.listToAttrs (
       lib.mapAttrsToList (label: repo: mkGlobalResticBackup label repo) repos
       ++ lib.flatten (
         lib.mapAttrsToList (
           label: repo:
-            lib.mapAttrsToList (
-              containerName: container: mkSplitResticBackupEntry containerName container label repo
-            )
-            splitContainers
-        )
-        repos
+          lib.mapAttrsToList (
+            containerName: container: mkSplitResticBackupEntry containerName container label repo
+          ) splitContainers
+        ) repos
       )
     );
 
-  mkPrivateTmp = splitContainers: repos:
+  mkPrivateTmp =
+    splitContainers: repos:
     lib.listToAttrs (
       lib.flatten (
         lib.mapAttrsToList (
           label: repo:
-            lib.mapAttrsToList (
-              containerName: _:
-                lib.nameValuePair "restic-backups-${containerName}-${label}" {
-                  Service = {
-                    PrivateTmp = lib.mkForce false;
-                  };
-                }
-            )
-            splitContainers
-        )
-        repos
+          lib.mapAttrsToList (
+            containerName: _:
+            lib.nameValuePair "restic-backups-${containerName}-${label}" {
+              Service = {
+                PrivateTmp = lib.mkForce false;
+              };
+            }
+          ) splitContainers
+        ) repos
       )
       ++ lib.mapAttrsToList (
         label: repo:
-          lib.nameValuePair "restic-backups-global-${label}" {
-            Service = {
-              PrivateTmp = lib.mkForce false;
-            };
-          }
-      )
-      repos
+        lib.nameValuePair "restic-backups-global-${label}" {
+          Service = {
+            PrivateTmp = lib.mkForce false;
+          };
+        }
+      ) repos
     );
-in {
+in
+{
   imports = [
     ./extension.nix
   ];
@@ -192,7 +183,7 @@ in {
 
     repositories = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
-      default = {};
+      default = { };
       description = ''
         Named restic repositories. Each key is a label, each value is a
         restic repository URL or path. These are mapped to restic backup
@@ -206,24 +197,14 @@ in {
       '';
     };
 
-    restic =
-      (import ./options.nix lib).resticBackupOptions
-      // {
-        enable = lib.mkEnableOption "restic";
-      };
+    restic = (import ./options.nix lib).resticBackupOptions // {
+      enable = lib.mkEnableOption "restic";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     services.restic.enable = lib.mkDefault true;
-    # services.restic.backups = (lib.mapAttrs' mkSplitResticBackupEntry splitBackupContainers) // {
-    #   global = mkGlobalResticBackup;
-    # };
     services.restic.backups = mkContainers splitBackupContainers cfg.repositories;
     systemd.user.services = mkPrivateTmp splitBackupContainers cfg.repositories;
-    # systemd.user.services."restic-backups-global" = {
-    #   Service = {
-    #     PrivateTmp = lib.mkForce false;
-    #   };
-    # };
   };
 }
