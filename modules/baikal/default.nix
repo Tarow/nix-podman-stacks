@@ -2,8 +2,7 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   name = "baikal";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
@@ -11,14 +10,12 @@ let
   category = "General";
   displayName = "Baikal";
   description = "DAV Server";
-in
-{
-  imports = import ../mkAliases.nix config lib name [ name ];
+in {
+  imports = import ../mkAliases.nix config lib name [name];
 
   options.nps.stacks.${name}.enable = lib.mkEnableOption name;
 
   config = lib.mkIf cfg.enable {
-
     services.podman.containers.${name} = {
       image = "docker.io/ckulka/baikal:0.10.1-nginx";
       volumeMap = {
@@ -43,6 +40,5 @@ in
         icon = "di:baikal";
       };
     };
-
   };
 }
