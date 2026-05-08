@@ -57,50 +57,55 @@ let
         )
       )
     );
+
   resticWrapper = pkgs.writeShellScriptBin "restic-podman-unshare" ''
     exec ${lib.getExe pkgs.podman} unshare ${lib.getExe pkgs.restic} "$@"
   '';
 
-  mkGlobalResticBackup = {
-    repository = "${cfg.backupStorageRepository}/global";
-    passwordFile = cfg.restic.passwordFile;
-    paths = if cfg.restic.paths != [ ] then cfg.restic.paths else backupPaths globalBackupContainers;
+  mkGlobalResticBackup =
+    label: repository:
+    lib.nameValuePair "global-${label}" {
+      repository = "${repository}/global";
+      # repository = "${cfg.backupStorageRepository}/global";
+      passwordFile = cfg.restic.passwordFile;
+      paths = if cfg.restic.paths != [ ] then cfg.restic.paths else backupPaths globalBackupContainers;
 
-    backupPrepareCommand =
-      if cfg.restic.backupPrepareCommand != null then
-        cfg.restic.backupPrepareCommand
-      else
-        prepareCommand globalBackupContainers;
-    backupCleanupCommand =
-      if cfg.restic.backupCleanupCommand != null then
-        cfg.restic.backupCleanupCommand
-      else
-        cleanupCommand globalBackupContainers;
+      backupPrepareCommand =
+        if cfg.restic.backupPrepareCommand != null then
+          cfg.restic.backupPrepareCommand
+        else
+          prepareCommand globalBackupContainers;
+      backupCleanupCommand =
+        if cfg.restic.backupCleanupCommand != null then
+          cfg.restic.backupCleanupCommand
+        else
+          cleanupCommand globalBackupContainers;
 
-    package = resticWrapper;
-    inherit (cfg.restic)
-      pruneOpts
-      timerConfig
-      initialize
-      extraBackupArgs
-      extraOptions
-      rcloneOptions
-      inhibitsSleep
-      checkOpts
-      exclude
-      environmentFile
-      dynamicFilesFrom
-      ;
-  };
+      package = resticWrapper;
+      inherit (cfg.restic)
+        pruneOpts
+        timerConfig
+        initialize
+        extraBackupArgs
+        extraOptions
+        rcloneOptions
+        inhibitsSleep
+        checkOpts
+        exclude
+        environmentFile
+        dynamicFilesFrom
+        ;
+    };
 
   mkSplitResticBackupEntry =
-    containerName: container:
+    containerName: container: label: repository:
     let
       rc = container.backups.restic;
     in
-    lib.nameValuePair containerName {
+    lib.nameValuePair "${containerName}-${label}" {
       repository =
-        if rc.repository != null then rc.repository else "${cfg.backupStorageRepository}/${containerName}";
+        # if rc.repository != null then rc.repository else "${cfg.backupStorageRepository}/${containerName}";
+        if rc.repository != null then rc.repository else "${repository}/${containerName}";
       passwordFile = rc.passwordFile;
       pruneOpts = if rc.pruneOpts != null then rc.pruneOpts else cfg.restic.pruneOpts;
       timerConfig = if rc.timerConfig != null then rc.timerConfig else cfg.restic.timerConfig;
@@ -127,6 +132,16 @@ let
         dynamicFilesFrom
         ;
     };
+
+  mkContainers =
+    globalContainers: splitContainers: repositories:
+    let
+      repos = cfg.repositories;
+    in
+    builtins.mapAttrs (
+      label: repo: lib.mapAttrs' (mkSplitResticBackupEntry splitBackupContainers label repo)
+    ) repos
+    // builtins.mapAttrs (label: repo: mkGlobalResticBackup label repo) repos;
 in
 {
   imports = [
@@ -136,13 +151,20 @@ in
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
 
-    backupStorageRepository = lib.mkOption {
-      type = lib.types.str;
+    repositories = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.attrsOf lib.types.str);
+      default = { };
       description = ''
-        Base directory or repository prefix for restic backups.
-        Each container gets its own sub-repo: <base>/<container-name>
+        Named restic repositories. Each key is a label, each value is a
+        restic repository URL or path. These are mapped to restic backup
+        entries named after the label.
       '';
-      example = "/nas/backups/restic";
+      example = lib.literalExpression ''
+        {
+          global-nas = "/nas/repo";
+          global-s3 = "s3:https://s3.example.com/bucket";
+        }
+      '';
     };
 
     restic = (import ./options.nix lib).resticBackupOptions // {
@@ -152,9 +174,12 @@ in
 
   config = lib.mkIf cfg.enable {
     services.restic.enable = lib.mkDefault true;
-    services.restic.backups = (lib.mapAttrs' mkSplitResticBackupEntry splitBackupContainers) // {
-      global = mkGlobalResticBackup;
-    };
+    # services.restic.backups = (lib.mapAttrs' mkSplitResticBackupEntry splitBackupContainers) // {
+    #   global = mkGlobalResticBackup;
+    # };
+    services.restic.backups =
+      mkContainers globalBackupContainers splitBackupContainers
+        cfg.repositories;
     systemd.user.services."restic-backups-global" = {
       Service = {
         PrivateTmp = lib.mkForce false;
