@@ -16,7 +16,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/civilblur/mazanoke:v1.1.5";
+      image = "ghcr.io/civilblur/mazanoke:v1.1.6";
 
       port = 80;
       traefik.name = name;
