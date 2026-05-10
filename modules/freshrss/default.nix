@@ -112,7 +112,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/freshrss/freshrss:1.28.1";
+      image = "docker.io/freshrss/freshrss:1.29.0";
       volumeMap = {
         data = "${storage}/data:/var/www/FreshRSS/data";
         extensions = "${storage}/extensions:/var/www/FreshRSS/extensions";
