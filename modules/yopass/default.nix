@@ -42,7 +42,7 @@ in {
       };
 
       ${dbName} = {
-        image = "docker.io/memcached:1.6.41";
+        image = "docker.io/memcached:1.6.42";
         stack = name;
 
         glance = {
