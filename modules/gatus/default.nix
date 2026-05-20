@@ -206,7 +206,7 @@ in {
           };
         configDir = "/app/config";
       in {
-        image = "ghcr.io/twin/gatus:v5.35.0";
+        image = "ghcr.io/twin/gatus:v5.36.0";
         volumeMap = {
           config = "${yaml.generate "config.yml" settings}:${configDir}/config.yml";
           data = lib.mkIf (cfg.db.type == "sqlite") "${storage}/sqlite:/data";
