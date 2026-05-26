@@ -92,7 +92,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/zhfahim/anchor:0.11.1";
+        image = "ghcr.io/zhfahim/anchor:0.12.0";
         volumeMap.data = "${storage}/data:/data";
 
         extraEnv =
