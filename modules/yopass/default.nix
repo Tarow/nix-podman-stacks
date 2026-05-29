@@ -21,6 +21,8 @@ in {
         image = "docker.io/jhaals/yopass:14.0.0";
         exec = "--memcached=${dbName}:11211 --port 8080";
 
+        extraEnv.PUBLIC_URL = cfg.containers.${name}.traefik.serviceUrl;
+
         wantsContainer = [dbName];
         stack = name;
         port = 8080;
