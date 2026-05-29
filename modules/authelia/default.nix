@@ -179,7 +179,6 @@ in {
     };
     settings = lib.mkOption {
       type = yaml.type;
-
       description = ''
         Additional Authelia settings. Will be provided in the `configuration.yml`.
       '';
@@ -213,13 +212,6 @@ in {
         The middleware will utilize the ForwardAuth Authz implementation.
 
         See <https://www.authelia.com/integration/proxies/traefik/#implementation>
-      '';
-    };
-    enableFilesystemNotifier = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether to enable the default filesystem notifier, as this collides with the SMTP notifier.
       '';
     };
     crowdsec = {
@@ -300,9 +292,9 @@ in {
         password_change.disable = lib.mkDefault true;
       };
       access_control.default_policy = lib.mkDefault config.nps.stacks.${name}.defaultAllowPolicy;
-      notifier = lib.mkIf cfg.enableFilesystemNotifier {
-        filesystem.filename = "/notifier/notification.txt";
-      };
+
+      # Make entire notifier block with default prioority, so configured smtp settings will override the filesystem notifier, since Authelia only supports a single configured notifier
+      notifier = lib.mkDefault {filesystem.filename = "/notifier/notification.txt";};
       session =
         {
           name = "authelia_session";
@@ -344,7 +336,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/authelia/authelia:4.39.19";
+        image = "ghcr.io/authelia/authelia:4.39.20";
         environment =
           {
             AUTHELIA_STORAGE_LOCAL_PATH = "/data/db.sqlite3";
