@@ -34,7 +34,8 @@
         "/guacamole/",
         "/kitchenowl/",
         "/adventurelog/",
-        "/kaneo/"
+        "/kaneo/",
+        "/profilarr/"
       ],
       "groupName": "{{parentDir}}"
     },

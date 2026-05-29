@@ -18,6 +18,7 @@
   quiName = "qui";
   seerrName = "seerr";
   profilarrName = "profilarr";
+  profilarrParserName = "${profilarrName}-parser";
 
   category = "Media & Downloads";
   qbittorrentDescription = "BitTorrent Client";
@@ -184,6 +185,7 @@ in {
     quiName
     seerrName
     profilarrName
+    profilarrParserName
   ];
 
   options.nps.stacks.${stackName} =
@@ -297,7 +299,31 @@ in {
           };
         };
       };
-      profilarr.enable = lib.mkEnableOption "Profilarr";
+      profilarr = {
+        enable = lib.mkEnableOption "Profilarr";
+        enableParser = lib.mkEnableOption "Profilarr Parser";
+        oidc = {
+          enable = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = ''
+              Whether to enable OIDC login with Authelia. This will register an OIDC client in Authelia
+              and setup the necessary configuration.
+
+              For details, see:
+
+              - <https://v2.dictionarry.dev/profilarr-setup/installation?section=authentication>
+            '';
+          };
+          clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;
+          clientSecretHash = (import ../authelia/options.nix lib).derivableClientSecretHash cfg.profilarr.oidc.clientSecretFile;
+          userGroup = lib.mkOption {
+            type = lib.types.str;
+            default = "${profilarrName}_user";
+            description = "Users of this group will be able to log in";
+          };
+        };
+      };
       seerr.enable = lib.mkEnableOption "Seerr";
       qui = {
         enable = lib.mkEnableOption "qui";
@@ -370,6 +396,9 @@ in {
       (lib.mkIf (cfg.qui.enable && cfg.qui.oidc.enable) {
         ${cfg.qui.oidc.userGroup} = {};
       })
+      (lib.mkIf (cfg.profilarr.enable && cfg.profilarr.oidc.enable) {
+        ${cfg.profilarr.oidc.userGroup} = {};
+      })
     ];
     nps.stacks.authelia = lib.mkMerge [
       (lib.mkIf (cfg.jellyfin.enable && cfg.jellyfin.oidc.enable) {
@@ -409,6 +438,31 @@ in {
             {
               policy = config.nps.stacks.authelia.defaultAllowPolicy;
               subject = "group:${cfg.qui.oidc.userGroup}";
+            }
+          ];
+        };
+      })
+      (lib.mkIf (cfg.profilarr.enable && cfg.profilarr.oidc.enable) {
+        oidc.clients.${profilarrName} = {
+          client_name = profilarrDisplayName;
+          client_secret = cfg.profilarr.oidc.clientSecretHash;
+          public = false;
+          authorization_policy = profilarrName;
+          require_pkce = false;
+          pkce_challenge_method = "";
+          pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
+          token_endpoint_auth_method = "client_secret_post";
+          redirect_uris = [
+            "${cfg.containers.${profilarrName}.traefik.serviceUrl}/auth/oidc/callback"
+          ];
+        };
+        # No real RBAC control based on custom claims / groups yet. Restrict user-access on Authelia level
+        settings.identity_providers.oidc.authorization_policies.${profilarrName} = {
+          default_policy = "deny";
+          rules = [
+            {
+              policy = config.nps.stacks.authelia.defaultAllowPolicy;
+              subject = "group:${cfg.profilarr.oidc.userGroup}";
             }
           ];
         };
@@ -651,13 +705,27 @@ in {
         };
 
         ${profilarrName} = lib.mkIf cfg.profilarr.enable {
-          image = "docker.io/santiagosayshey/profilarr:v1.1.4";
+          image = "ghcr.io/dictionarry-hub/profilarr:2.0.7";
           volumeMap.config = "${storage}/${profilarrName}/config:/config";
 
-          environment = {
-            PUID = config.nps.defaultUid;
-            PGID = config.nps.defaultGid;
-          };
+          extraEnv =
+            {
+              PUID = config.nps.defaultUid;
+              PGID = config.nps.defaultGid;
+              ORIGIN = cfg.containers.${profilarrName}.traefik.serviceUrl;
+            }
+            // lib.optionalAttrs cfg.profilarr.enableParser {
+              PARSER_HOST = profilarrParserName;
+              PARSER_PORT = 5000;
+            }
+            // lib.optionalAttrs cfg.profilarr.oidc.enable {
+              AUTH = "oidc";
+              OIDC_DISCOVERY_URL = "${config.nps.containers.authelia.traefik.serviceUrl}/.well-known/openid-configuration";
+              OIDC_CLIENT_ID = profilarrName;
+              OIDC_CLIENT_SECRET.fromFile = cfg.profilarr.oidc.clientSecretFile;
+            };
+
+          wantsContainer = lib.optional cfg.profilarr.enableParser profilarrParserName;
 
           port = 6868;
           traefik.name = profilarrName;
@@ -674,7 +742,18 @@ in {
             inherit category;
             description = profilarrDescription;
             name = profilarrDisplayName;
-            id = seerrName;
+            id = profilarrName;
+            icon = "di:profilarr";
+          };
+        };
+
+        ${profilarrParserName} = lib.mkIf cfg.profilarr.enableParser {
+          image = "ghcr.io/dictionarry-hub/profilarr-parser:2.0.7";
+          stack = stackName;
+          glance = {
+            inherit category;
+            name = "Profilarr Parser";
+            parent = profilarrName;
             icon = "di:profilarr";
           };
         };
