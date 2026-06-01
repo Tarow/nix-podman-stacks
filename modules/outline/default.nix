@@ -123,7 +123,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/outlinewiki/outline:1.7.1";
+        image = "docker.io/outlinewiki/outline:1.8.0";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap.data = "${storage}/data:/var/lib/outline/data";
         extraEnv = let
