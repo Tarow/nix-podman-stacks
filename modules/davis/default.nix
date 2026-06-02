@@ -87,7 +87,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/tchapi/davis-standalone:5.4.2";
+        image = "ghcr.io/tchapi/davis-standalone:5.4.3";
         volumeMap.data = lib.mkIf (cfg.db.type == "sqlite") "${storage}/sqlite:/data";
 
         extraEnv =
