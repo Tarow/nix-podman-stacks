@@ -20,7 +20,7 @@ jobs:
           remove-dotnet: true
           remove-android: true
           remove-haskell: true
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -56,7 +56,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
