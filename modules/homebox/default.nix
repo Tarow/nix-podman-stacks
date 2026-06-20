@@ -19,6 +19,15 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
+    apiKeyPepperFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        The file containing the pepper to use for API key hashing.
+        Can be generated using `openssl rand -base64 48`
+
+        See <https://homebox.software/en/quick-start/configure/>
+      '';
+    };
     extraEnv = lib.mkOption {
       type = (import ../types.nix lib).extraEnv;
       default = {};
@@ -100,6 +109,7 @@ in {
 
         extraEnv =
           {
+            HBOX_AUTH_API_KEY_PEPPER.fromFile = cfg.apiKeyPepperFile;
             HBOX_WEB_PORT = 7745;
             HBOX_MODE = "production";
             HBOX_LOG_LEVEL = "info";
