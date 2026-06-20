@@ -388,6 +388,7 @@ in {
 
       homebox = {
         enable = true;
+        apiKeyPepperFile = dummySecretFile;
         oidc = {
           enable = true;
           clientSecretFile = dummySecretFile;
