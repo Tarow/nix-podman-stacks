@@ -705,7 +705,7 @@ in {
         };
 
         ${profilarrName} = lib.mkIf cfg.profilarr.enable {
-          image = "ghcr.io/dictionarry-hub/profilarr:2.0.8";
+          image = "ghcr.io/dictionarry-hub/profilarr:2.0.9";
           volumeMap.config = "${storage}/${profilarrName}/config:/config";
 
           extraEnv =
@@ -748,7 +748,7 @@ in {
         };
 
         ${profilarrParserName} = lib.mkIf cfg.profilarr.enableParser {
-          image = "ghcr.io/dictionarry-hub/profilarr-parser:2.0.8";
+          image = "ghcr.io/dictionarry-hub/profilarr-parser:2.0.9";
           stack = stackName;
           glance = {
             inherit category;
