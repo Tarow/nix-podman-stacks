@@ -68,7 +68,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/binwiederhier/ntfy:v2.24.0";
+      image = "docker.io/binwiederhier/ntfy:v2.25.0";
       exec = "serve";
       volumeMap.data = "${storage}:/var/lib/ntfy";
 
