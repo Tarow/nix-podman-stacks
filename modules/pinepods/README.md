@@ -14,11 +14,6 @@ Podcast management system
       enable = true;
       clientSecretFile = config.sops.secrets."pinepods/authelia/client_secret".path;
     };
-    adminProvisioning = {
-      enable = true;
-      email = "admin@example.com";
-      passwordFile = config.sops.secrets."pinepods/admin_password".path;
-    };
   };
 }
 ```
