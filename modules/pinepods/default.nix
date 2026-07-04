@@ -18,14 +18,6 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    masterKeyFile = lib.mkOption {
-      type = lib.types.path;
-      description = ''
-        Path to the file containing the master encryption key. Can be generated with `openssl rand -base64 32`.
-
-        See <https://github.com/norish-recipes/norish?tab=readme-ov-file#required-variables>
-      '';
-    };
     adminProvisioning = {
       enable = lib.mkOption {
         type = lib.types.bool;
@@ -114,6 +106,7 @@ in {
         pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
         redirect_uris = [
           "${cfg.containers.${name}.traefik.serviceUrl}/api/auth/callback"
+          "pinepods://auth/callback" # mobile app
         ];
       };
     };
