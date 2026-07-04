@@ -74,7 +74,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/bellamy/wallos:4.6.0";
+        image = "docker.io/bellamy/wallos:4.9.6";
 
         volumeMap = {
           db = "${storage}/db:/var/www/html/db";
@@ -96,7 +96,7 @@ in {
           inherit category description;
           name = displayName;
           id = name;
-          icon = "di:wallos";
+          icon = "di:wallos.webp";
         };
       };
     };

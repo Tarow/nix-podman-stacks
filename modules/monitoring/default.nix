@@ -395,7 +395,7 @@ in {
 
     services.podman.containers = {
       ${grafanaName} = lib.mkIf cfg.grafana.enable {
-        image = "docker.io/grafana/grafana:12.3.2";
+        image = "docker.io/grafana/grafana:13.1.0";
         user = config.nps.defaultUid;
         volumeMap = {
           data = "${storage}/grafana/data:/var/lib/grafana";
@@ -458,7 +458,7 @@ in {
       };
 
       ${lokiName} = lib.mkIf cfg.loki.enable {
-        image = "docker.io/grafana/loki:3.6.5";
+        image = "docker.io/grafana/loki:3.7.3";
         exec = "-config.file=/etc/loki/local-config.yaml";
         user = config.nps.defaultUid;
         volumeMap = {
@@ -488,7 +488,7 @@ in {
         configDst = "/etc/alloy/config.alloy";
       in
         lib.mkIf cfg.alloy.enable {
-          image = "docker.io/grafana/alloy:v1.13.0";
+          image = "docker.io/grafana/alloy:v1.17.1";
           volumeMap.settings = "${cfg.alloy.config}:${configDst}";
           exec = "run --server.http.listen-addr=0.0.0.0:${toString cfg.alloy.port} --storage.path=/var/lib/alloy/data ${configDst}";
 
@@ -516,7 +516,7 @@ in {
         configDst = "/etc/prometheus/prometheus.yml";
       in
         lib.mkIf cfg.prometheus.enable {
-          image = "docker.io/prom/prometheus:v3.9.1";
+          image = "docker.io/prom/prometheus:v3.13.0";
           exec = "--config.file=${configDst}";
           user = config.nps.defaultUid;
           volumeMap = {
@@ -547,7 +547,7 @@ in {
         };
 
       ${podmanExporterName} = lib.mkIf cfg.podmanExporter.enable {
-        image = "quay.io/navidys/prometheus-podman-exporter:v1.20.0";
+        image = "quay.io/navidys/prometheus-podman-exporter:v1.21.2";
         volumeMap.socket = "${config.nps.socketLocation}:/var/run/podman/podman.sock";
 
         environment.CONTAINER_HOST = "unix:///var/run/podman/podman.sock";
@@ -573,7 +573,7 @@ in {
       };
 
       ${alertmanagerName} = lib.mkIf cfg.alertmanager.enable {
-        image = "docker.io/prom/alertmanager:v0.31.0";
+        image = "docker.io/prom/alertmanager:v0.33.0";
         user = config.nps.defaultUid;
         volumeMap = {
           settings = "${cfg.alertmanager.settings}:/config/alertmanager.yml";
@@ -603,7 +603,7 @@ in {
       };
 
       ${alertmanagerNtfyName} = lib.mkIf (cfg.alertmanager.enable && cfg.alertmanager.ntfy.enable) {
-        image = "ghcr.io/alexbakker/alertmanager-ntfy:1.1.0";
+        image = "ghcr.io/alexbakker/alertmanager-ntfy:1.2.1";
         volumeMap.settings = "${cfg.alertmanager.ntfy.settings}:/etc/config.yml";
         templateMount = lib.optional (cfg.alertmanager.ntfy.tokenFile != null) {
           templatePath = yaml.generate "auth.yaml" {ntfy.auth.token = "{{file.Read `${cfg.alertmanager.ntfy.tokenFile}`}}";};

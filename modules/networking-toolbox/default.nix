@@ -28,6 +28,7 @@ in {
         HealthTimeout = "10s";
         HealthRetries = 3;
         HealthStartPeriod = "20s";
+        HealthOnFailure = "kill";
       };
 
       port = 3000;

@@ -55,7 +55,7 @@ Self-hosted Git server
 
     oidc = {
       enable = true;
-      clientSecretFile = config.sops.secrets."fogejo/authelia/client_secret".path;
+      clientSecretFile = config.sops.secrets."forgejo/authelia/client_secret".path;
       clientSecretHash = "$pbkdf2-sha512$...";
     };
   };

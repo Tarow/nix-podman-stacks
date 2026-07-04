@@ -29,7 +29,7 @@
   container = cfg.containers.${name};
   lldap = config.nps.stacks.lldap;
 
-  mkClientSecretEnvName = clientName: "OIDC_CLIENT_SECRET_HASH_${lib.toUpper clientName}";
+  mkClientSecretEnvName = clientName: "OIDC_CLIENT_SECRET_HASH_${lib.toUpper clientName |> lib.replaceStrings ["-"] ["_"]}";
 
   fromFileClientSecrets =
     cfg.oidc.clients
@@ -82,11 +82,10 @@ in {
       type = lib.types.enum ["one_factor" "two_factor"];
       default = "one_factor";
       description = ''
-        Default policy to apply for allowed access. Will be used as a default for Access Control Rules as well as OIDC Authorization Policies if no rules apply.
+        Default policy to apply for allowed access. Will be used as a default for OIDC Authorization Policies.
 
         See
         - <https://www.authelia.com/configuration/identity-providers/openid-connect/clients/#authorization_policy>
-        - <https://www.authelia.com/configuration/security/access-control/#rules>
       '';
     };
     oidc = {
@@ -180,7 +179,6 @@ in {
     };
     settings = lib.mkOption {
       type = yaml.type;
-      apply = yaml.generate "configuration.yml";
       description = ''
         Additional Authelia settings. Will be provided in the `configuration.yml`.
       '';
@@ -293,8 +291,10 @@ in {
         password_reset.disable = lib.mkDefault true;
         password_change.disable = lib.mkDefault true;
       };
-      access_control.default_policy = config.nps.stacks.${name}.defaultAllowPolicy;
-      notifier.filesystem.filename = "/notifier/notification.txt";
+      access_control.default_policy = lib.mkDefault config.nps.stacks.${name}.defaultAllowPolicy;
+
+      # Make entire notifier block with default prioority, so configured smtp settings will override the filesystem notifier, since Authelia only supports a single configured notifier
+      notifier = lib.mkDefault {filesystem.filename = "/notifier/notification.txt";};
       session =
         {
           name = "authelia_session";
@@ -327,14 +327,16 @@ in {
         address = "http://authelia:9091/api/authz/forward-auth?authelia_url=https%3A%2F%2F${
           cfg.containers.${name}.traefik.serviceHost
         }%2F";
-        trustForwardHeader = true;
+        trustForwardHeader = lib.mkDefault true;
         authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name";
+        maxBodySize = lib.mkDefault 10485760; # 10 MiB
+        maxResponseBodySize = lib.mkDefault 10485760; # 10 MiB
       };
     };
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/authelia/authelia:4.39.15";
+        image = "ghcr.io/authelia/authelia:4.39.20";
         environment =
           {
             AUTHELIA_STORAGE_LOCAL_PATH = "/data/db.sqlite3";
@@ -361,14 +363,24 @@ in {
           {
             data = "${storage}/db:/data";
             notifier = "${storage}/notifier:/notifier";
-            settings = "${cfg.settings}:/config/configuration.yml";
+            settings = "${yaml.generate "configuration.yml" cfg.settings}:/config/configuration.yml";
           }
           // lib.optionalAttrs oidcEnabled {
             rsaKey = "${cfg.oidc.jwksRsaKeyFile}:/secrets/oidc/jwks/rsa.key";
             jwksKeyConfig = "${writeOidcJwksConfigFile "/secrets/oidc/jwks/rsa.key"}:/config/jwks_key_config.yml";
           };
 
-        wantsContainer = lib.optional (cfg.sessionProvider == "redis") redisName;
+        extraConfig.Container = {
+          Notify = "healthy";
+          HealthCmd = "/app/healthcheck.sh";
+          HealthInterval = "10s";
+          HealthTimeout = "10s";
+          HealthRetries = 5;
+          HealthStartPeriod = "20s";
+          HealthOnFailure = "kill";
+        };
+
+        wantsContainer = ["lldap"] ++ lib.optional (cfg.sessionProvider == "redis") redisName;
         stack = name;
         port = 9091;
         traefik.name = name;
@@ -401,6 +413,7 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "10s";
+          HealthOnFailure = "kill";
         };
         glance = {
           parent = name;

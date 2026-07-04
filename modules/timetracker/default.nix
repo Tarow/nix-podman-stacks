@@ -116,7 +116,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/drytrix/timetracker:4.18.0";
+        image = "ghcr.io/drytrix/timetracker:5.8.6";
         volumeMap.data = "${storage}:/data/";
         user = config.nps.defaultUid;
         extraEnv =
@@ -145,7 +145,7 @@ in {
             OIDC_CLIENT_ID = name;
             OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
             OIDC_REDIRECT_URI = "${cfg.containers.${name}.traefik.serviceUrl}/auth/oidc/callback";
-            OIDC_SCOPES = utils.escapeOnDemand ''"openid profile email groups"'';
+            OIDC_SCOPES = "openid profile email groups";
             OIDC_USERNAME_CLAIM = "preferred_username";
             OIDC_FULL_NAME_CLAIM = "name";
             OIDC_EMAIL_CLAIM = "email";
@@ -190,6 +190,7 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "10s";
+          HealthOnFailure = "kill";
         };
 
         stack = name;

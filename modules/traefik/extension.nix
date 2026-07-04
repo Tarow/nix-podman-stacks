@@ -88,7 +88,7 @@ in {
                     then ":${p}"
                     else ""
                   );
-                defaultText = lib.literalExpression ''"''${containerName}''${containerCfg.port}"'';
+                defaultText = lib.literalExpression ''"''${containerName}:''${containerCfg.port}"'';
                 description = ''
                   The internal main address of the service. Can be used for internal communication
                   without going through Traefik, when inside the same Podman network.
@@ -189,7 +189,7 @@ in {
             labels = lib.optionalAttrs enableTraefik (
               {
                 "traefik.enable" = "true";
-                "traefik.http.routers.${name}.rule" = utils.escapeOnDemand ''Host(`${traefikCfg.serviceHost}`)'';
+                "traefik.http.routers.${name}.rule" = ''Host(`${traefikCfg.serviceHost}`)'';
                 # "traefik.http.routers.${name}.entrypoints" = "websecure,websecure-internal";
                 "traefik.http.routers.${name}.service" = lib.mkDefault name;
               }

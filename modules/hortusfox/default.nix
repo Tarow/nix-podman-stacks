@@ -64,7 +64,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/danielbrendel/hortusfox-web:v5.7";
+        image = "ghcr.io/danielbrendel/hortusfox-web:v5.8";
         volumeMap = {
           img = "${storage}/img:/var/www/html/public/img";
           logs = "${storage}/logs:/var/www/html/app/logs";
@@ -126,6 +126,7 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "20s";
+          HealthOnFailure = "kill";
         };
 
         stack = name;

@@ -313,6 +313,7 @@ in {
           in
             lib.mkMerge [
               #globalConf.nps.defaultContainerSettings
+
               {
                 autoUpdate = lib.mkDefault "registry";
 
@@ -346,11 +347,6 @@ in {
                 ];
 
                 extraConfig = {
-                  Container = let
-                    hasHealthCheck = ((config.HealthCmd or "") != "") || ((config.HealthStartupCmd or "") != "");
-                  in {
-                    HealthOnFailure = lib.mkIf hasHealthCheck (lib.mkDefault "kill");
-                  };
                   Unit = {
                     Requires = config.dependsOn ++ config.dependsOnContainer;
                     Wants = config.wants ++ config.wantsContainer;

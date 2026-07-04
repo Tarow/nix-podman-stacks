@@ -18,8 +18,10 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/jhaals/yopass:12.5.0";
+        image = "docker.io/jhaals/yopass:14.3.0";
         exec = "--memcached=${dbName}:11211 --port 8080";
+
+        extraEnv.PUBLIC_URL = cfg.containers.${name}.traefik.serviceUrl;
 
         wantsContainer = [dbName];
         stack = name;
@@ -42,7 +44,7 @@ in {
       };
 
       ${dbName} = {
-        image = "docker.io/memcached:1.6.40";
+        image = "docker.io/memcached:1.6.42";
         stack = name;
 
         glance = {

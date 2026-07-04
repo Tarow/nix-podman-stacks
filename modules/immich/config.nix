@@ -13,7 +13,7 @@
     acceptedAudioCodecs = [
       "aac"
       "mp3"
-      "libopus"
+      "opus"
       "pcm_s16le"
     ];
     acceptedContainers = [

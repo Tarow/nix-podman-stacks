@@ -112,7 +112,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/freshrss/freshrss:1.28.1";
+      image = "docker.io/freshrss/freshrss:1.29.1";
       volumeMap = {
         data = "${storage}/data:/var/www/FreshRSS/data";
         extensions = "${storage}/extensions:/var/www/FreshRSS/extensions";
@@ -144,18 +144,16 @@ in {
             "--user ${cfg.adminProvisioning.username}"
           ];
         }
-        // lib.optionalAttrs cfg.oidc.enable (let
-          utils = import ../utils.nix {inherit lib config;};
-        in {
+        // lib.optionalAttrs cfg.oidc.enable {
           OIDC_ENABLED = 1;
           OIDC_PROVIDER_METADATA_URL = "${config.nps.containers.authelia.traefik.serviceUrl}/.well-known/openid-configuration";
           OIDC_CLIENT_ID = name;
           OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
           OIDC_CLIENT_CRYPTO_KEY = cfg.oidc.cryptoKeyFile;
           OIDC_REMOTE_USER_CLAIM = "preferred_username";
-          OIDC_SCOPES = utils.escapeOnDemand ''"openid groups email profile"'';
-          OIDC_X_FORWARDED_HEADERS = utils.escapeOnDemand ''"X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto"'';
-        });
+          OIDC_SCOPES = "openid groups email profile";
+          OIDC_X_FORWARDED_HEADERS = "X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto";
+        };
 
       port = 80;
       traefik.name = name;

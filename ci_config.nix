@@ -38,6 +38,15 @@ in {
         };
       };
 
+      anchor = {
+        enable = true;
+        oidc.enable = true;
+        db = {
+          type = "postgres";
+          passwordFile = dummySecretFile;
+        };
+      };
+
       aiostreams = {
         enable = true;
         secretKeyFile = dummySecretFile;
@@ -122,17 +131,6 @@ in {
         jwtSecretFile = dummySecretFile;
       };
 
-      booklore = {
-        enable = true;
-        oidc = {
-          registerClient = true;
-        };
-        db = {
-          userPasswordFile = dummySecretFile;
-          rootPasswordFile = dummySecretFile;
-        };
-      };
-
       calibre.enable = true;
 
       changedetection.enable = true;
@@ -152,6 +150,16 @@ in {
           type = "mysql";
           userPasswordFile = dummySecretFile;
           rootPasswordFile = dummySecretFile;
+        };
+      };
+
+      dawarich = {
+        enable = true;
+        secretKeyFile = dummySecretFile;
+        db.passwordFile = dummySecretFile;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
         };
       };
 
@@ -338,6 +346,17 @@ in {
         };
       };
 
+      grimmory = {
+        enable = true;
+        oidc = {
+          registerClient = true;
+        };
+        db = {
+          userPasswordFile = dummySecretFile;
+          rootPasswordFile = dummySecretFile;
+        };
+      };
+
       guacamole = {
         enable = true;
         userMappingXml = ''
@@ -366,6 +385,20 @@ in {
       };
 
       homeassistant.enable = true;
+
+      homebox = {
+        enable = true;
+        apiKeyPepperFile = dummySecretFile;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyHash;
+        };
+        db = {
+          type = "postgres";
+          passwordFile = dummySecretFile;
+        };
+      };
 
       homepage = {
         enable = true;
@@ -675,7 +708,7 @@ in {
 
       shelfmark = {
         enable = true;
-        downloadDirectory = "${config.nps.storageBaseDir}/booklore/bookdrop";
+        downloadDirectory = "${config.nps.storageBaseDir}/grimmory/bookdrop";
       };
 
       sshwifty = {
@@ -786,6 +819,15 @@ in {
         enableGrafanaMetricsDashboard = true;
         enableGrafanaAccessLogDashboard = true;
         crowdsec.middleware.bouncerKeyFile = dummySecretFile;
+      };
+
+      trek = {
+        enable = true;
+        oidc = {
+          enable = true;
+          clientSecretHash = dummyHash;
+          clientSecretFile = dummySecretFile;
+        };
       };
 
       trip = {

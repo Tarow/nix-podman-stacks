@@ -21,7 +21,7 @@ in {
         Path to the file containing the secret key. Must be a 64-character hex string.
         Can be generated using `openssl rand -hex 32`
 
-        See <https://github.com/outline/outline/blob/main/.env.sample>
+        See <https://docs.aiostreams.viren070.me/configuration/environment-variables/
       '';
     };
     extraEnv = lib.mkOption {
@@ -31,7 +31,7 @@ in {
         Extra environment variables to set for the container.
         Can be used to pass secrets such as the `TMDB_ACCESS_TOKEN`.
 
-        See <https://github.com/Viren070/AIOStreams/wiki/Configuration>
+        See <https://docs.aiostreams.viren070.me/configuration/environment-variables/>
       '';
       example = {
         TMDB_ACCESS_TOKEN = {
@@ -44,13 +44,14 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/viren070/aiostreams:v2.22.0";
+      image = "ghcr.io/viren070/aiostreams:v2.30.5";
       extraConfig.Container = {
         HealthCmd = "wget -qO- http://localhost:3000/api/v1/status";
         HealthInterval = "1m";
         HealthTimeout = "10s";
         HealthRetries = 5;
         HealthStartPeriod = "10s";
+        HealthOnFailure = "kill";
       };
       volumeMap.data = "${storage}/data:/app/data";
       environment = {

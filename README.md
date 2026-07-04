@@ -70,13 +70,13 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/adguard-home.svg" style="width:1em;height:1em;" /> [Adguard](https://tarow.github.io/nix-podman-stacks/docs/stacks/adguard.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/adventure-log.webp" style="width:1em;height:1em;" /> [AdventureLog](https://tarow.github.io/nix-podman-stacks/docs/stacks/adventurelog.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/stremio.svg" style="width:1em;height:1em;" /> [AIOStreams](https://tarow.github.io/nix-podman-stacks/docs/stacks/aiostreams.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/anchor.svg" style="width:1em;height:1em;" /> [Anchor](https://tarow.github.io/nix-podman-stacks/docs/stacks/anchor.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/audiobookshelf.svg" style="height:1em;" /> [Audiobookshelf](https://tarow.github.io/nix-podman-stacks/docs/stacks/audiobookshelf.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/authelia.svg" style="height:1em;" /> [Authelia](https://tarow.github.io/nix-podman-stacks/docs/stacks/authelia.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/baikal.png" style="width:1em;height:1em;" /> [Baikal](https://tarow.github.io/nix-podman-stacks/docs/stacks/baikal.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bentopdf.svg" style="width:1em;height:1em;" /> [BentoPDF](https://tarow.github.io/nix-podman-stacks/docs/stacks/bentopdf.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/beszel.svg" style="width:1em;height:1em;" /> [Beszel](https://tarow.github.io/nix-podman-stacks/docs/stacks/beszel.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/blocky.svg" style="width:1em;height:1em;" /> [Blocky](https://tarow.github.io/nix-podman-stacks/docs/stacks/blocky.html)
-- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/booklore.webp" style="height:1em;" /> [Booklore](https://tarow.github.io/nix-podman-stacks/docs/stacks/booklore.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bytestash.svg" style="width:1em;height:1em;" /> [ByteStash](https://tarow.github.io/nix-podman-stacks/docs/stacks/bytestash.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/calibre-web.svg" style="width:1em;height:1em;" /> [Calibre-Web Automated](https://tarow.github.io/nix-podman-stacks/docs/stacks/calibre.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/changedetection.svg" style="width:1em;height:1em;" /> [Changedetection](https://tarow.github.io/nix-podman-stacks/docs/stacks/changedetection.html)
@@ -84,12 +84,12 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/chrome.svg" style="width:1em;height:1em;" /> Sock Puppet Browser
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/crowdsec.svg" style="width:1em;height:1em;" /> [CrowdSec](https://tarow.github.io/nix-podman-stacks/docs/stacks/crowdsec.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/davis.png" style="width:1em;height:1em;" /> [Davis](https://tarow.github.io/nix-podman-stacks/docs/stacks/davis.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dawarich.svg" style="width:1em;height:1em;" /> [Dawarich](https://tarow.github.io/nix-podman-stacks/docs/stacks/dawarich.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ddns-updater.svg" style="width:1em;height:1em;" /> [DDNS-Updater](https://tarow.github.io/nix-podman-stacks/docs/stacks/ddns-updater.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/azure-dns.svg" style="width:1em;height:1em;" /> [DockDNS](https://tarow.github.io/nix-podman-stacks/docs/stacks/dockdns.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/haproxy.svg" style="width:1em;height:1em;" /> [Docker Socket Proxy](https://tarow.github.io/nix-podman-stacks/docs/stacks/docker-socket-proxy.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/donetick.svg" style="width:1em;height:1em;" /> [Donetick](https://tarow.github.io/nix-podman-stacks/docs/stacks/donetick.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dozzle.svg" style="width:1em;height:1em;" /> [Dozzle](https://tarow.github.io/nix-podman-stacks/docs/stacks/dozzle.html)
-- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/ephemera.webp" style="width:1em;height:1em;" /> [Ephemera](https://tarow.github.io/nix-podman-stacks/docs/stacks/ephemera.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/filebrowser.svg" style="width:1em;height:1em;" /> [Filebrowser](https://tarow.github.io/nix-podman-stacks/docs/stacks/filebrowser.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/filebrowser-quantum.png" style="width:1em;height:1em;" /> [Filebrowser Quantum](https://tarow.github.io/nix-podman-stacks/docs/stacks/filebrowser-quantum.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/flaresolverr.svg" style="width:1em;height:1em;" /> [Flaresolverr](https://tarow.github.io/nix-podman-stacks/docs/stacks/flaresolverr.html)
@@ -98,14 +98,17 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/freshrss.svg" style="width:1em;height:1em;" /> [FreshRSS](https://tarow.github.io/nix-podman-stacks/docs/stacks/freshrss.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gatus.svg" style="width:1em;height:1em;" /> [Gatus](https://tarow.github.io/nix-podman-stacks/docs/stacks/gatus.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/glance.svg" style="width:1em;height:1em;" /> [Glance](https://tarow.github.io/nix-podman-stacks/docs/stacks/glance.html)
+- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/grimmory.webp" style="height:1em;" /> [Grimmory](https://tarow.github.io/nix-podman-stacks/docs/stacks/grimmory.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/guacamole.svg" style="width:1em;height:1em;" /> [Guacamole](https://tarow.github.io/nix-podman-stacks/docs/stacks/guacamole.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/healthchecks.svg" style="width:1em;height:1em;" /> [Healthchecks](https://tarow.github.io/nix-podman-stacks/docs/stacks/healthchecks.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg" style="width:1em;height:1em;" /> [Home Assistant](https://tarow.github.io/nix-podman-stacks/docs/stacks/homeassistant.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homebox.svg" style="width:1em;height:1em;" /> [HomeBox](https://tarow.github.io/nix-podman-stacks/docs/stacks/homebox.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png" style="width:1em;height:1em;" /> [Homepage](https://tarow.github.io/nix-podman-stacks/docs/stacks/homepage.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/hortusfox.webp" style="width:1em;height:1em;" /> [HortusFox](https://tarow.github.io/nix-podman-stacks/docs/stacks/hortusfox.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg" style="width:1em;height:1em;" /> [Immich](https://tarow.github.io/nix-podman-stacks/docs/stacks/immich.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/it-tools.svg" style="width:1em;height:1em;" /> [IT-Tools](https://tarow.github.io/nix-podman-stacks/docs/stacks/it-tools.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jotty.svg" style="width:1em;height:1em;" /> [Jotty](https://tarow.github.io/nix-podman-stacks/docs/stacks/jotty.html)
+- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kaneo.webp" style="width:1em;height:1em;" /> [Kaneo](https://tarow.github.io/nix-podman-stacks/docs/stacks/kaneo.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/karakeep.svg" style="width:1em;height:1em;" /> [Karakeep](https://tarow.github.io/nix-podman-stacks/docs/stacks/karakeep.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kimai.svg" style="width:1em;height:1em;" /> [Kimai](https://tarow.github.io/nix-podman-stacks/docs/stacks/kimai.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kitchenowl.svg" style="width:1em;height:1em;" /> [KitchenOwl](https://tarow.github.io/nix-podman-stacks/docs/stacks/kitchenowl.html)
@@ -136,6 +139,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/paperless.svg" style="width:1em;height:1em;" /> Paperless-ngx
   - 📂 FTP Server
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/papra.svg" style="width:1em;" /> [Papra](https://tarow.github.io/nix-podman-stacks/docs/stacks/papra.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/reactive-resume.svg" style="width:1em;height:1em;" /> [Reactive Resume](https://tarow.github.io/nix-podman-stacks/docs/stacks/reactive_resume.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/romm.svg" style="width:1em;height:1em;" /> [RomM](https://tarow.github.io/nix-podman-stacks/docs/stacks/romm.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/searxng.svg" style="width:1em;height:1em;" /> [SearXNG](https://tarow.github.io/nix-podman-stacks/docs/stacks/searxng.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/calibre-web-automated-book-downloader.webp" style="width:1em;height:1em;" /> [Shelfmark](https://tarow.github.io/nix-podman-stacks/docs/stacks/shelfmark.html)
@@ -146,6 +150,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bazarr.svg" style="width:1em;height:1em;" /> Bazarr
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gluetun.svg" style="width:1em;height:1em;" /> Gluetun
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg" style="width:1em;height:1em;" /> Jellyfin
+  - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/profilarr.svg" style="width:1em;height:1em;" /> Profilarr
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prowlarr.svg" style="width:1em;height:1em;" /> Prowlarr
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg" style="width:1em;height:1em;" /> qBittorrent
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qui.svg" style="width:1em;height:1em;" /> qui
@@ -155,6 +160,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tandoor-recipes.svg" style="width:1em;height:1em;" /> [Tandoor](https://tarow.github.io/nix-podman-stacks/docs/stacks/tandoor.html)
 - <img src="https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/book-clock.svg" style="width:1em;height:1em;" /> [TimeTracker](https://tarow.github.io/nix-podman-stacks/docs/stacks/timetracker.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/traefik.svg" style="width:1em;height:1em;" /> [Traefik](https://tarow.github.io/nix-podman-stacks/docs/stacks/traefik.html)
+- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/trek.webp" style="height:1em;" /> [Trek](https://tarow.github.io/nix-podman-stacks/docs/stacks/trek.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/trip.webp" style="height:1em;" /> [Trip](https://tarow.github.io/nix-podman-stacks/docs/stacks/trip.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg" style="width:1em;height:1em;" /> [Uptime-Kuma](https://tarow.github.io/nix-podman-stacks/docs/stacks/uptime-kuma.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vaultwarden.svg" style="width:1em;height:1em;" /> [Vaultwarden](https://tarow.github.io/nix-podman-stacks/docs/stacks/vaultwarden.html)

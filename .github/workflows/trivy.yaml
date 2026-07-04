@@ -15,7 +15,7 @@ jobs:
       has_changes: ${{ steps.diff-images.outputs.has_changes }}
     steps:
       - name: Checkout PR
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -109,10 +109,10 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.2.5
+        uses: aquasecurity/setup-trivy@v0.3.1
 
       - name: Generate safe name for artifacts
         id: safe-name
@@ -140,7 +140,7 @@ jobs:
 
       - name: Upload scan results
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-${{ steps.safe-name.outputs.safe_name }}
           path: trivy-results
@@ -162,7 +162,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Download all scan results
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           path: all-results
           merge-multiple: true
@@ -196,7 +196,7 @@ jobs:
           echo -e "$BODY" > comment.md
 
       - name: Comment PR with Trivy results
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           path: comment.md
 

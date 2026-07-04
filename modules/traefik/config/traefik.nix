@@ -42,6 +42,7 @@ in {
   api = {
     dashboard = true;
   };
+  ping = {};
   providers = {
     docker = {
       exposedByDefault = false;

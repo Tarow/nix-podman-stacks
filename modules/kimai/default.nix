@@ -56,7 +56,7 @@ in {
     services.podman.containers = {
       ${name} = {
         # renovate: versioning=regex:^(?<compatibility>.*)-(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)$
-        image = "docker.io/kimai/kimai2:apache-2.48.0";
+        image = "docker.io/kimai/kimai2:apache-2.57.0";
         volumeMap = {
           data = "${storage}/data:/opt/kimai/var/data";
           plugins = "${storage}/plugins:/opt/kimai/var/plugins";
@@ -107,6 +107,7 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "20s";
+          HealthOnFailure = "kill";
         };
 
         stack = name;

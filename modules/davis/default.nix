@@ -87,7 +87,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/tchapi/davis-standalone:5.3.0";
+        image = "ghcr.io/tchapi/davis-standalone:5.4.3";
         volumeMap.data = lib.mkIf (cfg.db.type == "sqlite") "${storage}/sqlite:/data";
 
         extraEnv =
@@ -165,6 +165,7 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "20s";
+          HealthOnFailure = "kill";
         };
 
         stack = name;

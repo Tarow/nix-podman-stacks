@@ -202,7 +202,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/rommapp/romm:4.6.1";
+        image = "ghcr.io/rommapp/romm:4.9.2";
         volumeMap = {
           resources = "${storage}/resources:/romm/resources";
           redisData = "${storage}/redis_data:/redis-data";
@@ -255,6 +255,7 @@ in {
             HealthTimeout = "10s";
             HealthRetries = 5;
             HealthStartPeriod = "5s";
+            HealthOnFailure = "kill";
           };
           Service = {
             ExecStartPost = lib.optional cfg.adminProvisioning.enable (
@@ -305,6 +306,7 @@ in {
           HealthTimeout = "10s";
           HealthRetries = 5;
           HealthStartPeriod = "20s";
+          HealthOnFailure = "kill";
         };
 
         stack = name;

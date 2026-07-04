@@ -33,7 +33,9 @@
         "/beszel/",
         "/guacamole/",
         "/kitchenowl/",
-        "/adventurelog/"
+        "/adventurelog/",
+        "/kaneo/",
+        "/profilarr/"
       ],
       "groupName": "{{parentDir}}"
     },
@@ -53,7 +55,8 @@
         "/pgvecto-rs/",
         "/redis/",
         "/valkey/",
-        "/meilisearch/"
+        "/meilisearch/",
+        "docker.io/example/image"
       ],
       "enabled": false
     },

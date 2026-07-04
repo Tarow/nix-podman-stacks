@@ -2,9 +2,9 @@
   description = "Nix Podman Stacks Starter";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-podman-stacks = {
-      url = "github:Tarow/nix-podman-stacks/v0.3.0";
+      url = "github:Tarow/nix-podman-stacks/v0.9.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -34,7 +34,7 @@
         sops-nix.homeManagerModules.sops
         nix-podman-stacks.homeModules.nps
         {
-          home.stateVersion = "25.11";
+          home.stateVersion = "26.05";
 
           # Replace with your own username and home directory
           home.username = "someuser";

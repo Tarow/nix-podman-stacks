@@ -207,7 +207,7 @@ in {
         (lib.mkIf cfg.crowdsec.middleware.enable {
           experimental.plugins.bouncer = {
             moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";
-            version = "v1.5.0";
+            version = "v1.6.0";
           };
         })
       ];
@@ -283,7 +283,7 @@ in {
     };
 
     services.podman.containers.${name} = rec {
-      image = "docker.io/traefik:v3.6.7";
+      image = "docker.io/traefik:v3.7.6";
 
       socketActivation = [
         {
@@ -316,6 +316,16 @@ in {
       };
 
       wantsContainer = lib.optional cfg.crowdsec.middleware.enable "crowdsec";
+
+      extraConfig.Container = {
+        Notify = "healthy";
+        HealthCmd = "traefik healthcheck --ping";
+        HealthInterval = "10s";
+        HealthTimeout = "10s";
+        HealthRetries = 5;
+        HealthStartPeriod = "10s";
+        HealthOnFailure = "kill";
+      };
 
       # Traefik should only be in a single network and not be added to others by integations (e.g. socket-proxy)
       # Otherwise we lose the ability to assign static ip (only works with single bridge network)

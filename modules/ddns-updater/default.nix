@@ -60,7 +60,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/qdm12/ddns-updater:v2.9.0";
+      image = "ghcr.io/qdm12/ddns-updater:v2.10.0";
       user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
       volumes = [
         "${storage}/data:/updater/data"

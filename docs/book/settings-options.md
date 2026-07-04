@@ -12,10 +12,12 @@ An example would be the base location where containers should create bind mounts
 
 ```nix
 {config, ...}: {
+  nps = {
     hostIP4Address = "192.168.178.2";
     hostUid = 1000;
     storageBaseDir = "${config.home.homeDirectory}/stacks";
     externalStorageBaseDir = "/mnt/hdd";
+  };
 }
 ```
 

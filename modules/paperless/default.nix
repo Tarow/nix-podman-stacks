@@ -154,7 +154,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/paperless-ngx/paperless-ngx:2.20.6";
+        image = "ghcr.io/paperless-ngx/paperless-ngx:2.20.15";
         dependsOnContainer = [
           dbName
           brokerName
@@ -270,7 +270,7 @@ in {
       };
 
       ${tikaName} = lib.mkIf cfg.enableTika {
-        image = "docker.io/apache/tika:3.2.3.0";
+        image = "docker.io/apache/tika:3.3.1.0";
 
         stack = name;
         glance = {
@@ -282,7 +282,7 @@ in {
       };
 
       ${gotenbergName} = lib.mkIf cfg.enableTika {
-        image = "docker.io/gotenberg/gotenberg:8.26.0";
+        image = "docker.io/gotenberg/gotenberg:8.34.0";
         exec = "gotenberg --chromium-disable-javascript=true --chromium-allow-list=file:///tmp/.*";
 
         stack = name;

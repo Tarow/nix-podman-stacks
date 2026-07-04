@@ -204,7 +204,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/immich-app/immich-server:v2.5.5";
+        image = "ghcr.io/immich-app/immich-server:v3.0.1";
         volumeMap = {
           pictures = "${mediaStorage}/pictures/immich:${env.UPLOAD_LOCATION}";
           settings = lib.mkIf (cfg.settings != null && (!cfg.oidc.enable)) "${cfg.settings}:${env.IMMICH_CONFIG_FILE}";
@@ -257,14 +257,17 @@ in {
       };
 
       ${dbName} = {
-        image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0";
+        image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0";
         volumeMap.data = "${storage}/pgdata:/var/lib/postgresql/data";
 
         extraEnv = {
           POSTGRES_USER = env.DB_USERNAME;
           POSTGRES_DB = env.DB_DATABASE_NAME;
           POSTGRES_PASSWORD.fromFile = cfg.db.passwordFile;
+          POSTGRES_INITDB_ARGS = "--data-checksums";
         };
+
+        extraConfig.Container.ShmSize = "128mb";
 
         stack = name;
         glance = {
@@ -276,7 +279,7 @@ in {
       };
 
       ${mlName} = {
-        image = "ghcr.io/immich-app/immich-machine-learning:v2.5.5";
+        image = "ghcr.io/immich-app/immich-machine-learning:v3.0.1";
         volumeMap.cache = "${storage}/model-cache:/cache";
 
         stack = name;

@@ -3,6 +3,15 @@ SSO and OIDC provider
 - [Github](https://github.com/authelia/authelia)
 - [Website](https://www.authelia.com/)
 
+---
+
+> [!NOTE]
+> If you have access_control rules configured, (e.g. when using forwardAuth), it is recommended to change the `default_policy` to `deny`:
+>
+> ```nix
+> nps.stacks.authelia.settings.access_control.default_policy = "deny";
+> ```
+
 ## Example
 
 ```nix

@@ -115,6 +115,7 @@ in {
         HealthTimeout = "10s";
         HealthRetries = 5;
         HealthStartPeriod = "5s";
+        HealthOnFailure = "kill";
       };
 
       port = 8001;
