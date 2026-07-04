@@ -110,6 +110,7 @@ in {
         authorization_policy = config.nps.stacks.authelia.defaultAllowPolicy;
         require_pkce = false;
         pkce_challenge_method = "";
+        token_endpoint_auth_method = "client_secret_post";
         pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
         redirect_uris = [
           "${cfg.containers.${name}.traefik.serviceUrl}/api/auth/callback"
@@ -119,7 +120,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/madeofpendletonwool/pinepods:0.8.2";
+        image = "docker.io/madeofpendletonwool/pinepods:0.9.0";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap = {
           downloads = "${storage}/downloads:/opt/pinepods/downloads";
@@ -154,7 +155,6 @@ in {
             PASSWORD.fromFile = cfg.adminProvisioning.passwordFile;
           }
           // lib.optionalAttrs cfg.oidc.enable (let
-            utils = import ../utils.nix {inherit lib config;};
             autheliaUrl = config.nps.containers.authelia.traefik.serviceUrl;
           in {
             OIDC_PROVIDER_NAME = "Authelia";
@@ -163,14 +163,17 @@ in {
             OIDC_AUTHORIZATION_URL = "${autheliaUrl}/api/oidc/authorization";
             OIDC_TOKEN_URL = "${autheliaUrl}/api/oidc/token";
             OIDC_USER_INFO_URL = "${autheliaUrl}/api/oidc/userinfo";
-            OIDC_SCOPE = utils.escapeOnDemand ''"openid profile email groups"'';
+            OIDC_SCOPE = "openid profile email groups";
             OIDC_ROLES_CLAIM = "groups";
             OIDC_USER_ROLE = cfg.oidc.userGroup;
             OIDC_ADMIN_ROLE = cfg.oidc.adminGroup;
             OIDC_DISABLE_STANDARD_LOGIN = lib.mkDefault true;
+            OIDC_BUTTON_TEXT = "Authelia";
+            OIDC_BUTTON_COLOR = "#000000";
+            OIDC_BUTTON_TEXT_COLOR = "#FFFFFF";
           });
 
-        wantsContainer = [dbName];
+        wantsContainer = [dbName valkeyName];
 
         stack = name;
         port = 8040;
