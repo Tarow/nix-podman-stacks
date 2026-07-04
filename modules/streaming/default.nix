@@ -808,7 +808,7 @@ in {
 
         ${bazarrName} = lib.mkIf cfg.bazarr.enable (mkArrBase bazarrName
           // {
-            image = "lscr.io/linuxserver/bazarr:1.5.6";
+            image = "lscr.io/linuxserver/bazarr:1.6.0";
             port = 6767;
 
             homepage = {
