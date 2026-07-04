@@ -176,9 +176,7 @@ in {
           uploads = "${storage}/uploads:/app/SparkyFitnessServer/uploads";
         };
 
-        extraEnv = let
-          utils = import ../utils.nix {inherit lib config;};
-        in
+        extraEnv =
           {
             SPARKY_FITNESS_DB_USER = cfg.db.username;
             SPARKY_FITNESS_DB_HOST = dbName;
@@ -201,7 +199,7 @@ in {
             SPARKY_FITNESS_OIDC_PROVIDER_SLUG = "authelia";
             SPARKY_FITNESS_OIDC_PROVIDER_NAME = "Authelia";
             SPARKY_FITNESS_OIDC_AUTO_REGISTER = true;
-            SPARKY_FITNESS_OIDC_SCOPE = utils.escapeOnDemand ''"openid groups email profile"'';
+            SPARKY_FITNESS_OIDC_SCOPE = "openid groups email profile";
             SPARKY_FITNESS_OIDC_ADMIN_GROUP = cfg.oidc.adminGroup;
             SPARKY_FITNESS_OIDC_TOKEN_AUTH_METHOD = "client_secret_basic";
           }
