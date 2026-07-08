@@ -524,7 +524,7 @@ in {
         };
 
         ${qbittorrentName} = lib.mkIf cfg.qbittorrent.enable {
-          image = "docker.io/linuxserver/qbittorrent:5.2.2";
+          image = "docker.io/linuxserver/qbittorrent:5.2.3";
 
           network = lib.mkIf cfg.gluetun.enable (lib.mkForce ["container:${gluetunName}"]);
           volumeMap = {
