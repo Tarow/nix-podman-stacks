@@ -113,7 +113,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/amruthpillai/reactive-resume:v5.2.2";
+        image = "ghcr.io/amruthpillai/reactive-resume:v5.2.3";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap = {
           data = "${storage}/data:/app/data";
