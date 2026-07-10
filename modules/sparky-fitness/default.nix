@@ -139,7 +139,7 @@ in {
 
     services.podman.containers = {
       ${frontendName} = {
-        image = "ghcr.io/codewithcj/sparkyfitness-frontend:v0.17.2";
+        image = "ghcr.io/codewithcj/sparkyfitness-frontend:v0.17.3";
 
         extraEnv = {
           SPARKY_FITNESS_FRONTEND_URL = cfg.containers.${frontendName}.traefik.serviceUrl;
