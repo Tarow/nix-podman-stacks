@@ -785,7 +785,7 @@ in {
 
         ${radarrName} = lib.mkIf cfg.radarr.enable (mkArrBase radarrName
           // {
-            image = "lscr.io/linuxserver/radarr:6.2.1";
+            image = "lscr.io/linuxserver/radarr:6.3.0";
             port = 7878;
 
             homepage = {
