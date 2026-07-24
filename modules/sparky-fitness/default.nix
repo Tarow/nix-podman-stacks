@@ -169,7 +169,7 @@ in {
       };
 
       ${backendName} = {
-        image = "ghcr.io/codewithcj/sparkyfitness-server:v0.17.3";
+        image = "ghcr.io/codewithcj/sparkyfitness-server:v1.6.0";
 
         volumeMap = {
           backup = "${storage}/backup:/app/SparkyFitnessServer/backup";
