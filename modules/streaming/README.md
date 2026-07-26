@@ -6,6 +6,9 @@ Full streaming and automation stack containing:
 - qBittorrent: BitTorrent client
   - [Github](https://github.com/qbittorrent/qBittorrent)
   - [Website](https://www.qbittorrent.org)
+- SABnzbd: Usenet client
+  - [Github](https://github.com/sabnzbd/sabnzbd)
+  - [Website](https://sabnzbd.org/)
 - Sonarr: TV series PVR (automated episode downloads)
   - [Github](https://github.com/Sonarr/Sonarr)
   - [Website](https://sonarr.tv)
@@ -42,6 +45,7 @@ Additionally, the following services can be enabled (disabled by default):
 - Seerr
 - qui
 - Profilarr
+- SABnzbd
 
 ## Examples
 
