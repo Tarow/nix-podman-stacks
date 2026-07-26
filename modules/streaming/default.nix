@@ -498,6 +498,10 @@ in {
 
     nps.stacks.streaming.gluetun.settings = import ./gluetun_config.nix;
 
+    nps.stacks.streaming.sabnzbd.settings = {
+      misc.host_whitelist = cfg.containers.sabnzbd.traefik.serviceHost;
+    };
+
     services.podman.containers =
       {
         ${gluetunName} = lib.mkIf cfg.gluetun.enable {
@@ -635,10 +639,6 @@ in {
             id = quiName;
             icon = "di:qui";
           };
-        };
-
-        nps.stacks.streaming.sabnzbd.settings = {
-          misc.host_whitelist = cfg.containers.sabnzbd.traefik.serviceHost;
         };
 
         ${sabnzbdName} = lib.mkIf cfg.sabnzbd.enable {
