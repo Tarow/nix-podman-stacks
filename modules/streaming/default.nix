@@ -269,16 +269,6 @@ in {
       };
       sabnzbd = {
         enable = lib.mkEnableOption "SABnzbd";
-        extraEnv = lib.mkOption {
-          type = (import ../types.nix lib).extraEnv;
-          default = {};
-          description = ''
-            Extra environment variables to set for the container.
-            Variables can be either set directly or sourced from a file (e.g. for secrets).
-
-            See <https://docs.linuxserver.io/images/docker-sabnzbd/#environment-variables-e>
-          '';
-        };
         settings = lib.mkOption {
           type = ini.type;
           apply = ini.generate "sabnzbd.ini";
@@ -654,10 +644,7 @@ in {
             PUID = config.nps.defaultUid;
             PGID = config.nps.defaultGid;
             UMASK = "022";
-            TZ = config.nps.defaultTz;
           };
-
-          extraEnv = cfg.sabnzbd.extraEnv;
 
           stack = stackName;
           port = 8080;
