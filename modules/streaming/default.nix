@@ -6,10 +6,12 @@
 }: let
   stackName = "streaming";
 
+  ini = pkgs.formats.ini {};
   toml = pkgs.formats.toml {};
 
   gluetunName = "gluetun";
   qbittorrentName = "qbittorrent";
+  sabnzbdName = "sabnzbd";
   jellyfinName = "jellyfin";
   sonarrName = "sonarr";
   radarrName = "radarr";
@@ -23,6 +25,8 @@
   category = "Media & Downloads";
   qbittorrentDescription = "BitTorrent Client";
   qbittorrentDisplayName = "qBittorrent";
+  sabnzbdDescription = "Usenet Client";
+  sabnzbdDisplayName = "SABnzbd";
   jellyfinDescription = "Media Server";
   jellyfinDisplayName = "Jellyfin";
   sonarrDescription = "Series Management";
@@ -177,6 +181,7 @@ in {
   imports = import ../mkAliases.nix config lib stackName [
     gluetunName
     qbittorrentName
+    sabnzbdName
     jellyfinName
     sonarrName
     radarrName
@@ -260,6 +265,28 @@ in {
           example = {
             TORRENTING_PORT = "6881";
           };
+        };
+      };
+      sabnzbd = {
+        enable = lib.mkEnableOption "SABnzbd";
+        extraEnv = lib.mkOption {
+          type = (import ../types.nix lib).extraEnv;
+          default = {};
+          description = ''
+            Extra environment variables to set for the container.
+            Variables can be either set directly or sourced from a file (e.g. for secrets).
+
+            See <https://docs.linuxserver.io/images/docker-sabnzbd/#environment-variables-e>
+          '';
+        };
+        settings = lib.mkOption {
+          type = ini.type;
+          apply = ini.generate "sabnzbd.ini";
+          description = ''
+            Additional SABnzbd configuration settings
+
+            See <https://sabnzbd.org/wiki/configuration/5.0/configure>
+          '';
         };
       };
       jellyfin = {
@@ -607,6 +634,49 @@ in {
             name = quiDisplayName;
             id = quiName;
             icon = "di:qui";
+          };
+        };
+
+        nps.stacks.streaming.sabnzbd.settings = {
+          misc.host_whitelist = cfg.containers.sabnzbd.traefik.serviceHost;
+        };
+
+        ${sabnzbdName} = lib.mkIf cfg.sabnzbd.enable {
+          image = "lscr.io/linuxserver/sabnzbd:5.0.4";
+
+          volumeMap = {
+            config = "${storage}/${sabnzbdName}:/config";
+            media = "${mediaStorage}:/media";
+            settings = "${cfg.sabnzbd.settings}:/config/sabnzbd.ini";
+          };
+
+          environment = {
+            PUID = config.nps.defaultUid;
+            PGID = config.nps.defaultGid;
+            UMASK = "022";
+            TZ = config.nps.defaultTz;
+          };
+
+          extraEnv = cfg.sabnzbd.extraEnv;
+
+          stack = stackName;
+          port = 8080;
+          traefik.name = sabnzbdName;
+          homepage = {
+            inherit category;
+            name = sabnzbdDisplayName;
+            settings = {
+              description = sabnzbdDescription;
+              icon = "sabnzbd";
+              widget.type = "sabnzbd";
+            };
+          };
+          glance = {
+            inherit category;
+            description = sabnzbdDescription;
+            name = sabnzbdDisplayName;
+            id = sabnzbdName;
+            icon = "di:sabnzbd";
           };
         };
 
