@@ -97,7 +97,7 @@ in {
       };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/advplyr/audiobookshelf:2.35.1";
+      image = "ghcr.io/advplyr/audiobookshelf:2.36.0";
       volumeMap = {
         audiobooks = "${mediaStorage}/audiobooks:/audiobooks";
         podcasts = "${storage}/podcasts:/podcasts";
