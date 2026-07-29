@@ -269,11 +269,16 @@ in {
       };
       sabnzbd = {
         enable = lib.mkEnableOption "SABnzbd";
-        settings = lib.mkOption {
-          type = ini.type;
-          apply = ini.generate "sabnzbd.ini";
+        configIni = lib.mkOption {
+          type = lib.types.str;
+          default = ''
+            [misc]
+            host_whitelist = ${sabnzbdName}, ${cfg.containers.${sabnzbdName}.traefik.serviceHost}
+          '';
           description = ''
-            Additional SABnzbd configuration settings
+            SABnzbd configuration mounted as `/config/sabnzbd.ini` in the container.
+
+            The final configuration file will be templated with `gomplate`, so secrets can be read from files or environment variables.
 
             See <https://sabnzbd.org/wiki/configuration/5.0/configure>
           '';
@@ -488,10 +493,6 @@ in {
 
     nps.stacks.streaming.gluetun.settings = import ./gluetun_config.nix;
 
-    nps.stacks.streaming.sabnzbd.settings = {
-      misc.host_whitelist = cfg.containers.sabnzbd.traefik.serviceHost;
-    };
-
     services.podman.containers =
       {
         ${gluetunName} = lib.mkIf cfg.gluetun.enable {
@@ -637,7 +638,15 @@ in {
           volumeMap = {
             config = "${storage}/${sabnzbdName}:/config";
             media = "${mediaStorage}:/media";
-            settings = "${cfg.sabnzbd.settings}:/config/sabnzbd.ini";
+          };
+
+          templateMount = {
+            templatePath = pkgs.writeText "sabnzbd.ini" ''
+              __version__ = 19
+              __encoding__ = utf-8
+              ${cfg.sabnzbd.configIni}
+            '';
+            destPath = "/config/sabnzbd.ini";
           };
 
           environment = {
