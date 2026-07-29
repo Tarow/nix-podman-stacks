@@ -270,7 +270,7 @@ in {
       sabnzbd = {
         enable = lib.mkEnableOption "SABnzbd";
         configIni = lib.mkOption {
-          type = lib.types.str;
+          type = lib.types.nullOr lib.types.str;
           default = ''
             [misc]
             host_whitelist = ${sabnzbdName}, ${cfg.containers.${sabnzbdName}.traefik.serviceHost}
@@ -640,14 +640,16 @@ in {
             media = "${mediaStorage}:/media";
           };
 
-          templateMount = {
-            templatePath = pkgs.writeText "sabnzbd.ini" ''
-              __version__ = 19
-              __encoding__ = utf-8
-              ${cfg.sabnzbd.configIni}
-            '';
-            destPath = "/config/sabnzbd.ini";
-          };
+          templateMount =
+            lib.optional (cfg.sabnzbd.configIni != null)
+            {
+              templatePath = pkgs.writeText "sabnzbd.ini" ''
+                __version__ = 19
+                __encoding__ = utf-8
+                ${cfg.sabnzbd.configIni}
+              '';
+              destPath = "/config/sabnzbd.ini";
+            };
 
           environment = {
             PUID = config.nps.defaultUid;
