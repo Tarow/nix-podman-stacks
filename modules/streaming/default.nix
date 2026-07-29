@@ -6,7 +6,6 @@
 }: let
   stackName = "streaming";
 
-  ini = pkgs.formats.ini {};
   toml = pkgs.formats.toml {};
 
   gluetunName = "gluetun";
