@@ -69,6 +69,8 @@ in {
       prometheusName
       alloyName
       podmanExporterName
+      alertmanagerName
+      alertmanagerNtfyName
     ];
 
   options.nps.stacks.${stackName} = {
