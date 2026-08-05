@@ -37,7 +37,8 @@
         "/kaneo/",
         "/profilarr/",
         "/sparkyfitness/",
-        "/homelable/"
+        "/homelable/",
+        "/scanopy/"
       ],
       "groupName": "{{parentDir}}"
     },
