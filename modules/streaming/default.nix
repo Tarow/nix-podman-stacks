@@ -511,8 +511,8 @@ in {
           extraEnv =
             {
               WIREGUARD_PRIVATE_KEY.fromFile = cfg.gluetun.wireguardPrivateKeyFile;
-              WIREGUARD_PRESHARED_KEY.fromFile = cfg.gluetun.wireguardPresharedKeyFile;
-              WIREGUARD_ADDRESSES.fromFile = cfg.gluetun.wireguardAddressesFile;
+              WIREGUARD_PRESHARED_KEY = lib.mkIf (cfg.gluetun.wireguardPresharedKeyFile != null) {fromFile = cfg.gluetun.wireguardPresharedKeyFile;};
+              WIREGUARD_ADDRESSES = lib.mkIf (cfg.gluetun.wireguardAddressesFile != null) {fromFile = cfg.gluetun.wireguardAddressesFile;};
             }
             // cfg.gluetun.extraEnv;
 
