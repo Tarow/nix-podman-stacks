@@ -9,7 +9,6 @@
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
 
-  # Ports used by the Scanopy server and daemon
   serverPort = 60072;
   daemonPort = 60073;
 
@@ -111,27 +110,15 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/scanopy/scanopy/server:v0.17.8";
-
-        stack = name;
-        port = serverPort;
-        traefik.name = name;
-
+        image = "ghcr.io/scanopy/scanopy/server:v0.17.9";
         volumeMap.data = "${storage}/data:/data";
-
-        wantsContainer = [dbName];
 
         extraEnv =
           {
             SCANOPY_DATABASE_URL.fromTemplate = "postgresql://${cfg.db.username}:{{ file.Read \"${cfg.db.passwordFile}\" }}@${dbName}:5432/scanopy";
             SCANOPY_PUBLIC_URL = cfg.containers.${name}.traefik.serviceUrl;
             SCANOPY_WEB_EXTERNAL_PATH = "/app/static";
-            # Behind Traefik (TLS), so session cookies must be secure
             SCANOPY_USE_SECURE_SESSION_COOKIES = true;
-          }
-          // lib.optionalAttrs cfg.enableIntegratedDaemon {
-            # The daemon runs on the host network and is reachable from the server at the
-            # Traefik bridge gateway (host)
             SCANOPY_INTEGRATED_DAEMON_URL = "http://host.containers.internal:${toString daemonPort}";
           }
           // lib.optionalAttrs cfg.oidc.enable {
@@ -140,6 +127,12 @@ in {
             '';
           }
           // cfg.extraEnv;
+
+        stack = name;
+        port = serverPort;
+        traefik.name = name;
+
+        wantsContainer = [dbName];
 
         homepage = {
           inherit category;
@@ -154,6 +147,34 @@ in {
           inherit category description;
           name = displayName;
           id = name;
+          icon = "di:scanopy";
+        };
+      };
+
+      ${daemonName} = {
+        image = "ghcr.io/scanopy/scanopy/daemon:v0.17.9";
+
+        volumeMap = {
+          config = "${storage}/daemon:/root/.config";
+          podman-socket = "${config.nps.socketLocation}:/var/run/podman.sock:ro";
+        };
+
+        network = ["host"];
+        addCapabilities = ["NET_RAW" "NET_ADMIN"];
+
+        dependsOn = ["podman.socket"];
+
+        extraEnv =
+          {
+            SCANOPY_SERVER_URL = cfg.containers.${name}.traefik.serviceUrl;
+            CONTAINER_HOST = "unix:///var/run/podman.sock";
+          }
+          // cfg.extraEnv;
+
+        glance = {
+          inherit category;
+          parent = name;
+          name = "Daemon";
           icon = "di:scanopy";
         };
       };
@@ -173,39 +194,6 @@ in {
           parent = name;
           name = "Postgres";
           icon = "di:postgres";
-        };
-      };
-
-      ${daemonName} = {
-        image = "ghcr.io/scanopy/scanopy/daemon:v0.17.8";
-
-        # The daemon needs access to the host network to scan the LAN
-        network = ["host"];
-
-        # Raw packet scanning requires NET_RAW and NET_ADMIN
-        addCapabilities = ["NET_RAW" "NET_ADMIN"];
-
-        # Persists the daemon identity across restarts
-        volumeMap.config = "${storage}/daemon:/root/.config/scanopy/daemon";
-
-        # Mount the Podman socket directly so the daemon can discover containers
-        volumeMap.podman-socket = "${config.nps.socketLocation}:/var/run/podman.sock:ro";
-        dependsOn = ["podman.socket"];
-
-        extraEnv =
-          {
-            # With host networking the daemon reaches the server through Traefik
-            SCANOPY_SERVER_URL = cfg.containers.${name}.traefik.serviceUrl;
-            # Point at the mounted Podman socket to enable container discovery
-            CONTAINER_HOST = "unix:///var/run/podman.sock";
-          }
-          // cfg.extraEnv;
-
-        glance = {
-          inherit category;
-          parent = name;
-          name = "Daemon";
-          icon = "di:scanopy";
         };
       };
     };
