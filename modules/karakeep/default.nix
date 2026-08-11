@@ -107,7 +107,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/karakeep-app/karakeep:0.33.1";
+        image = "ghcr.io/karakeep-app/karakeep:0.33.2";
         volumeMap.data = "${storage}/data:/data";
         environment = {
           DATA_DIR = "/data";
