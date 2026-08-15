@@ -184,9 +184,68 @@ in {
       '';
       default = {};
     };
+    authSecretFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to a file containing the auth secret. Only required if OIDC Is enabled.
+        You can generate a secret using `openssl rand -base64 32.
+
+        See <https://gethomepage.dev/installation/#security-authentication>
+      '';
+    };
+    oidc = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to enable OIDC login with Authelia. This will register an OIDC client in Authelia
+          and setup the necessary configuration.
+
+          For details, see:
+
+          - <https://gethomepage.dev/installation/#security-authentication>
+        '';
+      };
+      clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;
+      clientSecretHash = (import ../authelia/options.nix lib).derivableClientSecretHash cfg.oidc.clientSecretFile;
+
+      userGroup = lib.mkOption {
+        type = lib.types.str;
+        default = "${name}_user";
+        description = "Users of this group will be able to log in";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    nps.stacks.lldap.bootstrap.groups = lib.mkIf cfg.oidc.enable {
+      ${cfg.oidc.userGroup} = {};
+    };
+    nps.stacks.authelia = lib.mkIf cfg.oidc.enable {
+      oidc.clients.${name} = {
+        client_name = displayName;
+        client_secret = cfg.oidc.clientSecretHash;
+        public = false;
+        authorization_policy = name;
+        require_pkce = true;
+        pkce_challenge_method = "S256";
+        pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
+        redirect_uris = [
+          "${cfg.containers.${name}.traefik.serviceUrl}/api/auth/callback/homepage-oidc"
+        ];
+      };
+
+      settings.identity_providers.oidc.authorization_policies.${name} = {
+        default_policy = "deny";
+        rules = [
+          {
+            policy = config.nps.stacks.authelia.defaultAllowPolicy;
+            subject = "group:${cfg.oidc.userGroup}";
+          }
+        ];
+      };
+    };
+
     services.podman.containers.${name} = {
       image = "ghcr.io/gethomepage/homepage:v2.0.0";
       volumeMap = {
@@ -198,11 +257,22 @@ in {
         bookmarks = "${bookmarks}:/app/config/bookmarks.yaml";
       };
 
-      environment = {
-        PUID = config.nps.defaultUid;
-        PGID = config.nps.defaultGid;
-        HOMEPAGE_ALLOWED_HOSTS = config.services.podman.containers.${name}.traefik.serviceHost;
-      };
+      extraEnv =
+        {
+          PUID = config.nps.defaultUid;
+          PGID = config.nps.defaultGid;
+          HOMEPAGE_ALLOWED_HOSTS = config.services.podman.containers.${name}.traefik.serviceHost;
+        }
+        // lib.optionalAttrs cfg.oidc.enable {
+          HOMEPAGE_AUTH_ENABLED = true;
+          HOMEPAGE_AUTH_SECRET.fromFile = cfg.authSecretFile;
+
+          HOMEPAGE_EXTERNAL_URL = config.services.podman.containers.${name}.traefik.serviceUrl;
+          HOMEPAGE_OIDC_ISSUER = config.nps.containers.authelia.traefik.serviceUrl;
+          HOMEPAGE_OIDC_CLIENT_ID = name;
+          HOMEPAGE_OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
+          HOMEPAGE_OIDC_NAME = "Authelia";
+        };
       fileEnvMount = pathEntries;
 
       port = 3000;

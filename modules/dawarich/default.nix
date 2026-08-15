@@ -79,7 +79,7 @@ in {
         default = false;
         description = ''
           Whether to enable OIDC login with Authelia. This will register an OIDC client in Authelia
-          and setup the necessary configuration in Immich.
+          and setup the necessary configuration.
 
           For details, see:
 
