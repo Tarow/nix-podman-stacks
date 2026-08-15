@@ -147,13 +147,16 @@ in {
 
     nps.stacks.filebrowser-quantum.settings = {
       server = {
-        port = 80;
-        baseURL = "/";
-        externalUrl = config.nps.containers.${name}.traefik.serviceUrl;
         logging = [
           {levels = "warning";}
         ];
         sources = lib.attrValues cfg.mounts;
+      };
+      http = {
+        port = 80;
+        baseURL = "/";
+        externalUrl = config.nps.containers.${name}.traefik.serviceUrl;
+        trustProxyHeaders = true;
       };
 
       userDefaults = {
@@ -164,14 +167,16 @@ in {
           office = false;
           highQuality = false;
         };
-        darkMode = true;
-        disableSettings = false;
-        singleClick = false;
-        permissions = {
-          admin = false;
-          modify = false;
-          share = false;
-          api = false;
+        ui.darkMode = true;
+
+        listing.singleClick = false;
+        account = {
+          disableSettings = false;
+          permissions = {
+            admin = false;
+            share = false;
+            api = false;
+          };
         };
       };
       auth.methods.oidc = {
@@ -199,7 +204,7 @@ in {
 
       extraEnv = {
         FILEBROWSER_CONFIG = "/home/filebrowser/config.yml";
-        FILEBROWSER_DATABASE = "/home/filebrowser/db/database.db";
+        FILEBROWSER_DATABASE_PATH = "/home/filebrowser/db/database.sqlite";
         FILEBROWSER_OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
       };
       port = 80;
