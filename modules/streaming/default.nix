@@ -635,7 +635,7 @@ in {
         };
 
         ${sabnzbdName} = lib.mkIf cfg.sabnzbd.enable {
-          image = "lscr.io/linuxserver/sabnzbd:5.1.0";
+          image = "lscr.io/linuxserver/sabnzbd:5.1.1";
 
           volumeMap = {
             config = "${storage}/${sabnzbdName}:/config";
