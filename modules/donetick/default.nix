@@ -164,7 +164,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/donetick/donetick:v0.1.76";
+        image = "docker.io/donetick/donetick:v0.1.79";
         volumeMap = {
           data = "${storage}/db:/donetick-data/";
           settings = "${yaml.generate "selfhosted.yaml" cfg.settings}:/config/selfhosted.yaml";
