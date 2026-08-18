@@ -154,7 +154,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/henrygd/beszel/beszel:0.18.7";
+        image = "ghcr.io/henrygd/beszel/beszel:0.18.8";
         volumeMap =
           {
             data = "${storage}/data:/beszel_data";
@@ -195,7 +195,7 @@ in {
       };
 
       ${agentName} = {
-        image = "ghcr.io/henrygd/beszel/beszel-agent:0.18.7";
+        image = "ghcr.io/henrygd/beszel/beszel-agent:0.18.8";
         volumeMap.socket = "${storage}/beszel_socket:/beszel_socket";
 
         # No way to connect to socket proxy through host network yet
