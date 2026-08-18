@@ -530,7 +530,7 @@ in {
         configDst = "/etc/prometheus/prometheus.yml";
       in
         lib.mkIf cfg.prometheus.enable {
-          image = "docker.io/prom/prometheus:v3.13.2";
+          image = "docker.io/prom/prometheus:v3.14.0";
           exec = "--config.file=${configDst}";
           user = config.nps.defaultUid;
           volumeMap = {
