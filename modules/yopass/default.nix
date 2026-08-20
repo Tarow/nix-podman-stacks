@@ -18,7 +18,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/jhaals/yopass:14.8.0";
+        image = "docker.io/jhaals/yopass:14.9.0";
         exec = "--memcached=${dbName}:11211 --port 8080";
 
         extraEnv.PUBLIC_URL = cfg.containers.${name}.traefik.serviceUrl;
