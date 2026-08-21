@@ -101,7 +101,7 @@ in {
 
     services.podman.containers = {
       ${webName} = {
-        image = "ghcr.io/usekaneo/web:2.21.0";
+        image = "ghcr.io/usekaneo/web:2.22.0";
 
         environment = {
           KANEO_CLIENT_URL = cfg.containers.${webName}.traefik.serviceUrl;
@@ -131,7 +131,7 @@ in {
       };
 
       ${apiName} = {
-        image = "ghcr.io/usekaneo/api:2.21.0";
+        image = "ghcr.io/usekaneo/api:2.22.0";
 
         extraEnv =
           {
