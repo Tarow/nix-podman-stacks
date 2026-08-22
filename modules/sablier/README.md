@@ -10,7 +10,7 @@ Stop unused services and start them on demand
   nps.stacks.sablier = {
     enable = true;
     settings = {
-      session.default-duration = "10m";
+      sessions.default-duration = "10m";
     };
   };
 }
