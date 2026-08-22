@@ -448,6 +448,58 @@ Prometheus alerts handled by Alertmanager can be automatically forwarded to `ntf
 }
 ```
 
+## Sablier
+
+Sablier stops containers that are not in use and starts them on demand through Traefik.
+Enable the Sablier stack and opt containers into it via the `sablier` container option.
+Enabling it for a container automatically assigns it to a Sablier group and applies the matching Traefik middleware.
+
+### Enable for a Container
+
+The simplest way to enable Sablier for a container is to set `sablier.enable`:
+
+```nix
+{
+  nps.stacks.sablier.enable = true;
+
+  nps.stacks.homepage.containers.homepage.sablier = {
+    enable = true;
+  };
+}
+```
+
+By default the container is assigned to a group named after its stack (`config.stack`).
+For details on the `sablier` container option check the [Container Options](/container-options#services.podman.containers.<name>.sablier.enable)
+
+### Custom Group
+
+To group multiple containers so they are started together, set a custom `group`:
+
+```nix
+{
+  nps.stacks.homepage.containers.homepage.sablier = {
+    enable = true;
+    group = "custom";
+  };
+}
+```
+
+### Scaling
+
+Additional Sablier settings are forwarded as `X-Sablier` labels on the systemd unit:
+
+```nix
+{
+  nps.stacks.homepage.containers.homepage.sablier = {
+    enable = true;
+    idleReplicas = "1";
+    idleMemory = "1G";
+    idleCPU = "0.1";
+    activeMemory = "2G";
+  };
+}
+```
+
 ## Traefik
 
 ### Change Service Subdomain
