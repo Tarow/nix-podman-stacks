@@ -65,6 +65,7 @@ let
     pinepods = ./pinepods;
     reactive-resume = ./reactive-resume;
     romm = ./romm;
+    sablier = ./sablier;
     scanopy = ./scanopy;
     searxng = ./searxng;
     shelfmark = ./shelfmark;
