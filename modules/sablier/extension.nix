@@ -5,7 +5,11 @@
 }: let
   stackName = "sablier";
   cfg = config.nps.stacks.sablier;
+
   mkMiddlewareName = group: "sablier-${group}";
+  capitalizeFirst = s:
+    lib.toUpper (builtins.substring 0 1 s)
+    + builtins.substring 1 (-1) s;
 
   sablierContainers = lib.filterAttrs (k: c: c.sablier.enable) config.services.podman.containers;
   sablierGroups =
@@ -43,7 +47,7 @@ in {
     }: {
       options.sablier = lib.mkOption {
         type = lib.types.submodule {
-          freeformType = lib.types.str;
+          freeformType = lib.types.attrsOf lib.types.str;
           options = {
             enable = lib.mkEnableOption "Sablier integration";
             group = lib.mkOption {
@@ -66,7 +70,7 @@ in {
       };
       config = lib.mkIf (cfg.enable && config.sablier.enable) {
         traefik.middleware.${mkMiddlewareName config.sablier.group}.enable = true;
-        extraConfig."X-Sablier" = lib.mapAttrs' (k: v: lib.nameValuePair (lib.toSentenceCase k) v) config.sablier;
+        extraConfig."X-Sablier" = lib.mapAttrs' (k: v: lib.nameValuePair (capitalizeFirst k) v) config.sablier;
       };
     }));
   };
