@@ -139,7 +139,7 @@ in {
 
     services.podman.containers = {
       ${frontendName} = {
-        image = "ghcr.io/codewithcj/sparkyfitness-frontend:v1.6.2";
+        image = "ghcr.io/codewithcj/sparkyfitness-frontend:v1.6.3";
 
         extraEnv = {
           SPARKY_FITNESS_FRONTEND_URL = cfg.containers.${frontendName}.traefik.serviceUrl;
@@ -169,7 +169,7 @@ in {
       };
 
       ${backendName} = {
-        image = "ghcr.io/codewithcj/sparkyfitness-server:v1.6.2";
+        image = "ghcr.io/codewithcj/sparkyfitness-server:v1.6.3";
 
         volumeMap = {
           backup = "${storage}/backup:/app/SparkyFitnessServer/backup";
