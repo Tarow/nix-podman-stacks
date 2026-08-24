@@ -50,6 +50,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    nps.stacks.traefik.provider = "file";
     nps.stacks.${name}.settings = {
       provider = {
         name = "systemd";

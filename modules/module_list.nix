@@ -38,7 +38,7 @@ let
     homepage = ./homepage;
     hortusfox = ./hortusfox;
     immich = ./immich;
-    ittools = ./it-tools;
+    it-tools = ./it-tools;
     jotty = ./jotty;
     kaneo = ./kaneo;
     karakeep = ./karakeep;

@@ -708,6 +708,13 @@ in {
         };
       };
 
+      sablier = {
+        enable = true;
+        settings = {
+          sessions.default-duration = "10m";
+        };
+      };
+
       searxng = {
         enable = true;
         secretKeyFile = dummySecretFile;
