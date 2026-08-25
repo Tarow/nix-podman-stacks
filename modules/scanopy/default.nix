@@ -152,7 +152,7 @@ in {
       };
 
       ${daemonName} = {
-        image = "ghcr.io/scanopy/scanopy/daemon:v0.17.11";
+        image = "ghcr.io/scanopy/scanopy/daemon:v0.17.12";
 
         volumeMap = {
           config = "${storage}/daemon:/root/.config";
