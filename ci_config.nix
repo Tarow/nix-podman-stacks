@@ -746,6 +746,11 @@ in {
         };
       };
 
+      spliit = {
+        enable = true;
+        db.passwordFile = dummySecretFile;
+      };
+
       sshwifty = {
         enable = true;
         settings = {

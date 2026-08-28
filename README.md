@@ -147,6 +147,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/shelfmark.webp" style="width:1em;height:1em;" /> [Shelfmark](https://tarow.github.io/nix-podman-stacks/docs/stacks/shelfmark.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/sparky-fitness.webp" style="width:1em;height:1em;" /> [SparkyFitness](https://tarow.github.io/nix-podman-stacks/docs/stacks/sparky-fitness.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sshwifty.svg" style="width:1em;height:1em;" /> [Sshwifty](https://tarow.github.io/nix-podman-stacks/docs/stacks/sshwifty.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/spliit.webp" style="height:1em;" /> [Spliit](https://tarow.github.io/nix-podman-stacks/docs/stacks/spliit.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/stirling-pdf.svg" style="width:1em;height:1em;" /> [Stirling-PDF](https://tarow.github.io/nix-podman-stacks/docs/stacks/stirling-pdf.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/storyteller.webp" style="width:1em;height:1em;" /> [Storyteller](https://tarow.github.io/nix-podman-stacks/docs/stacks/storyteller.html)
 - <span style="width:1em;height:1em;">📺</span> [Streaming](https://tarow.github.io/nix-podman-stacks/docs/stacks/streaming.html)
