@@ -45,7 +45,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/spliit-app/spliit:1.22.0";
+        image = "ghcr.io/spliit-app/spliit:1.23.1";
 
         volumeMap = {
           cache = "${storage}/cache:/usr/app/.next/cache";
