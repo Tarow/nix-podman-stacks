@@ -588,7 +588,7 @@ in {
         };
 
         ${quiName} = lib.mkIf cfg.qui.enable {
-          image = "ghcr.io/autobrr/qui:v1.26.0";
+          image = "ghcr.io/autobrr/qui:v1.27.0";
           volumeMap = {
             config = "${storage}/${quiName}:/config";
             media = "${mediaStorage}:/media";
@@ -635,7 +635,7 @@ in {
         };
 
         ${sabnzbdName} = lib.mkIf cfg.sabnzbd.enable {
-          image = "lscr.io/linuxserver/sabnzbd:5.1.1";
+          image = "lscr.io/linuxserver/sabnzbd:5.1.2";
 
           volumeMap = {
             config = "${storage}/${sabnzbdName}:/config";
@@ -777,7 +777,7 @@ in {
         };
 
         ${maintainerrName} = lib.mkIf cfg.maintainerr.enable {
-          image = "ghcr.io/maintainerr/maintainerr:3.24.0";
+          image = "ghcr.io/maintainerr/maintainerr:3.25.0";
           user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
           volumeMap = {
             data = "${storage}/${maintainerrName}/data:/opt/data";
