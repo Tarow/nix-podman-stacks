@@ -121,7 +121,7 @@ in {
       port = 8084;
       ingestDir = "/books";
     in {
-      image = "ghcr.io/calibrain/shelfmark-lite:v1.3.12";
+      image = "ghcr.io/calibrain/shelfmark-lite:v1.3.13";
       volumeMap = {
         config = "${storage}/config:/config";
         ingest = "${cfg.downloadDirectory}:${ingestDir}";
