@@ -247,7 +247,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/gethomepage/homepage:v2.1.2";
+      image = "ghcr.io/gethomepage/homepage:v2.2.0";
       volumeMap = {
         ext = "${externalStorage}:/ext:ro";
         docker = "${docker}:/app/config/docker.yaml";
