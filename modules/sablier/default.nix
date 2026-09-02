@@ -12,13 +12,6 @@
   description = "On Demand Service Scaling";
 
   yaml = pkgs.formats.yaml {};
-
-  src = builtins.fetchGit {
-    url = "https://github.com/Tarow/sablier";
-    ref = "main";
-    rev = "262cd927f4aaeaca22a8b0762d2a061ae0cb9145";
-  };
-  tag = "localhost/tarow/sablier:latest";
 in {
   imports = [./extension.nix] ++ import ../mkAliases.nix config lib name [name];
 
@@ -61,16 +54,11 @@ in {
       server.port = 10000;
     };
 
-    services.podman = let
+    services.podman.containers = let
       configDst = "/etc/sablier/sablier.yml";
     in {
-      builds.${name} = {
-        file = toString ./Dockerfile;
-        tags = [tag];
-        workingDirectory = toString src;
-      };
-      containers.${name} = {
-        image = "${name}.build";
+      ${name} = {
+        image = "ghcr.io/sablierapp/sablier:1.18.0";
 
         volumeMap = {
           config = "${cfg.settings}:${configDst}";
