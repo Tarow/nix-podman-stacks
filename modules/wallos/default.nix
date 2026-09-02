@@ -75,7 +75,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/bellamy/wallos:5.4.5";
+        image = "docker.io/bellamy/wallos:5.5.0";
 
         volumeMap = {
           db = "${storage}/db:/var/www/html/db";
