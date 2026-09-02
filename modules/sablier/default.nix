@@ -77,7 +77,7 @@ in {
           name = displayName;
           settings = {
             description = description;
-            icon = "sablier";
+            icon = "sh-sablier";
           };
         };
         glance = {
@@ -85,7 +85,7 @@ in {
           description = description;
           name = displayName;
           id = name;
-          icon = "di:sablier";
+          icon = "sh:sablier";
         };
       };
     };
