@@ -87,7 +87,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/glanceapp/glance:v0.8.5";
+      image = "docker.io/glanceapp/glance:v0.8.6";
 
       volumeMap = {
         settings = "${cfg.settings}:/app/config/glance.yml";
