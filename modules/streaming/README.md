@@ -1,11 +1,5 @@
 Full streaming and automation stack containing:
 
-- Gluetun: VPN client for containers
-  - [Github](https://github.com/qdm12/gluetun)
-  - [Website](https://github.com/qdm12/gluetun-wiki)
-- qBittorrent: BitTorrent client
-  - [Github](https://github.com/qbittorrent/qBittorrent)
-  - [Website](https://www.qbittorrent.org)
 - SABnzbd: Usenet client
   - [Github](https://github.com/sabnzbd/sabnzbd)
   - [Website](https://sabnzbd.org/)
@@ -24,9 +18,6 @@ Full streaming and automation stack containing:
 - Seerr: Media request/management UI
   - [Github](https://github.com/seerr-team/seerr)
   - [Website](https://seerr.dev)
-- qui: Alternative qBittorrent interfacew
-  - [Github](https://github.com/autobrr/qui)
-  - [Website](https://getqui.com)
 - Profilarr: Configuration Management Platform for Radarr/Sonarr
   - [Github](https://github.com/Dictionarry-Hub/profilarr)
   - [Website](https://dictionarry.dev/)
@@ -36,8 +27,6 @@ Full streaming and automation stack containing:
 
 By default, the following services are enabled:
 
-- Gluetun
-- qBittorrent
 - Sonarr
 - Radarr
 - Bazarr
@@ -46,26 +35,20 @@ By default, the following services are enabled:
 Additionally, the following services can be enabled (disabled by default):
 
 - Seerr
-- qui
 - Profilarr
 - SABnzbd
 - Maintainerr
+
+[qBittorrent (with Gluetun and qui)](https://tarow.github.io/nix-podman-stacks/docs/stacks/qbittorrent.html) is provided by the separate `qbittorrent` stack and can be enabled with `nps.stacks.streaming.qbittorrent.enable = true` (default).
 
 ## Examples
 
 ### Base
 
 ```nix
-{config, ...}: {
+{
   nps.stacks.streaming = {
     enable = true;
-
-    gluetun = {
-      vpnProvider = "airvpn";
-      wireguardPrivateKeyFile = config.sops.secrets."gluetun/wg_pk".path;
-      wireguardPresharedKeyFile = config.sops.secrets."gluetun/wg_psk".path;
-      wireguardAddressesFile = config.sops.secrets."gluetun/wg_address".path;
-    };
   };
 }
 ```
@@ -77,33 +60,10 @@ Additionally, the following services can be enabled (disabled by default):
   nps.stacks.streaming = {
     enable = true;
 
-    gluetun = {
-      vpnProvider = "airvpn";
-      wireguardPrivateKeyFile = config.sops.secrets."gluetun/wg_pk".path;
-      wireguardPresharedKeyFile = config.sops.secrets."gluetun/wg_psk".path;
-      wireguardAddressesFile = config.sops.secrets."gluetun/wg_address".path;
-
-      extraEnv = {
-        FIREWALL_VPN_INPUT_PORTS.fromFile = config.sops.secrets."qbittorrent/torrenting_port".path;
-      };
-    };
-
-    qbittorrent.extraEnv = {
-      TORRENTING_PORT.fromFile = config.sops.secrets."qbittorrent/torrenting_port".path;
-    };
-
     jellyfin = {
       oidc = {
         enable = true;
         clientSecretFile = config.sops.secrets."jellyfin/authelia/client_secret".path;
-      };
-    };
-
-    qui = {
-      enable = true;
-      oidc = {
-        enable = true;
-        clientSecretFile = config.sops.secrets."qui/authelia/client_secret".path;
       };
     };
 

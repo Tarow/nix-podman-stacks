@@ -63,6 +63,7 @@ let
     paperless = ./paperless;
     papra = ./papra;
     pinepods = ./pinepods;
+    qbittorrent = ./qbittorrent;
     reactive-resume = ./reactive-resume;
     romm = ./romm;
     sablier = ./sablier;

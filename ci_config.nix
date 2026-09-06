@@ -683,6 +683,31 @@ in {
         };
       };
 
+      qbittorrent = {
+        enable = true;
+        gluetun = {
+          vpnProvider = "airvpn";
+          wireguardPrivateKeyFile = dummySecretFile;
+          wireguardPresharedKeyFile = dummySecretFile;
+          wireguardAddressesFile = dummySecretFile;
+
+          extraEnv = {
+            FIREWALL_VPN_INPUT_PORTS.fromFile = dummySecretFile;
+            SERVER_NAMES.fromFile = dummySecretFile;
+            HTTP_CONTROL_SERVER_LOG = "off";
+          };
+        };
+        extraEnv.TORRENTING_PORT.fromFile = dummySecretFile;
+        qui = {
+          enable = true;
+          oidc = {
+            enable = true;
+            clientSecretFile = dummySecretFile;
+            clientSecretHash = dummyHash;
+          };
+        };
+      };
+
       romm = {
         enable = true;
         authSecretKeyFile = dummySecretFile;
@@ -787,30 +812,7 @@ in {
       streaming =
         {
           enable = true;
-          gluetun = {
-            vpnProvider = "airvpn";
-            wireguardPrivateKeyFile = dummySecretFile;
-            wireguardPresharedKeyFile = dummySecretFile;
-            wireguardAddressesFile = dummySecretFile;
-
-            extraEnv = {
-              FIREWALL_VPN_INPUT_PORTS.fromFile = dummySecretFile;
-              SERVER_NAMES.fromFile = dummySecretFile;
-              HTTP_CONTROL_SERVER_LOG = "off";
-            };
-          };
-          qbittorrent.extraEnv = {
-            TORRENTING_PORT.fromFile = dummySecretFile;
-          };
           jellyfin = {
-            oidc = {
-              enable = true;
-              clientSecretFile = dummySecretFile;
-              clientSecretHash = dummyHash;
-            };
-          };
-          qui = {
-            enable = true;
             oidc = {
               enable = true;
               clientSecretFile = dummySecretFile;
