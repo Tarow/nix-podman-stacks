@@ -148,6 +148,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/reactive-resume.svg" style="width:1em;height:1em;" /> [Reactive Resume](https://tarow.github.io/nix-podman-stacks/docs/stacks/reactive_resume.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/romm.svg" style="width:1em;height:1em;" /> [RomM](https://tarow.github.io/nix-podman-stacks/docs/stacks/romm.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/sablier.webp" style="width:1em;height:1em;" /> [Sablier](https://tarow.github.io/nix-podman-stacks/docs/stacks/sablier.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sabnzbd.svg" style="width:1em;height:1em;" /> [SABnzbd](https://tarow.github.io/nix-podman-stacks/docs/stacks/sabnzbd.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/scanopy.svg" style="width:1em;height:1em;" /> [Scanopy](https://tarow.github.io/nix-podman-stacks/docs/stacks/scanopy.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/searxng.svg" style="width:1em;height:1em;" /> [SearXNG](https://tarow.github.io/nix-podman-stacks/docs/stacks/searxng.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/shelfmark.webp" style="width:1em;height:1em;" /> [Shelfmark](https://tarow.github.io/nix-podman-stacks/docs/stacks/shelfmark.html)
@@ -163,7 +164,6 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/profilarr.svg" style="width:1em;height:1em;" /> Profilarr
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overseerr.svg" style="width:1em;height:1em;" /> Seerr
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg" style="width:1em;height:1em;" /> Radarr
-  - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sabnzbd.svg" style="width:1em;height:1em;" /> SABnzbd
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg" style="width:1em;height:1em;" /> Sonarr
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/super-productivity.webp" style="width:1em;height:1em;" /> [Super Productivity](https://tarow.github.io/nix-podman-stacks/docs/stacks/super-productivity.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tandoor-recipes.svg" style="width:1em;height:1em;" /> [Tandoor](https://tarow.github.io/nix-podman-stacks/docs/stacks/tandoor.html)

@@ -1,8 +1,5 @@
 Full streaming and automation stack containing:
 
-- SABnzbd: Usenet client
-  - [Github](https://github.com/sabnzbd/sabnzbd)
-  - [Website](https://sabnzbd.org/)
 - Sonarr: TV series PVR (automated episode downloads)
   - [Github](https://github.com/Sonarr/Sonarr)
   - [Website](https://sonarr.tv)
@@ -32,12 +29,14 @@ Additionally, the following services can be enabled (disabled by default):
 
 - Seerr
 - Profilarr
-- SABnzbd
 - Maintainerr
 
-[qBittorrent (with Gluetun and qui)](https://tarow.github.io/nix-podman-stacks/docs/stacks/qbittorrent.html) is provided by the separate `qbittorrent` stack and can be enabled with `nps.stacks.streaming.qbittorrent.enable = true` (default).
-
-[Prowlarr](https://tarow.github.io/nix-podman-stacks/docs/stacks/prowlarr.html) is provided by the separate `prowlarr` stack and can be enabled with `nps.stacks.streaming.prowlarr.enable = true` (default).
+> [!NOTE]
+> The following services are provided by separate stacks:
+>
+> - [qBittorrent (with Gluetun and qui)](https://tarow.github.io/nix-podman-stacks/docs/stacks/qbittorrent.html) — enabled by default via `nps.stacks.streaming.qbittorrent.enable = true`
+> - [Prowlarr](https://tarow.github.io/nix-podman-stacks/docs/stacks/prowlarr.html) — enabled by default via `nps.stacks.streaming.prowlarr.enable = true`
+> - [SABnzbd](https://tarow.github.io/nix-podman-stacks/docs/stacks/sabnzbd.html) — disabled by default, enable with `nps.stacks.streaming.sabnzbd.enable = true`
 
 ## Examples
 

@@ -68,6 +68,7 @@ let
     reactive-resume = ./reactive-resume;
     romm = ./romm;
     sablier = ./sablier;
+    sabnzbd = ./sabnzbd;
     scanopy = ./scanopy;
     searxng = ./searxng;
     shelfmark = ./shelfmark;
