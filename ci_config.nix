@@ -834,7 +834,7 @@ in {
           };
           seerr.enable = true;
           profilarr.enable = true;
-          sabnzbd.enable = true;
+          useSabnzbd = true;
           maintainerr.enable = true;
         }
         // lib.genAttrs ["sonarr" "radarr" "bazarr"] (name: {

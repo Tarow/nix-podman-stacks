@@ -62,18 +62,30 @@ in {
   options.nps.stacks.${stackName} =
     {
       enable = lib.mkEnableOption stackName;
-      qbittorrent.enable =
-        lib.mkEnableOption "the qBittorrent stack. Enables Gluetun, qBittorrent and qui and connects them to the streaming network."
-        // {
-          default = true;
-        };
-      prowlarr.enable =
-        lib.mkEnableOption "the Prowlarr stack. Enables Prowlarr and connects it to the streaming network."
-        // {
-          default = true;
-        };
-      sabnzbd.enable =
-        lib.mkEnableOption "the SABnzbd stack. Enables SABnzbd and connects it to the streaming network.";
+      useQbittorrent = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Whether to enable the qBittorrent stack and connect it to the streaming network.
+          The qBittorrent stack (Gluetun, qBittorrent and qui) runs standalone and is attached to the streaming network and Traefik.
+        '';
+      };
+      useProwlarr = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Whether to enable the Prowlarr stack and connect it to the streaming network.
+          The Prowlarr stack runs standalone and is attached to the streaming network and Traefik.
+        '';
+      };
+      useSabnzbd = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to enable the SABnzbd stack and connect it to the streaming network.
+          The SABnzbd stack runs standalone and is attached to the streaming network and Traefik.
+        '';
+      };
       jellyfin = {
         enable =
           lib.mkEnableOption "Jellyfin"
@@ -137,11 +149,6 @@ in {
         };
       };
       seerr.enable = lib.mkEnableOption "Seerr";
-      flaresolverr.enable =
-        lib.mkEnableOption "Flaresolverr"
-        // {
-          default = true;
-        };
       maintainerr.enable = lib.mkEnableOption "Maintainerr";
     }
     // (
@@ -155,29 +162,24 @@ in {
     );
 
   config = lib.mkIf cfg.enable {
-    # If Flaresolverr is enabled, enable it & connect it to the streaming stack network
-    nps.stacks.flaresolverr.enable = lib.mkIf cfg.flaresolverr.enable true;
     # Enable qBittorrent stack. Attach Gluetun to the streaming network when the VPN is enabled, otherwise qBittorrent directly
-    nps.stacks.qbittorrent.enable = lib.mkIf cfg.qbittorrent.enable true;
+    nps.stacks.qbittorrent.enable = lib.mkIf cfg.useQbittorrent true;
     # Enable Prowlarr stack & connect it to the streaming stack network
-    nps.stacks.prowlarr.enable = lib.mkIf cfg.prowlarr.enable true;
+    nps.stacks.prowlarr.enable = lib.mkIf cfg.useProwlarr true;
     # Enable SABnzbd stack & connect it to the streaming stack network
-    nps.stacks.sabnzbd.enable = lib.mkIf cfg.sabnzbd.enable true;
+    nps.stacks.sabnzbd.enable = lib.mkIf cfg.useSabnzbd true;
     nps.containers = lib.mkMerge [
-      (lib.mkIf cfg.flaresolverr.enable {
-        flaresolverr.network = [stackName];
-      })
-      (lib.mkIf cfg.qbittorrent.enable {
+      (lib.mkIf cfg.useQbittorrent {
         ${
           if config.nps.stacks.qbittorrent.gluetun.enable
           then "gluetun"
           else "qbittorrent"
         }.network = [stackName];
       })
-      (lib.mkIf cfg.prowlarr.enable {
+      (lib.mkIf cfg.useProwlarr {
         prowlarr.network = [stackName];
       })
-      (lib.mkIf cfg.sabnzbd.enable {
+      (lib.mkIf cfg.useSabnzbd {
         sabnzbd.network = [stackName];
       })
     ];

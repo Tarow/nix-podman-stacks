@@ -34,9 +34,9 @@ Additionally, the following services can be enabled (disabled by default):
 > [!NOTE]
 > The following services are provided by separate stacks:
 >
-> - [qBittorrent (with Gluetun and qui)](https://tarow.github.io/nix-podman-stacks/docs/stacks/qbittorrent.html) — enabled by default via `nps.stacks.streaming.qbittorrent.enable = true`
-> - [Prowlarr](https://tarow.github.io/nix-podman-stacks/docs/stacks/prowlarr.html) — enabled by default via `nps.stacks.streaming.prowlarr.enable = true`
-> - [SABnzbd](https://tarow.github.io/nix-podman-stacks/docs/stacks/sabnzbd.html) — disabled by default, enable with `nps.stacks.streaming.sabnzbd.enable = true`
+> - [qBittorrent (with Gluetun and qui)](https://tarow.github.io/nix-podman-stacks/docs/stacks/qbittorrent.html) — enabled by default via `nps.stacks.streaming.useQbittorrent = true`
+> - [Prowlarr](https://tarow.github.io/nix-podman-stacks/docs/stacks/prowlarr.html) — enabled by default via `nps.stacks.streaming.useProwlarr = true`
+> - [SABnzbd](https://tarow.github.io/nix-podman-stacks/docs/stacks/sabnzbd.html) — disabled by default, enable with `nps.stacks.streaming.useSabnzbd = true`
 
 ## Examples
 

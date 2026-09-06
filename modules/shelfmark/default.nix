@@ -70,17 +70,20 @@ in {
         description = "Users must be a part of this group to be able to log in.";
       };
     };
-    flaresolverr.enable =
-      lib.mkEnableOption "Flaresolverr"
-      // {
-        default = true;
-      };
+    useFlaresolverr = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether to enable the Flaresolverr stack and connect it to the Shelfmark network.
+        Shelfmark uses Flaresolverr to bypass Cloudflare protection.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     # If Flaresolverr is enabled, enable it & connect it to the shelfmark network
-    nps.stacks.flaresolverr.enable = lib.mkIf cfg.flaresolverr.enable true;
-    nps.containers.flaresolverr = lib.mkIf cfg.flaresolverr.enable {
+    nps.stacks.flaresolverr.enable = lib.mkIf cfg.useFlaresolverr true;
+    nps.containers.flaresolverr = lib.mkIf cfg.useFlaresolverr {
       network = [name];
     };
 
@@ -150,7 +153,7 @@ in {
           OIDC_AUTO_PROVISION = true;
           HIDE_LOCAL_AUTH = lib.mkDefault true;
         }
-        // lib.optionalAttrs cfg.flaresolverr.enable {
+        // lib.optionalAttrs cfg.useFlaresolverr {
           USE_CF_BYPASS = true;
           USING_EXTERNAL_BYPASSER = true;
           EXT_BYPASSER_URL = "http://flaresolverr:8191";

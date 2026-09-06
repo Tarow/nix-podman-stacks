@@ -34,9 +34,23 @@ in {
     enable = o.enable // {default = false;};
     extraEnv = o.extraEnv;
     db = o.db;
+    useFlaresolverr = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether to enable the Flaresolverr stack and connect it to the Prowlarr network.
+        Prowlarr uses Flaresolverr to bypass Cloudflare protection on indexers.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    # If Flaresolverr is enabled, enable it & connect it to the prowlarr stack network
+    nps.stacks.flaresolverr.enable = lib.mkIf cfg.useFlaresolverr true;
+    nps.containers.flaresolverr = lib.mkIf cfg.useFlaresolverr {
+      network = [name];
+    };
+
     services.podman.containers =
       {
         ${name} =
