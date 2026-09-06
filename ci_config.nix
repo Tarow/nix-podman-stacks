@@ -683,6 +683,11 @@ in {
         };
       };
 
+      prowlarr = {
+        enable = true;
+        extraEnv."PROWLARR__AUTH__APIKEY".fromFile = dummySecretFile;
+      };
+
       qbittorrent = {
         enable = true;
         gluetun = {
@@ -824,7 +829,7 @@ in {
           sabnzbd.enable = true;
           maintainerr.enable = true;
         }
-        // lib.genAttrs ["sonarr" "radarr" "bazarr" "prowlarr"] (name: {
+        // lib.genAttrs ["sonarr" "radarr" "bazarr"] (name: {
           extraEnv."${lib.toUpper name}__AUTH__APIKEY".fromFile = dummySecretFile;
         });
 

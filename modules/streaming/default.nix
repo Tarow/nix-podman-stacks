@@ -11,7 +11,6 @@
   sonarrName = "sonarr";
   radarrName = "radarr";
   bazarrName = "bazarr";
-  prowlarrName = "prowlarr";
   seerrName = "seerr";
   profilarrName = "profilarr";
   profilarrParserName = "${profilarrName}-parser";
@@ -28,8 +27,6 @@
   radarrDisplayName = "Radarr";
   bazarrDescription = "Subtitle Management";
   bazarrDisplayName = "Bazarr";
-  prolarrDescription = "Indexer Management";
-  prowlarrDisplayName = "Prowlarr";
   seerrDescription = "Media Requests";
   seerrDisplayName = "Seerr";
   profilarrDisplayName = "Profilarr";
@@ -42,131 +39,17 @@
   storage = "${config.nps.storageBaseDir}/${stackName}";
   mediaStorage = "${config.nps.mediaStorageBaseDir}";
 
-  mkArrOptions = name: {
-    enable =
-      lib.mkEnableOption name
-      // {
-        default = true;
-      };
-    extraEnv = lib.mkOption {
-      type = (import ../types.nix lib).extraEnv;
-      default = {};
-      description = ''
-        Extra environment variables to set for the container.
-        Variables can be either set directly or sourced from a file (e.g. for secrets).
-      '';
-    };
-    db = {
-      type = lib.mkOption {
-        type = lib.types.enum [
-          "sqlite"
-          "postgres"
-        ];
-        default = "sqlite";
-        description = ''
-          Type of the database to use.
-          Can be set to "sqlite" or "postgres".
-          If set to "postgres", the `passwordFile` option must be set.
-        '';
-      };
-      username = lib.mkOption {
-        type = lib.types.str;
-        default = name;
-        description = ''
-          The PostgreSQL user to use for the database.
-          Only used if db.type is set to "postgres".
-        '';
-      };
-      passwordFile = lib.mkOption {
-        type = lib.types.path;
-        description = ''
-          The file containing the PostgreSQL password for the database.
-          Only used if db.type is set to "postgres".
-        '';
-      };
-    };
+  arrlib = import ../arrlib.nix {
+    inherit
+      config
+      lib
+      pkgs
+      stackName
+      storage
+      mediaStorage
+      category
+      ;
   };
-
-  mkArrBase = name: let
-    arrCfg = cfg.${name};
-    upperName = lib.toUpper name;
-  in {
-    volumeMap = {
-      config = "${storage}/${name}:/config";
-      media = "${mediaStorage}:/media";
-    };
-
-    extraEnv =
-      {
-        PUID = config.nps.defaultUid;
-        PGID = config.nps.defaultGid;
-        "${upperName}__AUTH__METHOD" = "Forms";
-        "${upperName}__AUTH__REQUIRED" = "DisabledForLocalAddresses";
-      }
-      // lib.optionalAttrs (arrCfg.db.type == "postgres") {
-        "${upperName}__POSTGRES__HOST" = "${name}-db";
-        "${upperName}__POSTGRES__USER" = arrCfg.db.username;
-        "${upperName}__POSTGRES__PASSWORD".fromFile = arrCfg.db.passwordFile;
-        "${upperName}__POSTGRES__MAINDB" = name;
-        "${upperName}__POSTGRES__LOGDB" = "${name}_log";
-      }
-      // arrCfg.extraEnv;
-
-    wantsContainer = lib.optional (arrCfg.db.type == "postgres") "${name}-db";
-
-    stack = stackName;
-    traefik.name = name;
-  };
-
-  mkArrPostgres = name: let
-    arrCfg = cfg.${name};
-  in
-    lib.mkIf (arrCfg.db.type == "postgres") {
-      image = "docker.io/postgres:18";
-      volumeMap = let
-        init = pkgs.writeText "init.sql" ''
-          CREATE DATABASE ${name}_log;
-        '';
-      in {
-        # Needs extra folder, otherwise its mounted into *arr, which will chown all folders -> db fails to start
-        data = "${storage}/${name}_postgres:/var/lib/postgresql";
-        initSql = "${init}:/docker-entrypoint-initdb.d/init.sql";
-      };
-
-      extraEnv = {
-        POSTGRES_USER = arrCfg.db.username;
-        POSTGRES_DB = name;
-        POSTGRES_PASSWORD.fromFile = arrCfg.db.passwordFile;
-      };
-
-      extraConfig.Container = {
-        Notify = "healthy";
-        HealthCmd = "pg_isready -h 127.0.0.1 -d ${name}_log -U ${arrCfg.db.username}";
-        HealthInterval = "10s";
-        HealthTimeout = "10s";
-        HealthRetries = 5;
-        HealthStartPeriod = "10s";
-        HealthOnFailure = "kill";
-      };
-
-      stack = stackName;
-      glance = {
-        inherit category;
-        name = "Postgres";
-        parent = name;
-        icon = "di:postgres";
-      };
-    };
-
-  arrDbs =
-    lib.genAttrs'
-    [
-      sonarrName
-      radarrName
-      bazarrName
-      prowlarrName
-    ]
-    (name: lib.nameValuePair "${name}-db" (mkArrPostgres name));
 in {
   imports = import ../mkAliases.nix config lib stackName [
     sabnzbdName
@@ -174,7 +57,6 @@ in {
     sonarrName
     radarrName
     bazarrName
-    prowlarrName
     seerrName
     profilarrName
     profilarrParserName
@@ -186,6 +68,11 @@ in {
       enable = lib.mkEnableOption stackName;
       qbittorrent.enable =
         lib.mkEnableOption "the qBittorrent stack. Enables Gluetun, qBittorrent and qui and connects them to the streaming network."
+        // {
+          default = true;
+        };
+      prowlarr.enable =
+        lib.mkEnableOption "the Prowlarr stack. Enables Prowlarr and connects it to the streaming network."
         // {
           default = true;
         };
@@ -279,9 +166,8 @@ in {
         sonarrName
         radarrName
         bazarrName
-        prowlarrName
       ]
-      mkArrOptions
+      arrlib.mkArrOptions
     );
 
   config = lib.mkIf cfg.enable {
@@ -289,6 +175,8 @@ in {
     nps.stacks.flaresolverr.enable = lib.mkIf cfg.flaresolverr.enable true;
     # Enable qBittorrent stack. Attach Gluetun to the streaming network when the VPN is enabled, otherwise qBittorrent directly
     nps.stacks.qbittorrent.enable = lib.mkIf cfg.qbittorrent.enable true;
+    # Enable Prowlarr stack & connect it to the streaming stack network
+    nps.stacks.prowlarr.enable = lib.mkIf cfg.prowlarr.enable true;
     nps.containers = lib.mkMerge [
       (lib.mkIf cfg.flaresolverr.enable {
         flaresolverr.network = [stackName];
@@ -299,6 +187,9 @@ in {
           then "gluetun"
           else "qbittorrent"
         }.network = [stackName];
+      })
+      (lib.mkIf cfg.prowlarr.enable {
+        prowlarr.network = [stackName];
       })
     ];
 
@@ -580,7 +471,7 @@ in {
           };
         };
 
-        ${sonarrName} = lib.mkIf cfg.sonarr.enable (mkArrBase sonarrName
+        ${sonarrName} = lib.mkIf cfg.sonarr.enable (arrlib.mkArrBase sonarrName
           // {
             image = "lscr.io/linuxserver/sonarr:4.0.19";
             port = 8989;
@@ -603,7 +494,7 @@ in {
             };
           });
 
-        ${radarrName} = lib.mkIf cfg.radarr.enable (mkArrBase radarrName
+        ${radarrName} = lib.mkIf cfg.radarr.enable (arrlib.mkArrBase radarrName
           // {
             image = "lscr.io/linuxserver/radarr:6.3.0";
             port = 7878;
@@ -626,7 +517,7 @@ in {
             };
           });
 
-        ${bazarrName} = lib.mkIf cfg.bazarr.enable (mkArrBase bazarrName
+        ${bazarrName} = lib.mkIf cfg.bazarr.enable (arrlib.mkArrBase bazarrName
           // {
             image = "lscr.io/linuxserver/bazarr:1.6.0";
             port = 6767;
@@ -648,30 +539,7 @@ in {
               icon = "di:bazarr";
             };
           });
-
-        ${prowlarrName} = lib.mkIf cfg.prowlarr.enable (mkArrBase prowlarrName
-          // {
-            image = "lscr.io/linuxserver/prowlarr:2.5.2";
-            port = 9696;
-
-            homepage = {
-              inherit category;
-              name = prowlarrDisplayName;
-              settings = {
-                description = prolarrDescription;
-                icon = "prowlarr";
-                widget.type = "prowlarr";
-              };
-            };
-            glance = {
-              inherit category;
-              description = prolarrDescription;
-              name = prowlarrDisplayName;
-              id = prowlarrName;
-              icon = "di:prowlarr";
-            };
-          });
       }
-      // arrDbs;
+      // arrlib.arrDbs [sonarrName radarrName bazarrName];
   };
 }

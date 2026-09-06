@@ -12,9 +12,6 @@ Full streaming and automation stack containing:
 - Bazarr: Subtitle downloader for Sonarr/Radarr
   - [Github](https://github.com/morpheus65535/bazarr)
   - [Website](https://www.bazarr.media)
-- Prowlarr: Indexer manager / proxy for the \*arr apps
-  - [Github](https://github.com/Prowlarr/Prowlarr)
-  - [Website](https://prowlarr.com)
 - Seerr: Media request/management UI
   - [Github](https://github.com/seerr-team/seerr)
   - [Website](https://seerr.dev)
@@ -30,7 +27,6 @@ By default, the following services are enabled:
 - Sonarr
 - Radarr
 - Bazarr
-- Prowlarr
 
 Additionally, the following services can be enabled (disabled by default):
 
@@ -40,6 +36,8 @@ Additionally, the following services can be enabled (disabled by default):
 - Maintainerr
 
 [qBittorrent (with Gluetun and qui)](https://tarow.github.io/nix-podman-stacks/docs/stacks/qbittorrent.html) is provided by the separate `qbittorrent` stack and can be enabled with `nps.stacks.streaming.qbittorrent.enable = true` (default).
+
+[Prowlarr](https://tarow.github.io/nix-podman-stacks/docs/stacks/prowlarr.html) is provided by the separate `prowlarr` stack and can be enabled with `nps.stacks.streaming.prowlarr.enable = true` (default).
 
 ## Examples
 
