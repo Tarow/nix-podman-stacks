@@ -63,7 +63,10 @@ in rec {
     upperName = lib.toUpper name;
   in {
     volumeMap = {
-      config = "${storage}/${name}:/config";
+      config =
+        if name == stackName
+        then "${storage}/config:/config"
+        else "${storage}/${name}:/config";
       media = "${mediaStorage}:/media";
     };
 
@@ -100,7 +103,10 @@ in rec {
         '';
       in {
         # Needs extra folder, otherwise its mounted into *arr, which will chown all folders -> db fails to start
-        data = "${storage}/${name}_postgres:/var/lib/postgresql";
+        data =
+          if name == stackName
+          then "${storage}/postgres:/var/lib/postgresql"
+          else "${storage}/${name}_postgres:/var/lib/postgresql";
         initSql = "${init}:/docker-entrypoint-initdb.d/init.sql";
       };
 

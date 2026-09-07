@@ -36,7 +36,7 @@ in {
       image = "lscr.io/linuxserver/sabnzbd:5.1.2";
 
       volumeMap = {
-        config = "${storage}/${name}:/config";
+        config = "${storage}/config:/config";
         media = "${mediaStorage}:/media";
       };
 
