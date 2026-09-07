@@ -770,6 +770,12 @@ in {
       shelfmark = {
         enable = true;
         downloadDirectory = "${config.nps.storageBaseDir}/grimmory/bookdrop";
+        useProwlarr = true;
+        useQbittorrent = true;
+        extraEnv = {
+          PROWLARR_API_KEY.fromFile = dummySecretFile;
+          QBITTORRENT_PASSWORD.fromFile = dummySecretFile;
+        };
       };
 
       sparky-fitness = {

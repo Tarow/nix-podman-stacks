@@ -99,6 +99,9 @@ in {
                 description = ''
                   The internal main address of the service. Can be used for internal communication
                   without going through Traefik, when inside the same Podman network.
+
+                  If the container shares another container's network namespace (e.g. via `network = ["container:gluetun"]`),
+                  the address of that container is used instead
                 '';
                 readOnly = true;
               };
