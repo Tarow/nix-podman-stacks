@@ -80,8 +80,16 @@ in {
                 type = lib.types.str;
                 default = let
                   p = getPort port 1;
+                  containerNetwork =
+                    config.network
+                    |> lib.toList
+                    |> lib.findFirst (lib.hasPrefix "container:") null;
+                  hostname =
+                    if containerNetwork == null
+                    then name
+                    else lib.removePrefix "container:" containerNetwork;
                 in
-                  "${name}"
+                  "${hostname}"
                   + (
                     if (p != null)
                     then ":${p}"
