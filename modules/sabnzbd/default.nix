@@ -33,7 +33,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "lscr.io/linuxserver/sabnzbd:5.1.2";
+      image = "lscr.io/linuxserver/sabnzbd:5.1.3";
 
       volumeMap = {
         config = "${storage}/config:/config";
