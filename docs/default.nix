@@ -23,9 +23,6 @@
 
   stackNames = lib.attrNames eval.options.nps.stacks;
 
-  # matches --base` in docs/book/package.json
-  baseUrl = "/nix-podman-stacks/docs";
-
   mkStackOptionsFile = stack: ''
     echo "# ${stack}" > ./stacks/${stack}.md
 
@@ -140,7 +137,7 @@
         {
           rel = "icon";
           type = "image/svg+xml";
-          href = "${baseUrl}/favicon.svg";
+          href = "${siteUrl}/favicon.svg";
         }
       ]
     ];
