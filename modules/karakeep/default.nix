@@ -28,7 +28,7 @@ in {
       description = ''
         Path to file containing the NEXTAUTH_SECRET
 
-        See <https://docs.karakeep.app/configuration/>
+        See <https://docs.karakeep.app/configuration/environment-variables/>
       '';
     };
     meiliMasterKeyFile = lib.mkOption {
@@ -36,7 +36,7 @@ in {
       description = ''
         Path to file containing the MEILI_MASTER_KEY
 
-        See <https://docs.karakeep.app/configuration/>
+        See <https://docs.karakeep.app/configuration/environment-variables/>
       '';
     };
     oidc = {
@@ -50,7 +50,7 @@ in {
           For details, see:
 
           - <https://www.authelia.com/integration/openid-connect/clients/karakeep/>
-          - <https://docs.karakeep.app/configuration/#authentication--signup>
+          - <https://docs.karakeep.app/configuration/environment-variables/#authentication--signup>
         '';
       };
       clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;

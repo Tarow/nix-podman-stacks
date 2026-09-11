@@ -68,9 +68,7 @@ jobs:
       - name: Check links
         run: |
           nix run nixpkgs#lychee -- \
-            --no-progress \
-            --exclude-loopback \
-            --accept 200,204,301,302,429 \
+            --config ./docs/lychee.toml
             --root-dir ./result \
             result/**/*.html
       - name: Upload docs

@@ -32,7 +32,7 @@ in {
           and setup the necessary configuration.
 
           For details, see:
-          - https://github.com/DRYTRIX/TimeTracker/blob/main/docs/OIDC_SETUP.md
+          - <https://github.com/DRYTRIX/TimeTracker/blob/main/docs/admin/configuration/OIDC_SETUP.md>
         '';
       };
       clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;

@@ -46,7 +46,7 @@ in {
           For details, see:
 
           - <https://www.authelia.com/integration/openid-connect/clients/tandoor/>
-          - <https://docs.tandoor.dev/features/authentication/oidc/>
+          - <https://docs.tandoor.dev/features/authentication/#allauth>
         '';
       };
       clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;

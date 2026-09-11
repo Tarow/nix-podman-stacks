@@ -95,7 +95,7 @@ in {
         This requires the 'CF_DNS_API_TOKEN' environment variable to be present, e.g. by providing it via the `extraEnv` option.
 
         The DNS provider as well as any other settings can be overwritten.
-        For an example see <https://github.com/Tarow/nix-podman-stacks/blob/main/examples/traefik-dns-provider.nix>
+        For an example see <https://tarow.github.io/nix-podman-stacks/docs/examples.html#change-dns-provider>
       '';
     };
     dynamicConfig = lib.options.mkOption {

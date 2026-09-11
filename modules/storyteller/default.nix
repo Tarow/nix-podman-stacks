@@ -21,7 +21,7 @@ in {
       description = ''
         Path to the file containing the secret key.
 
-        See <https://storyteller-platform.gitlab.io/storyteller/docs/intro/getting-started#secrets>
+        See <https://storyteller-platform.dev/docs/installation/self-hosting#secrets>
       '';
     };
     oidc = {
@@ -33,7 +33,7 @@ in {
           and insert the necessary configuration records into the database.
 
           For details, see:
-          - <https://storyteller-platform.gitlab.io/storyteller/docs/administering#oauthoidc-configuration>
+          - <https://storyteller-platform.dev/docs/settings#authentication-providers>
         '';
       };
       clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;

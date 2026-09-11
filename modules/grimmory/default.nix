@@ -39,7 +39,7 @@ in {
 
           For details, see:
           - <https://www.authelia.com/integration/openid-connect/clients/booklore/>
-          - <https://booklore-app.github.io/booklore-docs/docs/authentication/authelia>
+          - <https://grimmory.org/docs/authentication/authelia/>
         '';
       };
       userGroup = lib.mkOption {

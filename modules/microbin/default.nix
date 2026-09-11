@@ -22,7 +22,7 @@ in {
         Extra environment variables to set for the container.
         Variables can be either set directly or sourced from a file (e.g. for secrets).
 
-        See <https://microbin.eu/docs/installation-and-configuration/configuration>
+        See <https://github.com/szabodanika/microbin/blob/master/.env>
       '';
     };
   };
