@@ -1,0 +1,9 @@
+# Cloudflare-protected sites return 403 to link checkers
+exclude = [
+    'https://docs\.paperless-ngx\.com/.*'
+]
+
+exclude_loopback = true
+no_progress = true
+
+accept = [200, 204, 301, 302, 429]
