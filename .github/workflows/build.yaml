@@ -62,13 +62,21 @@ jobs:
         with:
           extra_nix_config: "experimental-features = nix-command flakes pipe-operators"
       - name: Build docs
-        run: nix build .#book -o result/docs
+        run: nix build .#book -o result/nix-podman-stacks/docs
       - name: Build search
-        run: nix build .#search -o result/search
+        run: nix build .#search -o result/nix-podman-stacks/search
+      - name: Check links
+        run: |
+          nix run nixpkgs#lychee -- \
+            --no-progress \
+            --exclude-loopback \
+            --accept 200,204,301,302,429 \
+            --root-dir ./result \
+            result/**/*.html
       - name: Upload docs
         uses: actions/upload-pages-artifact@v5
         with:
-          path: ./result
+          path: ./result/nix-podman-stacks
 
   publish-docs:
     needs: build-docs
