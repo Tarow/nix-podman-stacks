@@ -68,7 +68,7 @@ jobs:
       - name: Check links
         run: |
           nix run nixpkgs#lychee -- \
-            --config ./docs/lychee.toml
+            --config ./docs/lychee.toml \
             --root-dir ./result \
             result/**/*.html
       - name: Upload docs
