@@ -8,9 +8,10 @@
 
   # Dummy secrets (never use real ones here)
   _module.args = {
-    dummySecretFile = "${pkgs.writeText "dummy-secret" "insecure_secret_insecure_secret"}";
-    dummyHash = "$argon2id$v=19$m=65536,t=3,p=4$8USywQgWNhOf4drzlVTieA$Rm8SlHy+ipThtIa/6nMMir2QkoXESCr4uCB2aAdvlmo";
-    dummyClientSecretHash = "$pbkdf2-sha512$310000$cbOAIWbfz3vCVXIPIp6d2A$J0klwULa6TvPRCU1HAfuKua/dMKTl8gbTYJz2N73ejGUu0LUGz/y3kwmJLuKuAYGg3WQOT0q9ZzVHHUvpKpgvQ";
+    # 64-character string, satisfies most stacks' secret format requirements
+    dummySecretFile = "${pkgs.writeText "dummy-secret" "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"}";
+    dummyHash = "$argon2id$v=19$m=65536,t=3,p=4$689VBxbUiBYuXgC2flxaMQ$dblA2J+WccfKujUOVm4KiIh5RrvCr02fOJNT2oKhGy0";
+    dummyClientSecretHash = "$pbkdf2-sha512$310000$1THCrOhCoICCVjNz7vfFMQ$2ercGVMG99CVVF42gs9BA4O9v.LlO3m8m8.6w0ynI0UFNJgnDPxadvgMTVc8mkCARlUSS5ZyxrSmm0WP31ZLSw";
     dummyUser = "admin";
     dummyEmail = "admin@example.com";
     dummyId = "dummy";
