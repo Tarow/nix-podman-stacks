@@ -1,0 +1,90 @@
+name: "Integration"
+on:
+  workflow_dispatch:
+    inputs:
+      stacks:
+        description: "Stacks to test (comma-separated) or 'all' (default: affected stacks)"
+        type: string
+        required: false
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      stacks: ${{ steps.affected.outputs.stacks }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Filter changed files
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          list-files: json
+          filters: |
+            stacks:
+              - 'modules/**'
+      - name: Determine affected stacks
+        id: affected
+        env:
+          STACK_FILES: ${{ steps.filter.outputs.stacks_files }}
+          MANUAL_STACKS: ${{ inputs.stacks }}
+        run: |
+          set -euo pipefail
+
+          if [[ -n "$MANUAL_STACKS" ]]; then
+            if [[ "$MANUAL_STACKS" == "all" ]]; then
+              STACKS=$(ls -d modules/*/vm-test.nix | cut -d/ -f2)
+            else
+              STACKS=$(echo "$MANUAL_STACKS" | tr ',' '\n')
+            fi
+          else
+            STACKS=$(echo "$STACK_FILES" | jq -r '.[]' | grep '^modules/' | cut -d/ -f2 | sort -u || true)
+          fi
+
+          # Keep only stacks that actually ship a vm-test.nix
+          FILTERED=""
+          for s in $STACKS; do
+            if [[ -f "modules/$s/vm-test.nix" ]]; then
+              FILTERED="$FILTERED$s\n"
+            fi
+          done
+
+          STACKS_JSON=$(printf "$FILTERED" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "stacks=$STACKS_JSON" >> "$GITHUB_OUTPUT"
+
+  integration:
+    needs: detect
+    if: needs.detect.outputs.stacks != '[]'
+    runs-on: ubuntu-24.04
+    name: Integration (${{ matrix.stacks }})
+    strategy:
+      fail-fast: false
+      matrix:
+        stacks: ${{ fromJson(needs.detect.outputs.stacks) }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: "experimental-features = nix-command flakes pipe-operators"
+      - name: Restore and cache Nix store
+        uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size-linux: 1073741824
+          purge: false
+      - name: Run integration test
+        env:
+          STACK: ${{ matrix.stacks }}
+        run: nix build .#packages.x86_64-linux.$STACK-integration --no-link --option sandbox false
