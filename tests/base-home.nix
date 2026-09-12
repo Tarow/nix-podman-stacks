@@ -8,8 +8,14 @@
 
   # Dummy secrets (never use real ones here)
   _module.args = {
-    dummySecretFile = "${pkgs.writeText "dummy-secret" "insecure_secret"}";
+    dummySecretFile = "${pkgs.writeText "dummy-secret" "insecure_secret_insecure_secret"}";
     dummyHash = "$argon2id$v=19$m=65536,t=3,p=4$8USywQgWNhOf4drzlVTieA$Rm8SlHy+ipThtIa/6nMMir2QkoXESCr4uCB2aAdvlmo";
+    dummyClientSecretHash = "$pbkdf2-sha512$310000$cbOAIWbfz3vCVXIPIp6d2A$J0klwULa6TvPRCU1HAfuKua/dMKTl8gbTYJz2N73ejGUu0LUGz/y3kwmJLuKuAYGg3WQOT0q9ZzVHHUvpKpgvQ";
+    dummyUser = "admin";
+    dummyEmail = "admin@example.com";
+    dummyId = "dummy";
+    dummySecret = "insecure_secret";
+    dummyRsaKeyFile = "${pkgs.runCommand "dummy-rsa-key" {nativeBuildInputs = [pkgs.openssl];} "openssl genrsa -out $out 2048"}";
   };
 
   nps = {
