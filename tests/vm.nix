@@ -1,13 +1,5 @@
 # Builds a NixOS VM integration test for a single stack.
-#
-# Usage (from `flake.nix`):
-#
-#   (import ./tests/vm.nix { inherit pkgs home-manager; }) "it-tools"
-#
-# The VM boots with the base setup from `base-config.nix`/`base-home.nix`
-# merged with `modules/<stack>/vm-test.nix`, activates it like a real
-# deployment and verifies that all systemd user services of the stack are
-# running (see `check.sh` / `driver.py`).
+# See tests/check.sh and tests/driver.py for the verification logic.
 {
   pkgs,
   home-manager,

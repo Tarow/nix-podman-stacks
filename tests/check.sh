@@ -1,24 +1,15 @@
 #!/usr/bin/env bash
-# Checks that all systemd user services belonging to a stack are running.
-#
-# Pure verification - no `systemctl start` is issued here. With user lingering
-# enabled, Podman services and all container units start automatically after
-# deployment, this script simply waits for them to become stable and asserts
-# their state. On failure it dumps the relevant diagnostics.
-#
-# The expected units are derived from the evaluated configuration at build time
-# (see `tests/vm.nix`) and written to /etc/nps-test/expected-units.
+# Verifies all systemd user services of a deployed stack are stable.
+# Expected units are written to /etc/nps-test/expected-units at build time.
 set -uo pipefail
 
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
 
-# The su session does not inherit the interactive login PATH, so assemble one
-# that includes the user (podman) and system (systemctl, journalctl, ...) bins.
+# Assemble a usable PATH for the su session.
 export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:${PATH:-}"
 
 EXPECTED_UNITS_FILE="/etc/nps-test/expected-units"
 WAIT_TIMEOUT=300
-# How long the units must stay stable before the re-check (crash-loop grace period)
 STABILITY_GRACE=60
 
 log() { printf '[%s] %s\n' "$(date '+%H:%M:%S')" "$*"; }
@@ -59,25 +50,21 @@ mapfile -t UNITS < "$EXPECTED_UNITS_FILE"
 
 log "checking ${#UNITS[@]} unit(s): $(printf '%s ' "${UNITS[@]}")"
 
-# Wait for every unit of this stack to become stable.
 for unit in "${UNITS[@]}"; do
   wait_for_unit "$unit"
 done
 
-# Informational: show which storage driver / network backend the environment
-# actually ended up using (in case the defaults change between nixpkgs bumps).
+# Log the active storage driver and network backend.
 log "podman storage driver: $(podman info --format '{{.Store.GraphDriverName}}')"
 log "podman network backend: $(podman info --format '{{.Host.NetworkBackend}}')"
 
-# Record the restart baseline (a unit may legitimately restart once during
-# startup) before the stability grace period.
+# Snapshot NRestarts baseline (a unit may restart once during startup).
 declare -A BASELINE_RESTARTS
 for unit in "${UNITS[@]}"; do
   BASELINE_RESTARTS["$unit"]="$(systemctl --user show -p NRestarts --value "$unit")"
 done
 
-# Anti-crash-loop: after a grace period every unit must still be active,
-# running and must not have restarted since it became stable.
+# Re-check: must still be active, running, no new restarts.
 sleep "$STABILITY_GRACE"
 for unit in "${UNITS[@]}"; do
   substate="$(systemctl --user show -p SubState --value "$unit")"
