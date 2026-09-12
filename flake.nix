@@ -65,8 +65,35 @@
             ;
           inherit (self.packages.${system}) optionsJSON;
         };
+
+        # NixOS VM integration tests. Only defined for Linux systems and only
+        # for stacks that ship a `modules/<stack>/vm-test.nix` file.
+        integrationTests =
+          lib.optionalAttrs (builtins.elem system [
+            "aarch64-linux"
+            "x86_64-linux"
+          ]) (let
+            stackNames = builtins.filter (
+              name: builtins.pathExists ./modules/${name}/vm-test.nix
+            ) (builtins.attrNames (import ./modules/module_list.nix));
+            mkIntegrationTest = stackName:
+              (import ./tests/vm.nix {
+                inherit
+                  pkgs
+                  home-manager
+                  self
+                  ;
+              })
+              stackName;
+          in
+            lib.listToAttrs (map (name: {
+                name = "${name}-integration";
+                value = mkIntegrationTest name;
+              })
+              stackNames));
       in
         docs
+        // integrationTests
     );
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);

@@ -30,6 +30,23 @@ nix build .#packages.x86_64-linux.book
 nix build .#packages.x86_64-linux.search
 ```
 
+### Integration Tests
+
+Each stack that ships a `modules/<stack>/vm-test.nix` gets a NixOS VM integration
+test that activates the stack like a real deployment and verifies that all its
+systemd user services reach a stable `active (running)` state.
+
+```bash
+# Requires network access for the VM, hence sandbox is disabled
+nix build .#packages.x86_64-linux.<stack>-integration --no-link --option sandbox false
+```
+
+The central test scaffolding lives in `tests/` (`base-config.nix`, `base-home.nix`,
+`vm.nix`, `check.sh`, `driver.py`) and is merged with the per-stack
+`vm-test.nix` home-manager fragment. Skip stacks that cannot run in a plain VM
+(devices, privileged ports, cross-stack coupling) by simply not adding a
+`vm-test.nix`.
+
 ## Module Structure
 
 Every module (`modules/<name>/default.nix`) follows this pattern:
@@ -58,6 +75,14 @@ in {
   };
 }
 ```
+
+### Test Files
+
+When adding a new module, also add a `modules/<name>/vm-test.nix` (a home-manager
+fragment enabling the stack with dummy secrets) so the stack gets a NixOS VM
+integration test. Available dummy secrets are exposed via `_module.args`
+(`dummySecretFile`, `dummyHash`) from `tests/base-home.nix`. See
+`modules/it-tools/vm-test.nix` for a minimal example.
 
 ## Container Configuration Patterns
 
