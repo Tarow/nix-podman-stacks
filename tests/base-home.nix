@@ -17,6 +17,6 @@
     storageBaseDir = "/home/ci/stacks";
     externalStorageBaseDir = "/mnt/media";
     defaultTz = "UTC";
-    hostIP4Address = "192.168.178.2";
+    hostIP4Address = "192.168.1.1";
   };
 }
