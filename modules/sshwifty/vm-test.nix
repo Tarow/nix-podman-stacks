@@ -11,11 +11,15 @@
           Meta = {
             User = "user";
             Encoding = "utf-8";
-            "Private Key" = "file://${dummySecretFile}";
+            "Private Key" = "file:///secrets/private-key";
             Authentication = "Private Key";
           };
         }
       ];
     };
   };
+
+  # Mount the dummy private key into the container so the config's
+  # `file:///secrets/private-key` reference resolves.
+  services.podman.containers.sshwifty.volumeMap.privateKey = "${dummySecretFile}:/secrets/private-key:ro";
 }
