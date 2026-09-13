@@ -9,7 +9,9 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
 export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:${PATH:-}"
 
 EXPECTED_UNITS_FILE="/etc/nps-test/expected-units"
-WAIT_TIMEOUT=300
+# Combined budget for ALL units to reach `active (running)`, shared across the
+# wait loop below (not a per-unit timeout).
+WAIT_TIMEOUT=600
 STABILITY_GRACE=60
 
 log() { printf '[%s] %s\n' "$(date '+%H:%M:%S')" "$*"; }
@@ -32,7 +34,7 @@ wait_for_unit() {
   local expected_substate="${2:-running}"
   local timeout="${3:-$WAIT_TIMEOUT}"
 
-  log "waiting up to ${timeout}s for ${unit} (${expected_substate})"
+  log "waiting for ${unit} (${expected_substate}) with ${timeout}s remaining"
   # shellcheck disable=SC2016
   timeout "$timeout" bash -c '
     while :; do
@@ -58,8 +60,16 @@ mapfile -t UNITS < "$EXPECTED_UNITS_FILE"
 
 log "checking ${#UNITS[@]} unit(s): $(printf '%s ' "${UNITS[@]}")"
 
+# All units share a single deadline: WAIT_TIMEOUT total, not per unit.
+START_TS="$(date +%s)"
 for unit in "${UNITS[@]}"; do
-  wait_for_unit "$unit"
+  remaining=$(( WAIT_TIMEOUT - ($(date +%s) - START_TS) ))
+  if [ "$remaining" -le 0 ]; then
+    log "=== global ${WAIT_TIMEOUT}s timeout exceeded while waiting for ${unit} ==="
+    dump_unit_logs "$unit"
+    fail "global ${WAIT_TIMEOUT}s timeout exceeded waiting for ${unit}"
+  fi
+  wait_for_unit "$unit" running "$remaining"
 done
 
 # Log the active storage driver and network backend.

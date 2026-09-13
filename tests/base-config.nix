@@ -5,6 +5,10 @@
   stackTestModule,
   ...
 }: {
+  config,
+  lib,
+  ...
+}: {
   imports = [
     home-manager.nixosModules.home-manager
   ];
@@ -60,7 +64,7 @@
   systemd.targets.network-online.wantedBy = ["multi-user.target"];
 
   virtualisation = {
-    memorySize = 2048;
+    memorySize = config.home-manager.users.ci.npsTests.memorySize;
     diskSize = 8192;
   };
 
