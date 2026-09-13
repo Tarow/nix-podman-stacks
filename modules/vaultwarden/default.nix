@@ -85,7 +85,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/dani-garcia/vaultwarden:1.37.2";
+      image = "ghcr.io/dani-garcia/vaultwarden:1.37.3";
       volumeMap.data = "${storage}/data:/data";
 
       extraEnv =
