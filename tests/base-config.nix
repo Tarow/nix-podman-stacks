@@ -49,8 +49,8 @@
 
   security.allowUserNamespaces = true;
   boot.kernel.sysctl = {
-    # Allow unprivileged binding of low ports (adguard 53/853, forgejo 22)
-    "net.ipv4.ip_unprivileged_port_start" = 22;
+    # Allow unprivileged binding of low ports (adguard 53/853, forgejo 22, ftp 21, ...)
+    "net.ipv4.ip_unprivileged_port_start" = 0;
   };
 
   # QEMU user networking provides DNS via the host through 10.0.2.3
