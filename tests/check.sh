@@ -18,6 +18,15 @@ fail() {
   exit 1
 }
 
+# Dump diagnostics for a failing unit: unit status and the last 200 journal
+# lines. Container output is captured into the journal by systemd, so this
+# covers both systemd lifecycle messages and container output.
+dump_unit_logs() {
+  local unit="$1"
+  systemctl --user status "$unit" --no-pager || true
+  journalctl --user -u "$unit" -n 200 --no-pager || true
+}
+
 wait_for_unit() {
   local unit="$1"
   local expected_substate="${2:-running}"
@@ -36,8 +45,7 @@ wait_for_unit() {
     done
   ' _ "$unit" "$expected_substate" || {
     log "=== ${unit} did not become active (${expected_substate}) within ${timeout}s ==="
-    systemctl --user status "$unit" --no-pager || true
-    journalctl --user -u "$unit" -n 200 --no-pager || true
+    dump_unit_logs "$unit"
     fail "unit ${unit} not active (${expected_substate})"
   }
   log "unit ${unit} is active (${expected_substate})"
@@ -73,11 +81,7 @@ for unit in "${UNITS[@]}"; do
   baseline="${BASELINE_RESTARTS["$unit"]}"
   if [ "$state" != "active" ] || [ "$substate" != "running" ] || [ "$restarts" != "$baseline" ]; then
     log "=== unit ${unit} is not stable after ${STABILITY_GRACE}s grace period ==="
-    systemctl --user status "$unit" --no-pager || true
-    journalctl --user -u "$unit" -n 200 --no-pager || true
-    cname="${unit#podman-}"
-    cname="${cname%.service}"
-    podman logs "$cname" --tail 200 || true
+    dump_unit_logs "$unit"
     fail "unit ${unit} not stable after grace period (state=${state}, substate=${substate}, restarts=${restarts}, baseline=${baseline})"
   fi
   log "unit ${unit} stable: active (running), ${restarts} restarts"
