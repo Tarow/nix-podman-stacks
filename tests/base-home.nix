@@ -1,5 +1,9 @@
 # Base home-manager settings for VM integration tests.
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   home = {
     username = "ci";
     homeDirectory = "/home/ci";
@@ -21,8 +25,8 @@
 
   nps = {
     hostUid = 1000;
-    storageBaseDir = "/home/ci/stacks";
-    externalStorageBaseDir = "/mnt/media";
+    storageBaseDir = "${config.home.homeDirectory}/stacks";
+    externalStorageBaseDir = "${config.home.homeDirectory}/external";
     defaultTz = "UTC";
     hostIP4Address = "192.168.1.1";
   };

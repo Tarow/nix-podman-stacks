@@ -31,6 +31,10 @@
     ];
   };
 
+  users.groups.ci = {
+    gid = 1000;
+  };
+
   # Stack under test (merged with base-home.nix).
   home-manager = {
     useGlobalPkgs = true;
@@ -51,11 +55,6 @@
 
   # QEMU user networking provides DNS via the host through 10.0.2.3
   networking.nameservers = ["10.0.2.3"];
-
-  # Storage mount point for media stacks (rootless podman can't create /mnt).
-  systemd.tmpfiles.rules = [
-    "d /mnt/media 0755 ci ci -"
-  ];
 
   # Podman waits for network-online.target at startup. Pull it in to avoid a 90s timeout.
   systemd.targets.network-online.wantedBy = ["multi-user.target"];
