@@ -1,6 +1,7 @@
 {
   dummyHash,
   dummySecretFile,
+  selfSignedCertDir,
   ...
 }: {
   imports = [../authelia/vm-test.nix];
@@ -24,5 +25,10 @@
       type = "postgres";
       passwordFile = dummySecretFile;
     };
+  };
+
+  services.podman.containers.forgejo = {
+    extraEnv.SSL_CERT_FILE = "/etc/ssl/certs/nps-test/wildcard.crt";
+    volumeMap.npsTestCert = "${selfSignedCertDir}:/etc/ssl/certs/nps-test:ro";
   };
 }
