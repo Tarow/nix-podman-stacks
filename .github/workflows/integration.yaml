@@ -87,4 +87,4 @@ jobs:
       - name: Run integration test
         env:
           STACK: ${{ matrix.stacks }}
-        run: nix build .#packages.x86_64-linux.$STACK-integration --no-link --option sandbox false
+        run: nix build .#integrationTests.x86_64-linux.$STACK-integration --no-link --option sandbox false

@@ -38,7 +38,7 @@ systemd user services reach a stable `active (running)` state.
 
 ```bash
 # Requires network access for the VM, hence sandbox is disabled
-nix build .#packages.x86_64-linux.<stack>-integration --no-link --option sandbox false
+nix build .#integrationTests.x86_64-linux.<stack>-integration --no-link --option sandbox false
 ```
 
 The central test scaffolding lives in `tests/` (`base-config.nix`, `base-home.nix`,
