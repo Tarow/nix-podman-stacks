@@ -155,6 +155,7 @@ in {
           OIDC_X_FORWARDED_HEADERS = "X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto";
         };
 
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 80;
       traefik.name = name;
       homepage = {

@@ -91,6 +91,7 @@ in {
           OIDC_USER_GROUP = cfg.oidc.userGroup;
         };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 9000;
         traefik.name = name;
         homepage = {

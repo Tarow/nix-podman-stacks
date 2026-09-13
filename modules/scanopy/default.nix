@@ -132,7 +132,7 @@ in {
         port = serverPort;
         traefik.name = name;
 
-        wantsContainer = [dbName];
+        wantsContainer = [dbName] ++ lib.optional cfg.oidc.enable "authelia";
 
         homepage = {
           inherit category;

@@ -116,7 +116,7 @@ in {
           }
           // cfg.extraEnv;
 
-        wantsContainer = lib.optional (cfg.db.type == "postgres") dbName;
+        wantsContainer = lib.optional (cfg.db.type == "postgres") dbName ++ lib.optional cfg.oidc.enable "authelia";
         stack = name;
 
         port = 3000;

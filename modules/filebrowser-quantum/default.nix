@@ -207,6 +207,7 @@ in {
         FILEBROWSER_DATABASE_PATH = "/home/filebrowser/db/database.sqlite";
         FILEBROWSER_OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
       };
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 80;
       traefik.name = name;
       homepage = {

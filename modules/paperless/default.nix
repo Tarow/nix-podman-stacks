@@ -159,6 +159,7 @@ in {
           dbName
           brokerName
         ];
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         volumeMap = {
           data = "${storage}/data:/usr/src/paperless/data";
           media = "${storage}/media:/usr/src/paperless/media";

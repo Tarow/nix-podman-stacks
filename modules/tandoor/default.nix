@@ -133,6 +133,7 @@ in {
               |> lib.replaceStrings ["\n"] [""];
           };
         dependsOnContainer = [dbName];
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
 
         stack = name;
         port = 80;

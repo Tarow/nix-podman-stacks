@@ -223,6 +223,7 @@ in {
           redisName
           dbName
         ];
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 2283;
 
         stack = name;

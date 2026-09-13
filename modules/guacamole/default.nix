@@ -166,7 +166,7 @@ in {
             POSTGRESQL_USERNAME = cfg.db.username;
           };
 
-        wantsContainer = [guacdName] ++ (lib.optional cfg.db.enable dbName);
+        wantsContainer = [guacdName] ++ (lib.optional cfg.db.enable dbName) ++ lib.optional cfg.oidc.enable "authelia";
 
         stack = name;
         port = 8080;

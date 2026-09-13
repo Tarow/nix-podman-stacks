@@ -167,7 +167,7 @@ in {
             POSTGRES_PASSWORD.fromFile = cfg.db.passwordFile;
           });
 
-        wantsContainer = [dbName];
+        wantsContainer = [dbName] ++ lib.optional cfg.oidc.registerClient "authelia";
         stack = name;
         port = 8000;
         traefik.name = backendName;

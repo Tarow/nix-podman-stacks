@@ -275,6 +275,7 @@ in {
         };
       fileEnvMount = pathEntries;
 
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 3000;
       traefik = {
         inherit name;

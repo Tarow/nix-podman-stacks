@@ -189,6 +189,7 @@ in {
           AUTHELIA_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
         };
 
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 8888;
       traefik = {
         name = name;

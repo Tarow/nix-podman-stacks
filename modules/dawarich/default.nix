@@ -155,7 +155,7 @@ in {
         entrypoint = " web-entrypoint.sh";
         exec = "bin/rails server -p 3000 -b ::";
 
-        wantsContainer = [dbName redisName];
+        wantsContainer = [dbName redisName] ++ lib.optional cfg.oidc.enable "authelia";
 
         port = 3000;
 
@@ -187,7 +187,7 @@ in {
         };
         extraEnv = env // cfg.extraEnv;
 
-        wantsContainer = [name dbName redisName];
+        wantsContainer = [name dbName redisName] ++ lib.optional cfg.oidc.enable "authelia";
 
         extraPodmanArgs = ["-ti"];
         entrypoint = "sidekiq-entrypoint.sh";

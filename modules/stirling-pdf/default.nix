@@ -98,6 +98,7 @@ in {
           SECURITY_OAUTH2_PROVIDER = "Authelia";
         };
 
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 8080;
       traefik.name = "pdf";
       homepage = {

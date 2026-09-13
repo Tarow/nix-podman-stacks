@@ -149,7 +149,7 @@ in {
             DISABLE_PASSWORD_REGISTRATION = lib.mkDefault true;
           };
 
-        wantsContainer = [dbName];
+        wantsContainer = [dbName] ++ lib.optional cfg.oidc.enable "authelia";
         stack = name;
 
         traefik.name = apiName;

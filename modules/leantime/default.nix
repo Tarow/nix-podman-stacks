@@ -161,7 +161,7 @@ in {
             LEAN_OIDC_DEFAULT_ROLE = 20; # Editor
           };
 
-        wantsContainer = [dbName];
+        wantsContainer = [dbName] ++ lib.optional cfg.oidc.enable "authelia";
 
         stack = name;
         port = 8080;

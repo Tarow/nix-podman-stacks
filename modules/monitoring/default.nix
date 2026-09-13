@@ -450,6 +450,7 @@ in {
             GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH.fromFile = pkgs.writeText "role_attribute_path" ''contains(groups[*], '${cfg.grafana.oidc.adminGroup}') && 'Admin' ||  contains(groups[*], '${cfg.grafana.oidc.userGroup}') && 'Viewer' || 'None' '';
           };
 
+        wantsContainer = lib.optional cfg.grafana.oidc.enable "authelia";
         port = 3000;
         stack = stackName;
         traefik.name = grafanaName;

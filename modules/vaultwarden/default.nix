@@ -103,6 +103,7 @@ in {
         }
         // cfg.extraEnv;
 
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 80;
       traefik.name = "vw";
       homepage = {

@@ -176,6 +176,7 @@ in {
           USER_PASSWORD.fromFile = cfg.adminProvisioning.passwordFile;
         };
 
+        wantsContainer = lib.optional cfg.oidc.registerClient "authelia";
         port = 8090;
         traefik.name = name;
         homepage = {

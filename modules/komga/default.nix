@@ -113,6 +113,7 @@ in {
           AUTHELIA_CLIENT_SECRET = lib.mkIf (cfg.oidc.enable) {fromFile = cfg.oidc.clientSecretFile;};
         };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 25600;
         traefik.name = name;
         homepage = {

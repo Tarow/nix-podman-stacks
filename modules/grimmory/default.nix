@@ -141,6 +141,7 @@ in {
           };
 
         dependsOnContainer = [dbName];
+        wantsContainer = lib.optional cfg.oidc.registerClient "authelia";
         stack = name;
 
         port = 6060;

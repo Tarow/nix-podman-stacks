@@ -166,7 +166,7 @@ in {
             OIDC_BUTTON_TEXT_COLOR = "#FFFFFF";
           });
 
-        wantsContainer = [dbName valkeyName];
+        wantsContainer = [dbName valkeyName] ++ lib.optional cfg.oidc.enable "authelia";
 
         stack = name;
         port = 8040;

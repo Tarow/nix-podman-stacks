@@ -127,6 +127,7 @@ in {
             OAUTH_PROVIDER_NAME = "Authelia";
           };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         stack = name;
         port = 3000;
         traefik.name = name;

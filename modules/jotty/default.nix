@@ -118,6 +118,7 @@ in {
           OIDC_GROUPS_SCOPE = "groups";
         };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         stack = name;
         port = 3000;
         traefik.name = name;

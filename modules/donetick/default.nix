@@ -182,6 +182,7 @@ in {
             DT_OAUTH2_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
           };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 2021;
         traefik.name = name;
         homepage = {

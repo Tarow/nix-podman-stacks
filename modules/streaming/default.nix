@@ -287,6 +287,7 @@ in {
                 config.services.podman.containers.${jellyfinName}.traefik.serviceUrl;
             };
 
+            wantsContainer = lib.optional cfg.jellyfin.oidc.enable "authelia";
             port = 8096;
             stack = stackName;
             traefik.name = jellyfinName;
@@ -383,7 +384,7 @@ in {
               OIDC_CLIENT_SECRET.fromFile = cfg.profilarr.oidc.clientSecretFile;
             };
 
-          wantsContainer = lib.optional cfg.profilarr.enableParser profilarrParserName;
+          wantsContainer = lib.optional cfg.profilarr.enableParser profilarrParserName ++ lib.optional cfg.profilarr.oidc.enable "authelia";
 
           port = 6868;
           traefik.name = profilarrName;

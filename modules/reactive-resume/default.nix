@@ -136,7 +136,7 @@ in {
           }
           // cfg.extraEnv;
 
-        wantsContainer = [dbName chromeName];
+        wantsContainer = [dbName chromeName] ++ lib.optional cfg.oidc.enable "authelia";
 
         stack = name;
         port = 3000;

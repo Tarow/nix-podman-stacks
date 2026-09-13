@@ -219,6 +219,7 @@ in {
             );
             network = lib.mkIf enableTraefik [stackCfg.network.name];
             ports = lib.optional (!enableTraefik && (port != null)) "${hostPort}:${containerPort}";
+            wantsContainer = lib.optional enableTraefik "traefik";
           };
         }
       )

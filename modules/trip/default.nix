@@ -121,6 +121,7 @@ in {
           }
           // cfg.extraEnv;
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         stack = name;
         port = 8000;
         traefik.name = name;

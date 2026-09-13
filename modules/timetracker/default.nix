@@ -155,6 +155,7 @@ in {
 
         extraConfig.Service.ExecStartPre = lib.optional (cfg.db.type == "sqlite") "${pkgs.coreutils}/bin/touch ${storage}/timetracker.db";
         dependsOnContainer = lib.optional (cfg.db.type == "postgres") dbName;
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 8080;
         stack = name;
         traefik.name = name;

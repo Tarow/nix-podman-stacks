@@ -232,7 +232,7 @@ in {
           };
         };
 
-        wantsContainer = [dbName];
+        wantsContainer = [dbName] ++ lib.optional cfg.oidc.enable "authelia";
         stack = name;
 
         port = 8080;

@@ -232,6 +232,7 @@ in {
           HealthOnFailure = "kill";
         };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         stack = name;
         glance = {
           inherit category;

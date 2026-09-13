@@ -164,7 +164,8 @@ in {
         # Declare dependencies to other containers. Remove if not applicable
         wantsContainer =
           lib.optional (cfg.db.type == "postgres") dbName
-          ++ [redisName];
+          ++ [redisName]
+          ++ lib.optional cfg.oidc.enable "authelia";
 
         # Needed for multi-container stacks. Will create a shared network for all containers sharing the same stack
         stack = name;

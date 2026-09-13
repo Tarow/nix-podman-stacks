@@ -119,6 +119,7 @@ in {
         };
 
         dependsOnContainer = lib.optional (cfg.db.type == "postgres") dbName;
+        wantsContainer = lib.optional cfg.oidc.registerClient "authelia";
         stack = name;
         port = 5230;
         traefik.name = name;

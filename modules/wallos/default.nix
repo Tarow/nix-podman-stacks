@@ -96,6 +96,7 @@ in {
           SSRF_ALLOWLIST = config.nps.containers.authelia.traefik.serviceHost;
         };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         stack = name;
         port = 80;
         traefik.name = name;

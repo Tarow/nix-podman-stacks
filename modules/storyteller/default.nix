@@ -118,6 +118,7 @@ in {
         HealthOnFailure = "kill";
       };
 
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 8001;
       traefik.name = name;
       homepage = {

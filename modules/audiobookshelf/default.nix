@@ -104,6 +104,7 @@ in {
         metadata = "${storage}/metadata:/metadata";
         config = "${storage}/config:/config";
       };
+      wantsContainer = lib.optional cfg.oidc.registerClient "authelia";
       port = 80;
       traefik.name = name;
 

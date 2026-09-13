@@ -125,6 +125,7 @@ in {
             OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
           };
 
+        wantsContainer = lib.optional cfg.oidc.enable "authelia";
         stack = stackName;
 
         # Join Traefik network for internal communication required for OIDC

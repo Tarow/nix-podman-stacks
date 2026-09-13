@@ -100,6 +100,7 @@ in {
           OIDC_SCOPE = "openid profile email groups";
         };
 
+      wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 3000;
       traefik.name = name;
       homepage = {
