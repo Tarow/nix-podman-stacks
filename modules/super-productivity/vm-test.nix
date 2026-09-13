@@ -1,4 +1,7 @@
 {dummySecretFile, ...}: {
+  # PUBLIC_URL needs to be https://...
+  imports = [../traefik/vm-test.nix];
+
   nps.stacks.super-productivity = {
     enable = true;
     enableSync = true;
