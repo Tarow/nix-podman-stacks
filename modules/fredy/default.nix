@@ -18,7 +18,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
       # renovate: datasource=docker depName=ghcr.io/orangecoding/fredy
-      image = "ghcr.io/orangecoding/fredy:27.6.1";
+      image = "ghcr.io/orangecoding/fredy:28.0.0";
 
       volumeMap = {
         conf = "${storage}/conf:/conf";
