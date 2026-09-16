@@ -116,7 +116,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/drytrix/timetracker:5.14.1";
+        image = "ghcr.io/drytrix/timetracker:5.15.0";
         volumeMap.data = "${storage}:/data/";
         user = config.nps.defaultUid;
         extraEnv =
