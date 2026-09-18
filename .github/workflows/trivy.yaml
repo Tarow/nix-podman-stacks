@@ -8,7 +8,7 @@ on:
 jobs:
   detect-changed-images:
     name: Detect changed container images
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     if: github.event_name == 'pull_request'
     outputs:
       images: ${{ steps.diff-images.outputs.images }}
@@ -97,7 +97,7 @@ jobs:
 
   trivy-scan:
     name: Trivy Security Scan
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: detect-changed-images
     if: needs.detect-changed-images.outputs.has_changes == 'true'
     permissions:
@@ -155,7 +155,7 @@ jobs:
 
   trivy-aggregate:
     name: Trivy Aggregate Results
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [detect-changed-images, trivy-scan]
     if: always() && needs.detect-changed-images.outputs.has_changes == 'true'
     permissions:

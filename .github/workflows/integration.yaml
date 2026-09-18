@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   detect:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       pull-requests: read
@@ -65,7 +65,7 @@ jobs:
   integration:
     needs: detect
     if: needs.detect.outputs.stacks != '[]'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     name: Integration (${{ matrix.stacks }})
     strategy:
       fail-fast: false

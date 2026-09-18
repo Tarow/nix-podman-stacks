@@ -9,7 +9,7 @@ on:
 jobs:
   build-config:
     name: Build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Free diskspace
         if: false
@@ -38,7 +38,7 @@ jobs:
         run: nix build .#homeConfigurations.ci.activationPackage
 
   check_flake:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -50,7 +50,7 @@ jobs:
         run: nix flake check --keep-going
 
   build-docs:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     concurrency:
       group: pages-${{ github.ref }}
       cancel-in-progress: true
@@ -78,7 +78,7 @@ jobs:
 
   publish-docs:
     needs: build-docs
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     concurrency:
       group: pages-${{ github.ref }}
       cancel-in-progress: true
