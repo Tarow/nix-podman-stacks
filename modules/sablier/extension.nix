@@ -34,7 +34,7 @@ in {
 
       staticConfig.experimental.plugins.sablier = {
         moduleName = "github.com/sablierapp/sablier-traefik-plugin";
-        version = "v1.3.0";
+        version = "v1.3.1";
       };
     };
   };
