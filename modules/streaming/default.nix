@@ -259,7 +259,8 @@ in {
           '';
         in
           lib.mkIf cfg.jellyfin.enable {
-            image = "lscr.io/linuxserver/jellyfin:10.11.11";
+            # renovate: versioning=regex:^version-(?<major>\d+)\.(?<minor>\d+)(?:\.(?<patch>\d+))?(?<compatibility>ubu\d+)$
+            image = "lscr.io/linuxserver/jellyfin:version-12.0ubu2604";
             volumeMap = {
               config = "${storage}/${jellyfinName}:/config";
               media = "${mediaStorage}:/media";
