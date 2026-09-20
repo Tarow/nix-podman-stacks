@@ -43,6 +43,7 @@
             <CanonicalLinks></CanonicalLinks>
             <DisableHttps>false</DisableHttps>
             <SchemeOverride>https</SchemeOverride>
+            <DisablePushedAuthorization>true</DisablePushedAuthorization>
             <DoNotValidateEndpoints>false</DoNotValidateEndpoints>
             <DoNotValidateIssuerName>false</DoNotValidateIssuerName>
           </PluginConfiguration>
