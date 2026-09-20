@@ -91,7 +91,7 @@ in {
       };
 
       ${syncName} = lib.mkIf cfg.enableSync {
-        image = "ghcr.io/warreth/super-sync-server:v19.0.1";
+        image = "ghcr.io/warreth/super-sync-server:v19.1.0";
         stack = name;
 
         volumeMap.data = "${storage}/supersync:/data";
