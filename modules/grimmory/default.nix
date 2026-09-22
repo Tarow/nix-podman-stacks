@@ -118,7 +118,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/grimmory-tools/grimmory:v3.4.1";
+        image = "ghcr.io/grimmory-tools/grimmory:v3.5.0";
         volumeMap = {
           data = "${storage}/data:/app/data";
           books = "${cfg.libraryPath}:/books";
