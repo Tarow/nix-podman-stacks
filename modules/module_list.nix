@@ -28,6 +28,7 @@ let
     fredy = ./fredy;
     free-games-claimer = ./free-games-claimer;
     freshrss = ./freshrss;
+    frigate = ./frigate;
     gatus = ./gatus;
     glance = ./glance;
     grimmory = ./grimmory;

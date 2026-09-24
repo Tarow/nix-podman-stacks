@@ -278,6 +278,11 @@ in {
         };
       };
 
+      frigate = {
+        enable = true;
+        containers.frigate.devices = lib.mkForce [];
+      };
+
       gatus = {
         enable = true;
         db = {

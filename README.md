@@ -96,6 +96,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://raw.githubusercontent.com/orangecoding/fredy/refs/heads/master/doc/logo_white.png" style="height:1em;" /> [Fredy](https://tarow.github.io/nix-podman-stacks/docs/stacks/fredy.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/free-games-claimer.webp" style="width:1em;height:1em;" /> [Free Games Claimer](https://tarow.github.io/nix-podman-stacks/docs/stacks/free-games-claimer.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/freshrss.svg" style="width:1em;height:1em;" /> [FreshRSS](https://tarow.github.io/nix-podman-stacks/docs/stacks/freshrss.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/frigate.svg" style="width:1em;height:1em;" /> [Frigate](https://tarow.github.io/nix-podman-stacks/docs/stacks/frigate.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gatus.svg" style="width:1em;height:1em;" /> [Gatus](https://tarow.github.io/nix-podman-stacks/docs/stacks/gatus.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/glance.svg" style="width:1em;height:1em;" /> [Glance](https://tarow.github.io/nix-podman-stacks/docs/stacks/glance.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/grimmory.webp" style="height:1em;" /> [Grimmory](https://tarow.github.io/nix-podman-stacks/docs/stacks/grimmory.html)
