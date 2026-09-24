@@ -179,7 +179,7 @@ in {
       };
 
       ${browserName} = {
-        image = "docker.io/norishapp/obscura:0.2.0-norish.1";
+        image = "docker.io/norishapp/obscura:0.2.2-norish.1";
 
         stack = name;
         glance = {
