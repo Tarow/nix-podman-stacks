@@ -503,7 +503,7 @@ in {
         configDst = "/etc/alloy/config.alloy";
       in
         lib.mkIf cfg.alloy.enable {
-          image = "docker.io/grafana/alloy:v1.19.2";
+          image = "docker.io/grafana/alloy:v1.20.0";
           volumeMap.settings = "${cfg.alloy.config}:${configDst}";
           exec = "run --server.http.listen-addr=0.0.0.0:${toString cfg.alloy.port} --storage.path=/var/lib/alloy/data ${configDst}";
 
