@@ -116,21 +116,12 @@ in {
         wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 25600;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "komga";
-            widget.type = "komga";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:komga";
         };
+        homepage.settings.widget.type = "komga";
       };
     };
   };

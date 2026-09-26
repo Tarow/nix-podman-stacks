@@ -55,18 +55,9 @@ in {
 
       port = cfg.port;
       traefik.name = "dsp";
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "haproxy";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:haproxy";
       };
     };

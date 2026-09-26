@@ -179,18 +179,9 @@ in {
         wantsContainer = lib.optional cfg.oidc.registerClient "authelia";
         port = 8090;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "beszel";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:beszel";
         };
       };
@@ -216,12 +207,13 @@ in {
             then "unix://${socketTargetLocation}"
             else config.nps.stacks.docker-socket-proxy.address;
         };
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "Beszel Agent";
           icon = "di:beszel";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

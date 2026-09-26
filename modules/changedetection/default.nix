@@ -32,21 +32,12 @@ in {
         stack = name;
         port = 5000;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "changedetection";
-            widget.type = "changedetectionio";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:changedetection";
         };
+        homepage.settings.widget.type = "changedetectionio";
       };
 
       ${browserName} = {
@@ -60,12 +51,13 @@ in {
         addCapabilities = ["SYS_ADMIN"];
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "Sockpuppetbrowser";
           icon = "di:chrome";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

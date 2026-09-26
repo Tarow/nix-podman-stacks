@@ -48,21 +48,12 @@ in {
       port = 4533;
       traefik.name = name;
 
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "navidrome";
-          widget.type = "navidrome";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:navidrome";
       };
+      homepage.settings.widget.type = "navidrome";
     };
   };
 }

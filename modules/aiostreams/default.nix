@@ -69,18 +69,9 @@ in {
       port = 3000;
       traefik.name = name;
 
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "stremio";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:stremio";
       };
     };

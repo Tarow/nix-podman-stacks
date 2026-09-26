@@ -93,20 +93,12 @@ in {
         stack = name;
         port = 80;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "hortusfox";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
-          icon = "sh:hortusfox";
+          icon = "di:hortusfox";
         };
+        glance.icon = "sh:hortusfox";
       };
 
       ${dbName} = {
@@ -130,11 +122,12 @@ in {
         };
 
         stack = name;
-        glance = {
-          parent = name;
-          icon = "si:mariadb";
+        dashboard = {
           inherit category;
+          icon = "si:mariadb";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

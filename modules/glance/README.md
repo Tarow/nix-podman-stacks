@@ -43,8 +43,13 @@ Highly customizable dashboard
 Glance adds the `glance` container options to the existing `services.podman.containers.<name>` options.
 Setting the `category` automatically adds the container to a `docker-containers` widget on the dashboard.
 
-The `name` defaults to the container name, the `url` defaults to the URL registered in Traefik.
-Additional settings (icon, description, href, ...) can be provided via freeform attributes, see <https://github.com/glanceapp/glance/blob/main/docs/configuration.md#docker-containers>.
+Metadata that is shared with Homepage is configured via the `dashboard` container option,
+`category`, `name`, `url` as well as the `description`, `icon`, `id` and `parent` settings
+are derived from it. Glance specific settings can be added via the freeform `glance` attributes,
+see <https://github.com/glanceapp/glance/blob/main/docs/configuration.md#docker-containers>.
+
+To hide a service from the dashboard, set the `dashboard.category` option to `null`,
+or `glance.category` to only hide it on Glance.
 
 Example:
 
@@ -52,14 +57,23 @@ Example:
 {config, ...}: {
   nps.stacks.glance.enable = true;
 
-  nps.stacks.streaming.containers.jellyfin.glance = {
+  # Shared with Homepage
+  nps.stacks.streaming.containers.jellyfin.dashboard = {
     category = "Media";
     name = "Jellyfin";
     description = "Media Server";
-    icon = "si:jellyfin";
+    icon = "di:jellyfin";
   };
+
+  # Glance only
+  nps.stacks.streaming.containers.jellyfin.glance.icon = "si:jellyfin";
 }
 ```
+
+Icons are written in the Glance syntax and translated for Homepage,
+`di:jellyfin` becomes `jellyfin` and `sh:jellyfin` becomes `sh-jellyfin` on Homepage.
+
+<RenderDocs :options="data" :include="/services\.podman\.containers\..+\.dashboard(\..*)?/" />
 
 <RenderDocs :options="data" :include="/services\.podman\.containers\..+\.glance(\..*)?/" />
 

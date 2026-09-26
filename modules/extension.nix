@@ -289,6 +289,66 @@ in {
                 For every stack, a Podman networking will be crearted that the respective container will be connected to.
               '';
             };
+
+            dashboard = mkOption {
+              type = types.submodule {
+                options = {
+                  category = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = "Category of the service, `null` hides it.";
+                  };
+                  name = mkOption {
+                    type = types.str;
+                    default = lib.toSentenceCase name;
+                    defaultText = lib.literalExpression ''lib.toSentenceCase "<container name>"'';
+                    description = "Name of the service on the dashboards.";
+                  };
+                  description = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = "Short description of the service.";
+                  };
+                  icon = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = ''
+                      Icon in Glance syntax, translated for Homepage.
+                      `di:name` becomes `name`, `sh:name` becomes `sh-name`, a bare name
+                      is resolved via dashboard-icons.
+                    '';
+                    example = "di:jellyfin";
+                  };
+                  url = mkOption {
+                    type = types.nullOr types.str;
+                    default =
+                      if (config.traefik.name != null)
+                      then config.traefik.serviceUrl
+                      else null;
+                    defaultText = lib.literalExpression ''config.traefik.serviceUrl'';
+                    description = "URL the service links to, defaults to the Traefik serviceUrl.";
+                  };
+                  id = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = ''
+                      Identifier of the service on Glance, referenced by `parent`.
+                      Defaults to the container name.
+                    '';
+                  };
+                  parent = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = "Identifier of the service this container belongs to, groups it below the parent on Glance.";
+                  };
+                };
+              };
+              default = {};
+              description = ''
+                Metadata shared between the Homepage and Glance dashboards.
+                Dashboard specific settings go into `homepage` and `glance`.
+              '';
+            };
           };
 
           config = let

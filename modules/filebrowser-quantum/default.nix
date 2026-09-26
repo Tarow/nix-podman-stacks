@@ -210,17 +210,8 @@ in {
       wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 80;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "filebrowser-quantum";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
-        id = name;
         name = displayName;
         icon = "di:filebrowser-quantum";
       };

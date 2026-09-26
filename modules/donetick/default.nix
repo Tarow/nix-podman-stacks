@@ -185,18 +185,9 @@ in {
         wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 2021;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "donetick";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:donetick";
         };
       };

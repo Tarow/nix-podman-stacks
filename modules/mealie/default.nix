@@ -94,21 +94,12 @@ in {
         wantsContainer = lib.optional cfg.oidc.enable "authelia";
         port = 9000;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "mealie";
-            widget.type = "mealie";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:mealie";
         };
+        homepage.settings.widget.type = "mealie";
       };
     };
   };

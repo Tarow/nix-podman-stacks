@@ -26,19 +26,9 @@ in {
       };
 
       port = 8191;
-      homepage = {
-        inherit category;
+      dashboard = {
+        inherit category description;
         name = displayName;
-        settings = {
-          description = description;
-          icon = "flaresolverr";
-        };
-      };
-      glance = {
-        inherit category;
-        description = description;
-        name = displayName;
-        id = name;
         icon = "di:flaresolverr";
       };
     };

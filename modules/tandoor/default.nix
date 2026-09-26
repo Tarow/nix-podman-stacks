@@ -138,21 +138,12 @@ in {
         stack = name;
         port = 80;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "tandoor-recipes";
-            widget.type = "tandoor";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:tandoor-recipes";
         };
+        homepage.settings.widget.type = "tandoor";
       };
 
       ${dbName} = {
@@ -165,12 +156,13 @@ in {
         };
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Postgres";
-          parent = name;
           icon = "di:postgres";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

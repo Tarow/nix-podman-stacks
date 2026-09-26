@@ -209,17 +209,8 @@ in {
       port = port;
       traefik.name = name;
       stack = name;
-      homepage = {
+      dashboard = {
         inherit category;
-        name = displayName;
-        settings = {
-          description = description;
-          icon = "shelfmark";
-        };
-      };
-      glance = {
-        inherit category;
-        id = name;
         name = displayName;
         description = description;
         icon = "di:shelfmark.webp";

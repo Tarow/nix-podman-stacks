@@ -224,32 +224,24 @@ in {
 
         stack = name;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "paperless-ngx";
-            widget.type = "paperlessngx";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:paperless-ngx";
         };
+        homepage.settings.widget.type = "paperlessngx";
       };
 
       ${brokerName} = {
         image = "docker.io/redis:8.0";
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Redis";
           icon = "di:redis";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${dbName} = {
@@ -262,24 +254,26 @@ in {
         };
 
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Postgres";
           icon = "di:postgres";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${tikaName} = lib.mkIf cfg.enableTika {
         image = "docker.io/apache/tika:3.3.1.0";
 
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Tika";
           icon = "sh:apache-tika";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${gotenbergName} = lib.mkIf cfg.enableTika {
@@ -287,12 +281,13 @@ in {
         exec = "gotenberg --chromium-disable-javascript=true --chromium-allow-list=file:///tmp/.*";
 
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Gotenberg";
           icon = "di:gotenberg";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${ftpName} = let
@@ -324,12 +319,13 @@ in {
             "40000-40009:40000-40009"
           ];
 
-          glance = {
-            parent = name;
+          dashboard = {
+            inherit category;
             name = "FTP-Server";
             icon = "si:sftpgo";
-            inherit category;
+            parent = name;
           };
+          homepage.category = null;
         };
     };
   };

@@ -73,18 +73,9 @@ in {
         // cfg.extraEnv;
       port = 2112;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "pangolin";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:pangolin";
       };
     };

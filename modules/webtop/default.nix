@@ -45,18 +45,9 @@ in {
       extraConfig.Container.ShmSize = "1gb";
       port = 3000;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "webtop";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:webtop.png";
       };
     };

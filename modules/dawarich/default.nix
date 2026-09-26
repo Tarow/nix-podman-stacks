@@ -162,18 +162,9 @@ in {
         stack = name;
         traefik.name = name;
 
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "dawarich";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:dawarich";
         };
       };
@@ -194,12 +185,13 @@ in {
         exec = "sidekiq";
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Dawarich Sidekiq";
-          parent = name;
           icon = "di:immich";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${redisName} = {
@@ -215,12 +207,13 @@ in {
           HealthStartPeriod = "10s";
           HealthOnFailure = "kill";
         };
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "Redis";
           icon = "di:redis";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${dbName} = {
@@ -247,12 +240,13 @@ in {
         };
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Postgres";
-          parent = name;
           icon = "di:postgres";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

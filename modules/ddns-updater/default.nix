@@ -75,18 +75,9 @@ in {
       traefik.name = name;
 
       stack = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "ddns-updater";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:ddns-updater";
       };
     };

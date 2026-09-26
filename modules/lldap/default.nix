@@ -351,20 +351,12 @@ in {
 
       port = 17170;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "lldap-dark";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
-        icon = "auto-invert di:lldap";
+        icon = "di:lldap-dark";
       };
+      glance.icon = "auto-invert di:lldap";
     };
   };
 }

@@ -100,14 +100,12 @@ in {
         subDomain = lib.mkDefault "";
       };
 
-      homepage = {
-        inherit category;
+      dashboard = {
+        inherit category description;
         name = displayName;
-        settings = {
-          inherit description;
-          icon = "glance";
-        };
+        icon = "di:glance";
       };
+      glance.category = null;
     };
   };
 }

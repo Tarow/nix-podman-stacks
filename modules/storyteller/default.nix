@@ -121,19 +121,10 @@ in {
       wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 8001;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "sh-storyteller";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
-        icon = "di:sh-storyteller";
+        icon = "sh:storyteller";
       };
     };
   };

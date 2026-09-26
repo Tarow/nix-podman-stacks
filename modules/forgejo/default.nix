@@ -400,18 +400,9 @@ in {
         stack = name;
         port = 3000;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "forgejo";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:forgejo";
         };
       };
@@ -436,12 +427,13 @@ in {
         };
 
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Postgres";
           icon = "di:postgres";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

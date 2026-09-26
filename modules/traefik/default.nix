@@ -353,21 +353,14 @@ in {
       alloy = lib.mkIf cfg.enableGrafanaAccessLogDashboard {
         enable = true;
       };
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          href = "https://${name}.${cfg.domain}";
-          icon = "traefik";
-          widget.type = "traefik";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:traefik";
+      };
+      homepage.settings = {
+        href = "https://${name}.${cfg.domain}";
+        widget.type = "traefik";
       };
     };
   };

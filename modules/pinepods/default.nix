@@ -171,18 +171,9 @@ in {
         stack = name;
         port = 8040;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "pinepods";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:pinepods";
         };
       };
@@ -207,12 +198,13 @@ in {
         };
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Postgres";
-          parent = name;
           icon = "di:postgres";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${valkeyName} = {
@@ -227,12 +219,13 @@ in {
           HealthStartPeriod = "10s";
         };
 
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Valkey";
           icon = "di:valkey";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

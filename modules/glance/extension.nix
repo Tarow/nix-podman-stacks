@@ -7,6 +7,8 @@
   cfg = config.nps.stacks.glance;
   yaml = pkgs.formats.yaml {};
 
+  dash = import ../dashboard.nix lib;
+
   glanceContainers = lib.filterAttrs (k: c: c.glance.category != null) config.services.podman.containers;
   groupByCategory = attrs:
     builtins.foldl' (
@@ -55,23 +57,20 @@ in {
           options = {
             category = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
-              default = null;
-              description = ''
-                The category under which the service will be listed on the dashboard.
-              '';
+              default = config.dashboard.category;
+              description = "Category of the service, `null` hides it on Glance.";
             };
             name = lib.mkOption {
               type = lib.types.str;
               description = "The name of the service as it will displayed on the dashboard.";
-              default = lib.toSentenceCase name;
-              defaultText = lib.literalExpression ''lib.toSentenceCase <containerName>'';
+              default = config.dashboard.name;
             };
             url = lib.mkOption {
               type = lib.types.str;
               description = "The URL of the service.";
               default =
-                if (config.traefik.name != null)
-                then config.traefik.serviceUrl
+                if (config.dashboard.url != null)
+                then config.dashboard.url
                 else "";
             };
           };
@@ -82,6 +81,20 @@ in {
 
           See <https://github.com/glanceapp/glance/blob/main/docs/configuration.md#docker-containers>
         '';
+      };
+
+      config.glance = {
+        description = lib.mkDefault config.dashboard.description;
+        parent = lib.mkDefault config.dashboard.parent;
+        icon = lib.mkDefault (dash.toGlance config.dashboard.icon);
+        # Glance groups children by the id of their parent, a child must not have one
+        id = lib.mkDefault (
+          if (config.dashboard.id != null)
+          then config.dashboard.id
+          else if (config.dashboard.parent == null)
+          then name
+          else null
+        );
       };
     }));
   };

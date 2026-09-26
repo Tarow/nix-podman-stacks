@@ -152,19 +152,11 @@ in {
         stack = stackName;
         port = 80;
         traefik.name = stackName;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "sparky-fitness";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = stackName;
           icon = "di:sparky-fitness";
+          id = stackName;
         };
       };
 
@@ -213,12 +205,13 @@ in {
         port = 3010;
         traefik.name = backendName;
 
-        glance = {
+        dashboard = {
           inherit category;
           name = "Backend";
-          parent = stackName;
           icon = "di:sparky-fitness";
+          parent = stackName;
         };
+        homepage.category = null;
       };
 
       ${dbName} = {
@@ -242,12 +235,13 @@ in {
         };
 
         stack = stackName;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Postgres";
-          parent = stackName;
           icon = "di:postgres";
+          parent = stackName;
         };
+        homepage.category = null;
       };
     };
   };

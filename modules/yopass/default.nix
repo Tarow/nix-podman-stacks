@@ -27,18 +27,9 @@ in {
         stack = name;
         port = 8080;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "https://repository-images.githubusercontent.com/16027367/5e148d00-d9f9-11e9-8fa7-04b02283d9af";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "https://repository-images.githubusercontent.com/16027367/5e148d00-d9f9-11e9-8fa7-04b02283d9af";
         };
       };
@@ -47,12 +38,13 @@ in {
         image = "docker.io/memcached:1.6.45";
         stack = name;
 
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Memcached";
           icon = "sh:memcached";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

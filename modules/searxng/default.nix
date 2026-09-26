@@ -84,18 +84,9 @@ in {
         traefik.name = name;
 
         stack = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "searxng";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:searxng";
         };
       };
@@ -115,12 +106,13 @@ in {
           HealthOnFailure = "kill";
         };
 
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Valkey";
           icon = "di:valkey";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

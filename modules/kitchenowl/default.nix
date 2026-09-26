@@ -102,12 +102,13 @@ in {
         traefik.name = stackName;
         dependsOnContainer = [backendName];
 
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          parent = stackName;
           icon = "di:kitchenowl";
+          parent = stackName;
         };
+        homepage.category = null;
       };
 
       ${backendName} = {
@@ -131,21 +132,12 @@ in {
         # Join Traefik network for internal communication required for OIDC
         network = [config.nps.stacks.traefik.network.name];
 
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            href = cfg.containers.${frontendName}.traefik.serviceUrl;
-            icon = "kitchenowl";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          url = cfg.containers.${frontendName}.traefik.serviceUrl;
-          id = stackName;
           icon = "di:kitchenowl";
+          id = stackName;
+          url = cfg.containers.${frontendName}.traefik.serviceUrl;
         };
       };
     };

@@ -454,22 +454,13 @@ in {
         port = 3000;
         stack = stackName;
         traefik.name = grafanaName;
-        homepage = {
+        dashboard = {
           inherit category;
           name = grafanaDisplayName;
-          settings = {
-            description = grafanaDescription;
-            icon = "grafana";
-            widget.type = "grafana";
-          };
-        };
-        glance = {
-          inherit category;
           description = grafanaDescription;
-          name = grafanaDisplayName;
-          id = grafanaName;
           icon = "di:grafana";
         };
+        homepage.settings.widget.type = "grafana";
       };
 
       ${lokiName} = lib.mkIf cfg.loki.enable {
@@ -482,19 +473,10 @@ in {
         };
 
         stack = stackName;
-        homepage = {
+        dashboard = {
           inherit category;
           name = lokiDisplayName;
-          settings = {
-            description = lokiDescription;
-            icon = "loki";
-          };
-        };
-        glance = {
-          inherit category;
           description = lokiDescription;
-          name = lokiDisplayName;
-          id = lokiName;
           icon = "di:loki";
         };
       };
@@ -510,19 +492,10 @@ in {
           stack = stackName;
           inherit (cfg.alloy) port;
           traefik.name = alloyName;
-          homepage = {
+          dashboard = {
             inherit category;
             name = alloyDisplayName;
-            settings = {
-              description = alloyDescription;
-              icon = "alloy";
-            };
-          };
-          glance = {
-            inherit category;
             description = alloyDescription;
-            name = alloyDisplayName;
-            id = alloyName;
             icon = "di:alloy";
           };
         };
@@ -543,22 +516,13 @@ in {
           port = cfg.prometheus.port;
           stack = stackName;
           traefik.name = "prometheus";
-          homepage = {
+          dashboard = {
             inherit category;
             name = prometheusDisplayName;
-            settings = {
-              description = prometheusDescription;
-              icon = "prometheus";
-              widget.type = "prometheus";
-            };
-          };
-          glance = {
-            inherit category;
             description = prometheusDescription;
-            name = prometheusDisplayName;
-            id = prometheusName;
             icon = "di:prometheus";
           };
+          homepage.settings.widget.type = "prometheus";
         };
 
       ${podmanExporterName} = lib.mkIf cfg.podmanExporter.enable {
@@ -570,19 +534,10 @@ in {
         extraPodmanArgs = ["--security-opt=label=disable"];
 
         stack = stackName;
-        homepage = {
+        dashboard = {
           inherit category;
           name = podmanExporterDisplayName;
-          settings = {
-            description = podmanExporterDescription;
-            icon = "podman";
-          };
-        };
-        glance = {
-          inherit category;
           description = podmanExporterDescription;
-          name = podmanExporterDisplayName;
-          id = podmanExporterName;
           icon = "di:podman";
         };
       };
@@ -600,19 +555,10 @@ in {
         port = 9093;
         traefik.name = alertmanagerName;
 
-        homepage = {
+        dashboard = {
           inherit category;
           name = alertmanagerDisplayName;
-          settings = {
-            description = alertmanagerDescription;
-            icon = "alertmanager";
-          };
-        };
-        glance = {
-          inherit category;
           description = alertmanagerDescription;
-          name = alertmanagerDisplayName;
-          id = alertmanagerName;
           icon = "di:alertmanager";
         };
       };
@@ -630,19 +576,10 @@ in {
         stack = stackName;
         network = ["ntfy"];
 
-        homepage = {
+        dashboard = {
           inherit category;
           name = alertmanagerNtfyDisplayName;
-          settings = {
-            description = alertmanagerNtfyDescription;
-            icon = "ntfy";
-          };
-        };
-        glance = {
-          inherit category;
           description = alertmanagerNtfyDescription;
-          name = alertmanagerNtfyDisplayName;
-          id = alertmanagerNtfyName;
           icon = "di:ntfy";
         };
       };

@@ -132,20 +132,12 @@ in {
         stack = name;
         port = 9000;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "davis";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
-          icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/davis.webp";
+          icon = "di:davis";
         };
+        glance.icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/davis.webp";
       };
 
       ${dbName} = lib.mkIf (cfg.db.type == "mysql") {
@@ -170,12 +162,13 @@ in {
 
         stack = name;
 
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "MariaDB";
           icon = "di:mariadb";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

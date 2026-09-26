@@ -20,20 +20,12 @@ in {
 
       port = 80;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "mazanoke";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
-        icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/mazanoke.webp";
+        icon = "di:mazanoke";
       };
+      glance.icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/mazanoke.webp";
     };
   };
 }

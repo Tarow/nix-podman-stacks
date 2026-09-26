@@ -282,12 +282,12 @@ in {
         subDomain = lib.mkDefault "";
       };
 
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:homepage.png";
       };
+      homepage.category = null;
     };
 
     nps.stacks.${name} = {

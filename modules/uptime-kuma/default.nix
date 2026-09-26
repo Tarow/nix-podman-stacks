@@ -32,21 +32,12 @@ in {
         inherit name;
         subDomain = "uptime";
       };
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "uptime-kuma";
-          widget.type = "uptimekuma";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:uptime-kuma";
       };
+      homepage.settings.widget.type = "uptimekuma";
     };
   };
 }

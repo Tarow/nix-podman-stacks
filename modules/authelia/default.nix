@@ -385,18 +385,9 @@ in {
         port = 9091;
         traefik.name = name;
 
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "authelia";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:authelia";
         };
       };
@@ -415,12 +406,13 @@ in {
           HealthStartPeriod = "10s";
           HealthOnFailure = "kill";
         };
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Redis";
           icon = "di:redis";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

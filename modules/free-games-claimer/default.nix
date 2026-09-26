@@ -37,20 +37,12 @@ in {
 
       port = 6080;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "sh-free-games-claimer";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
-        icon = "sh:free-games-claimers";
+        icon = "sh:free-games-claimer";
       };
+      glance.icon = "sh:free-games-claimers";
     };
   };
 }

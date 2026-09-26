@@ -60,22 +60,13 @@ in {
       stack = name;
       port = 8080;
       traefik.name = name;
-      homepage = {
+      dashboard = {
         inherit category;
         name = displayName;
-        settings = {
-          description = description;
-          icon = "sabnzbd";
-          widget.type = "sabnzbd";
-        };
-      };
-      glance = {
-        inherit category;
         description = description;
-        name = displayName;
-        id = name;
         icon = "di:sabnzbd";
       };
+      homepage.settings.widget.type = "sabnzbd";
     };
   };
 }

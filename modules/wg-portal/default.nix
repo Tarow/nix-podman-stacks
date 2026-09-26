@@ -195,18 +195,9 @@ in {
         name = name;
         subDomain = "wg";
       };
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "wireguard";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:wireguard";
       };
     };

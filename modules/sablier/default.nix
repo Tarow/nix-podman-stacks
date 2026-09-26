@@ -72,19 +72,10 @@ in {
         traefik.name = name;
 
         port = 10000;
-        homepage = {
+        dashboard = {
           inherit category;
           name = displayName;
-          settings = {
-            description = description;
-            icon = "sh-sablier";
-          };
-        };
-        glance = {
-          inherit category;
           description = description;
-          name = displayName;
-          id = name;
           icon = "sh:sablier";
         };
       };

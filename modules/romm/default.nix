@@ -244,21 +244,12 @@ in {
 
         port = 8080;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "romm";
-            widget.type = "romm";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:romm";
         };
+        homepage.settings.widget.type = "romm";
       };
       ${dbName} = {
         image = "docker.io/mariadb:11";
@@ -281,12 +272,13 @@ in {
         };
 
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "MariaDB";
           icon = "si:mariadb";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

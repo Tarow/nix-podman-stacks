@@ -229,32 +229,24 @@ in {
         stack = name;
         traefik.name = name;
 
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "immich";
-            widget.type = "immich";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:immich";
         };
+        homepage.settings.widget.type = "immich";
       };
 
       ${redisName} = {
         image = "docker.io/redis:8.0";
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "Redis";
           icon = "di:redis";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${dbName} = {
@@ -271,12 +263,13 @@ in {
         extraConfig.Container.ShmSize = "128mb";
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "Postgres";
           icon = "di:postgres";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${mlName} = {
@@ -284,12 +277,13 @@ in {
         volumeMap.cache = "${storage}/model-cache:/cache";
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Immich Machine Learning";
-          parent = name;
           icon = "di:immich";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

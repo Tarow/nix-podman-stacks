@@ -159,18 +159,9 @@ in {
         stack = name;
         port = 80;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "homelable";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:homelable";
         };
       };
@@ -234,12 +225,13 @@ in {
 
         wantsContainer = lib.optional cfg.oidc.enable "authelia";
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "Backend";
           icon = "di:homelable";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${mcpName} = lib.mkIf cfg.mcp.enable {
@@ -253,12 +245,13 @@ in {
 
         wantsContainer = [backendName];
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "MCP Server";
           icon = "di:homelable";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

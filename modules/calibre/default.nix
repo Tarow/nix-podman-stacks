@@ -41,21 +41,12 @@ in {
 
       stack = name;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "calibre-web";
-          widget.type = "calibreweb";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:calibre-web";
       };
+      homepage.settings.widget.type = "calibreweb";
     };
   };
 }

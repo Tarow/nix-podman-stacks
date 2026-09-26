@@ -114,7 +114,7 @@ in {
         enableGrafanaDashboard = true;
         enablePrometheusExport = true;
         containers.blocky = {
-          homepage.settings.href = "${config.nps.containers.grafana.traefik.serviceUrl}/d/blocky";
+          dashboard.url = "${config.nps.containers.grafana.traefik.serviceUrl}/d/blocky";
           gatus = {
             enable = true;
             settings = {

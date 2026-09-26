@@ -169,21 +169,12 @@ in {
         stack = name;
         port = 3456;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "vikunja";
-            widget.type = "vikunja";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:vikunja";
         };
+        homepage.settings.widget.type = "vikunja";
       };
 
       ${dbName} = lib.mkIf (cfg.db.type == "postgres") {
@@ -196,12 +187,13 @@ in {
         };
 
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Postgres";
           icon = "di:postgres";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

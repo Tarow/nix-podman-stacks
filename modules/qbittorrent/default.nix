@@ -205,24 +205,15 @@ in {
 
         stack = name;
         port = 8888;
-        homepage = {
+        dashboard = {
           category = gluetunCategory;
           name = gluetunDisplayName;
-          settings = {
-            description = gluetunDescription;
-            icon = "gluetun";
-            widget = {
-              type = "gluetun";
-              url = "http://${gluetunName}:8000";
-            };
-          };
-        };
-        glance = {
-          category = gluetunCategory;
           description = gluetunDescription;
-          name = gluetunDisplayName;
-          id = gluetunName;
           icon = "di:gluetun";
+        };
+        homepage.settings.widget = {
+          type = "gluetun";
+          url = "http://${gluetunName}:8000";
         };
       };
 
@@ -248,22 +239,13 @@ in {
         stack = name;
         port = 8080;
         traefik.name = qbittorrentName;
-        homepage = {
+        dashboard = {
           inherit category;
           name = qbittorrentDisplayName;
-          settings = {
-            description = qbittorrentDescription;
-            icon = "qbittorrent";
-            widget.type = "qbittorrent";
-          };
-        };
-        glance = {
-          inherit category;
           description = qbittorrentDescription;
-          name = qbittorrentDisplayName;
-          id = qbittorrentName;
           icon = "di:qbittorrent";
         };
+        homepage.settings.widget.type = "qbittorrent";
       };
 
       ${quiName} = lib.mkIf cfg.qui.enable {
@@ -292,19 +274,10 @@ in {
         stack = name;
         port = 7476;
         traefik.name = quiName;
-        homepage = {
+        dashboard = {
           inherit category;
           name = quiDisplayName;
-          settings = {
-            description = quiDescription;
-            icon = "qui";
-          };
-        };
-        glance = {
-          inherit category;
           description = quiDescription;
-          name = quiDisplayName;
-          id = quiName;
           icon = "di:qui";
         };
       };

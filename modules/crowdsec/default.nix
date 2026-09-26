@@ -197,23 +197,14 @@ in {
       };
       extraEnv = cfg.extraEnv;
 
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "crowdsec";
-          widget = {
-            type = "crowdsec";
-            url = "http://${name}:8080";
-          };
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:crowdsec";
+      };
+      homepage.settings.widget = {
+        type = "crowdsec";
+        url = "http://${name}:8080";
       };
     };
   };

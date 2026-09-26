@@ -103,18 +103,9 @@ in {
       wantsContainer = lib.optional cfg.oidc.enable "authelia";
       port = 3000;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "sh-trek";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "sh:trek";
       };
     };

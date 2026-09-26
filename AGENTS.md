@@ -94,9 +94,23 @@ integration test. Available dummy secrets are exposed via `_module.args`
 
 ### Dashboard Configs
 
-- `homepage` - **only on main container** (the one with `traefik.name`)
-- `glance` - **all containers**; use `parent = name` for child containers (DB, Redis, etc.)
-- Define let variables (name, category, displayName, description) and apply to Homepage and Glance configs
+Use the `dashboard` option, it configures Homepage and Glance from a single value:
+
+```nix
+dashboard = {
+  inherit category description;    # let variables, applied to both dashboards
+  name = displayName;
+  icon = "di:jellyfin";            # Glance syntax, translated for Homepage
+  parent = name;                   # optional, groups child containers on Glance
+};
+
+homepage.category = null;          # for Glance only containers (DB, Redis, etc.)
+homepage.settings.widget.type = "jellyfin"; # Homepage only
+glance.icon = "si:jellyfin";       # Glance only
+```
+
+- `dashboard` - **all containers**
+- `homepage` / `glance` - only for what is specific to one dashboard
 
 ### Volume Abstraction
 

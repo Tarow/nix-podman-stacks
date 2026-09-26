@@ -111,23 +111,14 @@ in {
         name = name;
         subDomain = "wg";
       };
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "wireguard";
-          widget = {
-            type = "wgeasy";
-            version = 2;
-          };
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:wireguard";
+      };
+      homepage.settings.widget = {
+        type = "wgeasy";
+        version = 2;
       };
     };
   };

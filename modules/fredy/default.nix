@@ -27,18 +27,9 @@ in {
 
       port = 9998;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "https://raw.githubusercontent.com/orangecoding/fredy/refs/heads/master/doc/logo_white.png";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "https://raw.githubusercontent.com/orangecoding/fredy/refs/heads/master/doc/logo_white.png";
       };
     };

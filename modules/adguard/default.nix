@@ -31,21 +31,12 @@ in {
       ];
       port = 3000;
       traefik.name = name;
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "adguard-home";
-          widget.type = "adguard";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:adguard-home";
       };
+      homepage.settings.widget.type = "adguard";
     };
   };
 }

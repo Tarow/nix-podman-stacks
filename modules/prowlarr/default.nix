@@ -59,22 +59,13 @@ in {
             image = "lscr.io/linuxserver/prowlarr:2.6.5";
             port = 9696;
 
-            homepage = {
+            dashboard = {
               inherit category;
               name = displayName;
-              settings = {
-                description = description;
-                icon = "prowlarr";
-                widget.type = "prowlarr";
-              };
-            };
-            glance = {
-              inherit category;
               description = description;
-              name = displayName;
-              id = name;
               icon = "di:prowlarr";
             };
+            homepage.settings.widget.type = "prowlarr";
           };
       }
       // arrlib.arrDbs [name];

@@ -131,21 +131,13 @@ in {
         stack = name;
         port = 3000;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "karakeep";
-            widget.type = "karakeep";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
-          icon = "auto-invert di:karakeep-dark";
+          icon = "di:karakeep";
         };
+        glance.icon = "auto-invert di:karakeep-dark";
+        homepage.settings.widget.type = "karakeep";
       };
 
       ${chromeName} = {
@@ -160,12 +152,13 @@ in {
         extraPodmanArgs = ["--init"];
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Chrome";
-          parent = name;
           icon = "di:chrome";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${meilisearchName} = {
@@ -179,12 +172,13 @@ in {
         volumeMap.data = "${storage}/meilisearch:/meili_data";
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "Meilisearch";
-          parent = name;
           icon = "di:meilisearch";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

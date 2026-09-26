@@ -66,18 +66,9 @@ in {
         name = "sshwifty";
         subDomain = "ssh";
       };
-      homepage = {
-        inherit category;
-        name = displayName;
-        settings = {
-          inherit description;
-          icon = "sshwifty";
-        };
-      };
-      glance = {
+      dashboard = {
         inherit category description;
         name = displayName;
-        id = name;
         icon = "di:sshwifty";
       };
     };

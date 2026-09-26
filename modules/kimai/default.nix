@@ -74,18 +74,9 @@ in {
 
         port = 8001;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "kimai";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:kimai";
         };
       };
@@ -111,12 +102,13 @@ in {
         };
 
         stack = name;
-        glance = {
+        dashboard = {
           inherit category;
           name = "MySQL";
-          parent = name;
           icon = "di:mysql";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

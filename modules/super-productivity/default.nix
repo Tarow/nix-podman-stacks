@@ -74,18 +74,9 @@ in {
         port = 80;
         traefik.name = name;
 
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "super-productivity";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:super-productivity.png";
         };
       };
@@ -131,12 +122,13 @@ in {
           HealthStartPeriod = "20s";
         };
 
-        glance = {
+        dashboard = {
           inherit category description;
-          parent = name;
           name = "SuperSync";
           icon = "di:super-productivity.png";
+          parent = name;
         };
+        homepage.category = null;
       };
 
       ${dbName} = lib.mkIf cfg.enableSync {
@@ -149,12 +141,13 @@ in {
           POSTGRES_PASSWORD.fromFile = cfg.db.passwordFile;
         };
 
-        glance = {
+        dashboard = {
           inherit category;
-          parent = name;
           name = "Postgres";
           icon = "di:postgres";
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

@@ -159,18 +159,9 @@ in {
         port = 8080;
         stack = name;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "mdi-book-clock-outline";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "mdi:book-clock-outline";
         };
       };
@@ -195,12 +186,13 @@ in {
         };
 
         stack = name;
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Postgres";
           icon = "di:postgres";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

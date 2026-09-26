@@ -63,18 +63,9 @@ in {
 
         port = 3000;
         traefik.name = name;
-        homepage = {
-          inherit category;
-          name = displayName;
-          settings = {
-            inherit description;
-            icon = "spliit";
-          };
-        };
-        glance = {
+        dashboard = {
           inherit category description;
           name = displayName;
-          id = name;
           icon = "di:spliit";
         };
       };
@@ -88,12 +79,13 @@ in {
           POSTGRES_USER = cfg.db.username;
           POSTGRES_PASSWORD.fromFile = cfg.db.passwordFile;
         };
-        glance = {
-          parent = name;
+        dashboard = {
+          inherit category;
           name = "Postgres";
           icon = "di:postgres";
-          inherit category;
+          parent = name;
         };
+        homepage.category = null;
       };
     };
   };

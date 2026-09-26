@@ -39,10 +39,13 @@ Customizable application dashboard
 Homepage adds the `homepage` container options to the existing `services.podman.containers.<name>` options.
 Setting the `category` automatically adds the container to the Homepage dashboard under that category.
 
-The `name` defaults to the container name, the service `href` is automatically set to the URL registered in Traefik.
-Additional settings (icon, description, widget configuration, ...) can be provided via the `settings` attribute, see <https://gethomepage.dev/configs/services/>.
+Metadata that is shared with Glance is configured via the `dashboard` container option,
+`category` and `name` as well as the `href`, `description` and `icon` settings are derived from it.
+Homepage specific settings such as the widget configuration are added via the `settings` attribute,
+see <https://gethomepage.dev/configs/services/>.
 
-To hide a service from the dashboard, set the `category` option to `null`.
+To hide a service from the dashboard, set the `dashboard.category` option to `null`,
+or `homepage.category` to only hide it on Homepage.
 
 Example:
 
@@ -50,16 +53,20 @@ Example:
 {config, ...}: {
   nps.stacks.homepage.enable = true;
 
-  nps.stacks.streaming.containers.jellyfin.homepage = {
+  # Shared with Glance
+  nps.stacks.streaming.containers.jellyfin.dashboard = {
     category = "Media";
     name = "Jellyfin";
-    settings = {
-      description = "Media Server";
-      icon = "jellyfin";
-    };
+    description = "Media Server";
+    icon = "di:jellyfin";
   };
+
+  # Homepage only
+  nps.stacks.streaming.containers.jellyfin.homepage.settings.widget.enable = true;
 }
 ```
+
+<RenderDocs :options="data" :include="/services\.podman\.containers\..+\.dashboard(\..*)?/" />
 
 <RenderDocs :options="data" :include="/services\.podman\.containers\..+\.homepage(\..*)?/" />
 
