@@ -169,7 +169,6 @@ in {
           parent = name;
           icon = "di:adventure-log";
         };
-        homepage.category = null;
       };
 
       ${dbName} = {
@@ -199,7 +198,6 @@ in {
           parent = name;
           icon = "di:postgres";
         };
-        homepage.category = null;
       };
     };
   };

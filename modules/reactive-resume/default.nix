@@ -157,7 +157,6 @@ in {
           icon = "di:chrome";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${dbName} = {
@@ -185,7 +184,6 @@ in {
           icon = "di:postgres";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

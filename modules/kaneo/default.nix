@@ -152,7 +152,6 @@ in {
           icon = "sh:kaneo";
           parent = webName;
         };
-        homepage.category = null;
       };
 
       ${dbName} = {
@@ -182,7 +181,6 @@ in {
           icon = "di:postgres";
           parent = webName;
         };
-        homepage.category = null;
       };
     };
   };

@@ -193,7 +193,6 @@ in {
           icon = "di:postgres";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

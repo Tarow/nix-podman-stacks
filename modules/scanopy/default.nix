@@ -167,7 +167,6 @@ in {
           icon = "di:scanopy";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${dbName} = {
@@ -186,7 +185,6 @@ in {
           icon = "di:postgres";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

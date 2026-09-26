@@ -380,7 +380,6 @@ in {
             icon = "di:profilarr";
             parent = profilarrName;
           };
-          homepage.category = null;
         };
 
         ${sonarrName} = lib.mkIf cfg.sonarr.enable (arrlib.mkArrBase sonarrName

@@ -230,7 +230,6 @@ in {
           icon = "di:postgres";
           parent = name;
         };
-        homepage.category = null;
       };
 
       # Delete if stack doesn't require redis
@@ -243,7 +242,6 @@ in {
           icon = "di:redis";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

@@ -318,7 +318,7 @@ To hide it on a single dashboard only, set the `category` of that dashboard to `
   nps.stacks = {
     # Hidden on Homepage and Glance
     streaming.containers.sonarr.dashboard.category = null;
-    # Hidden on Homepage only, for example for database containers
+    # Hidden on Homepage only
     streaming.containers.sonarr.homepage.category = null;
     # Hidden on Glance only
     streaming.containers.sonarr.glance.category = null;

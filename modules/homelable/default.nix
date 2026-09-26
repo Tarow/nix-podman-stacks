@@ -231,7 +231,6 @@ in {
           icon = "di:homelable";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${mcpName} = lib.mkIf cfg.mcp.enable {
@@ -251,7 +250,6 @@ in {
           icon = "di:homelable";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

@@ -158,7 +158,6 @@ in {
           icon = "di:chrome";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${meilisearchName} = {
@@ -178,7 +177,6 @@ in {
           icon = "di:meilisearch";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

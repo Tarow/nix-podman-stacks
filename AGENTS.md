@@ -101,16 +101,16 @@ dashboard = {
   inherit category description;    # let variables, applied to both dashboards
   name = displayName;
   icon = "di:jellyfin";            # Glance syntax, translated for Homepage
-  parent = name;                   # optional, groups child containers on Glance
+  parent = name;                   # optional, child service, Glance only
 };
 
-homepage.category = null;          # for Glance only containers (DB, Redis, etc.)
 homepage.settings.widget.type = "jellyfin"; # Homepage only
 glance.icon = "si:jellyfin";       # Glance only
 ```
 
 - `dashboard` - **all containers**
 - `homepage` / `glance` - only for what is specific to one dashboard
+- containers with a `parent` are child services, they are not shown on Homepage
 
 ### Volume Abstraction
 

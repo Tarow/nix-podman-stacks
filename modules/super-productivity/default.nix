@@ -128,7 +128,6 @@ in {
           icon = "di:super-productivity.png";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${dbName} = lib.mkIf cfg.enableSync {
@@ -147,7 +146,6 @@ in {
           icon = "di:postgres";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

@@ -44,7 +44,6 @@ in {
           icon = "sh:memcached";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

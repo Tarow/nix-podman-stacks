@@ -46,6 +46,8 @@ see <https://gethomepage.dev/configs/services/>.
 
 To hide a service from the dashboard, set the `dashboard.category` option to `null`,
 or `homepage.category` to only hide it on Homepage.
+Containers with a `dashboard.parent` are child services and hidden on Homepage by default,
+set `homepage.category` to show them there anyway.
 
 Example:
 

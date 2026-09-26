@@ -259,7 +259,6 @@ in {
           name = "Postgres";
           icon = "di:postgres";
         };
-        homepage.category = null;
       };
     };
   };

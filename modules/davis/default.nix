@@ -168,7 +168,6 @@ in {
           icon = "di:mariadb";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

@@ -180,7 +180,6 @@ in {
           icon = "si:mariadb";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

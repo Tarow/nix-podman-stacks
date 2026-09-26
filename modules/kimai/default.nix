@@ -108,7 +108,6 @@ in {
           icon = "di:mysql";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

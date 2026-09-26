@@ -133,7 +133,6 @@ in rec {
         icon = "di:postgres";
         parent = name;
       };
-      homepage.category = null;
     };
 
   arrDbs = names:

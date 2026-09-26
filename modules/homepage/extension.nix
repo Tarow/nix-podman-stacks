@@ -39,8 +39,15 @@ in {
       options.homepage = with lib; {
         category = options.mkOption {
           type = types.nullOr types.str;
-          default = config.dashboard.category;
-          description = "Category of the service, `null` hides it on Homepage.";
+          default =
+            if (config.dashboard.parent != null)
+            then null
+            else config.dashboard.category;
+          defaultText = lib.literalExpression ''config.dashboard.category'';
+          description = ''
+            Category of the service, `null` hides it on Homepage.
+            Containers with a `dashboard.parent` are hidden by default.
+          '';
         };
         name = options.mkOption {
           type = types.str;

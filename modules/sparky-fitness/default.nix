@@ -211,7 +211,6 @@ in {
           icon = "di:sparky-fitness";
           parent = stackName;
         };
-        homepage.category = null;
       };
 
       ${dbName} = {
@@ -241,7 +240,6 @@ in {
           icon = "di:postgres";
           parent = stackName;
         };
-        homepage.category = null;
       };
     };
   };

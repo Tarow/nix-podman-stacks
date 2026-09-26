@@ -108,7 +108,6 @@ in {
           icon = "di:kitchenowl";
           parent = stackName;
         };
-        homepage.category = null;
       };
 
       ${backendName} = {

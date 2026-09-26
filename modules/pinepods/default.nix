@@ -204,7 +204,6 @@ in {
           icon = "di:postgres";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${valkeyName} = {
@@ -225,7 +224,6 @@ in {
           icon = "di:valkey";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

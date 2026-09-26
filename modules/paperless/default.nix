@@ -241,7 +241,6 @@ in {
           icon = "di:redis";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${dbName} = {
@@ -260,7 +259,6 @@ in {
           icon = "di:postgres";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${tikaName} = lib.mkIf cfg.enableTika {
@@ -273,7 +271,6 @@ in {
           icon = "sh:apache-tika";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${gotenbergName} = lib.mkIf cfg.enableTika {
@@ -287,7 +284,6 @@ in {
           icon = "di:gotenberg";
           parent = name;
         };
-        homepage.category = null;
       };
 
       ${ftpName} = let
@@ -325,7 +321,6 @@ in {
             icon = "si:sftpgo";
             parent = name;
           };
-          homepage.category = null;
         };
     };
   };

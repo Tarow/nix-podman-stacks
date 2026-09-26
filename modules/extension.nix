@@ -339,7 +339,11 @@ in {
                   parent = mkOption {
                     type = types.nullOr types.str;
                     default = null;
-                    description = "Identifier of the service this container belongs to, groups it below the parent on Glance.";
+                    description = ''
+                      Identifier of the service this container belongs to.
+                      Groups it below the parent on Glance and keeps it off Homepage,
+                      set `homepage.category` to show it there anyway.
+                    '';
                   };
                 };
               };

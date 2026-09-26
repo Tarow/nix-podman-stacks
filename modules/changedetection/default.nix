@@ -57,7 +57,6 @@ in {
           icon = "di:chrome";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

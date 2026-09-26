@@ -412,7 +412,6 @@ in {
           icon = "di:redis";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

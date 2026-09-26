@@ -213,7 +213,6 @@ in {
           icon = "di:beszel";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };

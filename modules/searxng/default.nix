@@ -112,7 +112,6 @@ in {
           icon = "di:valkey";
           parent = name;
         };
-        homepage.category = null;
       };
     };
   };
