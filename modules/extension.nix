@@ -332,7 +332,7 @@ in {
                     type = types.nullOr types.str;
                     default = null;
                     description = ''
-                      Identifier of the service on Glance, referenced by `parent`.
+                      Identifier of the service, referenced by the `parent` of its child containers.
                       Defaults to the container name.
                     '';
                   };
@@ -341,7 +341,7 @@ in {
                     default = null;
                     description = ''
                       Identifier of the service this container belongs to.
-                      Groups it below the parent on Glance and keeps it off Homepage,
+                      Groups it below the parent on the dashboard and keeps it off Homepage,
                       set `homepage.category` to show it there anyway.
                     '';
                   };
@@ -349,8 +349,8 @@ in {
               };
               default = {};
               description = ''
-                Metadata shared between the Homepage and Glance dashboards.
-                Dashboard specific settings go into `homepage` and `glance`.
+                Metadata shared between the dashboards.
+                Settings that only apply to a single dashboard go into its own container option.
               '';
             };
           };

@@ -90,6 +90,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/haproxy.svg" style="width:1em;height:1em;" /> [Docker Socket Proxy](https://tarow.github.io/nix-podman-stacks/docs/stacks/docker-socket-proxy.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/donetick.svg" style="width:1em;height:1em;" /> [Donetick](https://tarow.github.io/nix-podman-stacks/docs/stacks/donetick.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dozzle.svg" style="width:1em;height:1em;" /> [Dozzle](https://tarow.github.io/nix-podman-stacks/docs/stacks/dozzle.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dynacat.svg" style="width:1em;height:1em;" /> [Dynacat](https://tarow.github.io/nix-podman-stacks/docs/stacks/dynacat.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/filebrowser-quantum.png" style="width:1em;height:1em;" /> [Filebrowser Quantum](https://tarow.github.io/nix-podman-stacks/docs/stacks/filebrowser-quantum.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/flaresolverr.svg" style="width:1em;height:1em;" /> [Flaresolverr](https://tarow.github.io/nix-podman-stacks/docs/stacks/flaresolverr.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/forgejo.svg" style="width:1em;height:1em;" /> [Forgejo](https://tarow.github.io/nix-podman-stacks/docs/stacks/forgejo.html)
