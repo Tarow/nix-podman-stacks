@@ -62,7 +62,7 @@ Setting the `category` automatically adds the container to a `docker-containers`
 Metadata that is shared between the dashboards is configured via the `dashboard` container option,
 `category`, `name`, `url` as well as the `description`, `icon`, `id` and `parent` settings
 are derived from it. Dynacat specific settings can be added via the freeform `dynacat` attributes,
-see <https://dynacat.artur.zone/configuration#docker-containers>.
+see <https://dynacat.artur.zone/#configuration/docker-containers>.
 
 To hide a service from the dashboard, set the `dashboard.category` option to `null`,
 or `dynacat.category` to only hide it on Dynacat.

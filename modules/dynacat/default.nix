@@ -31,7 +31,7 @@ in {
           Whether to enable OIDC login with Authelia. This will register an OIDC client in Authelia
           and setup the necessary configuration.
 
-          For details, see <https://dynacat.artur.zone/authentication#oidc-authentication>
+          For details, see <https://dynacat.artur.zone/#authentication/oidc-authentication>
         '';
       };
       clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;
@@ -52,7 +52,7 @@ in {
         Can be generated with
         `podman run --rm panonim/dynacat secret:make`.
 
-        See <https://dynacat.artur.zone/authentication>
+        See <https://dynacat.artur.zone/#authentication>
       '';
     };
 
@@ -104,7 +104,7 @@ in {
       description = ''
         Settings that will be provided as the `dynacat.yml` configuration file.
 
-        See <https://dynacat.artur.zone/configuration>
+        See <https://dynacat.artur.zone/#configuration>
       '';
     };
     userCss = lib.mkOption {
@@ -114,7 +114,7 @@ in {
       description = ''
         Custom CSS settings.
 
-        See <https://dynacat.artur.zone/configuration#custom-css-file>
+        See <https://dynacat.artur.zone/#configuration/custom-css-file>
       '';
     };
     extraEnv = lib.mkOption {

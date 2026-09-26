@@ -79,7 +79,7 @@ in {
         description = ''
           Settings for the service.
 
-          See <https://dynacat.artur.zone/configuration#docker-containers>
+          See <https://dynacat.artur.zone/#configuration/docker-containers>
         '';
       };
 
