@@ -172,7 +172,7 @@ in {
         type = lib.types.attrsOf (
           lib.types.submodule (
             {name, ...}: {
-              freeformType = customAttrsType;
+              freeformType = lib.types.attrsOf customAttrsType;
               options = {
                 id = lib.mkOption {
                   type = lib.types.str;
@@ -235,7 +235,7 @@ in {
         type = lib.types.attrsOf (
           lib.types.submodule (
             {name, ...}: {
-              freeformType = customAttrsType;
+              freeformType = lib.types.attrsOf customAttrsType;
               options = {
                 name = lib.mkOption {
                   type = lib.types.str;
