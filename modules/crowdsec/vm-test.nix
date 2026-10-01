@@ -1,5 +1,5 @@
 {...}: {
-  imports = [../docker-socket-proxy/vm-test.nix];
+  imports = [../socket-proxy/vm-test.nix];
   nps.stacks.crowdsec = {
     enable = true;
     useSocketProxy = true;

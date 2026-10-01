@@ -201,8 +201,6 @@ in {
         ];
       };
 
-      docker-socket-proxy.enable = true;
-
       donetick = {
         jwtSecretFile = dummySecretFile;
         oidc = {
@@ -818,6 +816,8 @@ in {
           QBITTORRENT_PASSWORD.fromFile = dummySecretFile;
         };
       };
+
+      socket-proxy.enable = true;
 
       sparky-fitness = {
         enable = true;

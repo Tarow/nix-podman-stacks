@@ -5,6 +5,7 @@
 }: let
   name = "pangolin-newt";
   cfg = config.nps.stacks.${name};
+  sections = config.nps.stacks.socket-proxy.sections;
 
   category = "Network & Administration";
   displayName = "Pangolin Newt";
@@ -12,7 +13,12 @@
 in {
   imports =
     [
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
+        stack = name;
+        permissions = {
+          GET = [sections.containers];
+        };
+      })
     ]
     ++ import ../mkAliases.nix config lib name [name];
 
@@ -65,7 +71,7 @@ in {
       image = "ghcr.io/fosrl/newt:1.18.0";
       extraEnv =
         {
-          DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
+          DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.socket-proxy.address;
         }
         // lib.optionalAttrs cfg.enablePrometheusExport {
           NEWT_METRICS_PROMETHEUS_ENABLED = true;

@@ -43,7 +43,7 @@
         enable = true;
       };
 
-      docker-socket-proxy.enable = true;
+      socket-proxy.enable = true;
 
       homepage.enable = true;
 

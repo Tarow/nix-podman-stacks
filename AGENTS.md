@@ -251,7 +251,7 @@ settings = lib.mkOption {
 ```nix
 (import ../types.nix lib).extraEnv
 (import ../authelia/options.nix lib).clientSecretFile
-(import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+(import ../socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
 ```
 
 ### Option Exposure Guidelines

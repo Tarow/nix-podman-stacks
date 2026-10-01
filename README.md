@@ -87,7 +87,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dawarich.svg" style="width:1em;height:1em;" /> [Dawarich](https://tarow.github.io/nix-podman-stacks/docs/stacks/dawarich.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ddns-updater.svg" style="width:1em;height:1em;" /> [DDNS-Updater](https://tarow.github.io/nix-podman-stacks/docs/stacks/ddns-updater.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/azure-dns.svg" style="width:1em;height:1em;" /> [DockDNS](https://tarow.github.io/nix-podman-stacks/docs/stacks/dockdns.html)
-- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/haproxy.svg" style="width:1em;height:1em;" /> [Docker Socket Proxy](https://tarow.github.io/nix-podman-stacks/docs/stacks/docker-socket-proxy.html)
+
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/donetick.svg" style="width:1em;height:1em;" /> [Donetick](https://tarow.github.io/nix-podman-stacks/docs/stacks/donetick.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dozzle.svg" style="width:1em;height:1em;" /> [Dozzle](https://tarow.github.io/nix-podman-stacks/docs/stacks/dozzle.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dynacat.svg" style="width:1em;height:1em;" /> [Dynacat](https://tarow.github.io/nix-podman-stacks/docs/stacks/dynacat.html)
@@ -155,6 +155,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/scanopy.svg" style="width:1em;height:1em;" /> [Scanopy](https://tarow.github.io/nix-podman-stacks/docs/stacks/scanopy.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/searxng.svg" style="width:1em;height:1em;" /> [SearXNG](https://tarow.github.io/nix-podman-stacks/docs/stacks/searxng.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/shelfmark.webp" style="width:1em;height:1em;" /> [Shelfmark](https://tarow.github.io/nix-podman-stacks/docs/stacks/shelfmark.html)
+- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/golang.svg" style="width:1em;height:1em;" /> [Socket Proxy](https://tarow.github.io/nix-podman-stacks/docs/stacks/socket-proxy.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/sparky-fitness.webp" style="width:1em;height:1em;" /> [SparkyFitness](https://tarow.github.io/nix-podman-stacks/docs/stacks/sparky-fitness.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sshwifty.svg" style="width:1em;height:1em;" /> [Sshwifty](https://tarow.github.io/nix-podman-stacks/docs/stacks/sshwifty.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/spliit.webp" style="height:1em;" /> [Spliit](https://tarow.github.io/nix-podman-stacks/docs/stacks/spliit.html)
