@@ -7,6 +7,7 @@
   name = "dynacat";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+  sections = config.nps.stacks.socket-proxy.sections;
 
   yaml = pkgs.formats.yaml {};
 
@@ -17,7 +18,12 @@ in {
   imports =
     [
       ./extension.nix
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
+        stack = name;
+        permissions = {
+          GET = [sections.containers];
+        };
+      })
     ]
     ++ (import ../mkAliases.nix config lib name [name]);
 

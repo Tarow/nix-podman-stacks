@@ -21,7 +21,6 @@ let
     dockdns = ./dockdns;
     donetick = ./donetick;
     dozzle = ./dozzle;
-    docker-socket-proxy = ./docker-socket-proxy;
     dynacat = ./dynacat;
     filebrowser-quantum = ./filebrowser-quantum;
     flaresolverr = ./flaresolverr;
@@ -75,6 +74,7 @@ let
     scanopy = ./scanopy;
     searxng = ./searxng;
     shelfmark = ./shelfmark;
+    socket-proxy = ./socket-proxy;
     sparky-fitness = ./sparky-fitness;
     spliit = ./spliit;
     sshwifty = ./sshwifty;

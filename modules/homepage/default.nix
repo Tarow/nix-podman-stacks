@@ -7,6 +7,7 @@
   name = "homepage";
   externalStorage = config.nps.externalStorageBaseDir;
   cfg = config.nps.stacks.${name};
+  sections = config.nps.stacks.socket-proxy.sections;
   yaml = pkgs.formats.yaml {};
 
   category = "Network & Administration";
@@ -66,7 +67,16 @@ in {
   imports =
     [
       ./extension.nix
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
+        stack = name;
+        permissions = {
+          GET = [
+            sections.containers
+            sections.info
+            sections.events
+          ];
+        };
+      })
     ]
     ++ import ../mkAliases.nix config lib name [name];
 
@@ -293,8 +303,8 @@ in {
       docker.local =
         if cfg.useSocketProxy
         then {
-          host = "docker-socket-proxy";
-          port = config.nps.stacks.docker-socket-proxy.port;
+          host = "socket-proxy";
+          port = config.nps.stacks.socket-proxy.port;
         }
         else {socket = "/var/run/docker.sock";};
       settings.statusStyle = "dot";

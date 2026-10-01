@@ -31,7 +31,7 @@
       type = "docker-containers";
       title = category;
       category = category;
-      sock-path = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
+      sock-path = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.socket-proxy.address;
       containers = containerAttrs;
       running-only = false;
       cache = "30s";

@@ -14,7 +14,7 @@
 in {
   imports = [
     ../authelia/vm-test.nix
-    ../docker-socket-proxy/vm-test.nix
+    ../socket-proxy/vm-test.nix
   ];
   nps.stacks.beszel = {
     enable = true;

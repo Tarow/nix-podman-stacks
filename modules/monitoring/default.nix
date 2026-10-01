@@ -6,6 +6,7 @@
 }: let
   stackName = "monitoring";
   cfg = config.nps.stacks.${stackName};
+  sections = config.nps.stacks.socket-proxy.sections;
   storage = "${config.nps.storageBaseDir}/${stackName}";
 
   category = "Monitoring";
@@ -50,17 +51,23 @@
 
   dockerHost =
     if cfg.alloy.useSocketProxy
-    then config.nps.stacks.docker-socket-proxy.address
+    then config.nps.stacks.socket-proxy.address
     else "unix:///var/run/docker.sock";
 in {
   imports =
     [
       ./extension.nix
       # Create the `alloy.useSocketProxy` option
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
         stack = stackName;
         container = alloyName;
         subPath = alloyName;
+        permissions = {
+          GET = [
+            sections.containers
+            sections.networks
+          ];
+        };
       })
     ]
     ++ import ../mkAliases.nix config lib stackName [

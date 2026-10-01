@@ -7,6 +7,7 @@
   name = "crowdsec";
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
+  sections = config.nps.stacks.socket-proxy.sections;
 
   yaml = pkgs.formats.yaml {};
 
@@ -43,9 +44,15 @@
 in {
   imports =
     [
-      # Create the `useSocketProxy` option
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
         stack = name;
+        permissions = {
+          GET = [
+            sections.containers
+            sections.info
+            sections.events
+          ];
+        };
       })
     ]
     ++ import ../mkAliases.nix config lib name [name];
@@ -119,7 +126,7 @@ in {
           name: settings:
             settings
             // lib.optionalAttrs (settings.source == "docker" && cfg.useSocketProxy) {
-              docker_host = config.nps.stacks.docker-socket-proxy.address;
+              docker_host = config.nps.stacks.socket-proxy.address;
             }
         )
         |> lib.mapAttrs (name: settings: yaml.generate "${name}-acquis.yaml" settings);

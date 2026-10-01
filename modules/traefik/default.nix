@@ -6,6 +6,7 @@
 }: let
   name = "traefik";
   cfg = config.nps.stacks.${name};
+  sections = config.nps.stacks.socket-proxy.sections;
 
   yaml = pkgs.formats.yaml {};
 
@@ -18,7 +19,16 @@ in {
   imports =
     [
       ./extension.nix
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
+        stack = name;
+        permissions = {
+          GET = [
+            sections.containers
+            sections.info
+            sections.events
+          ];
+        };
+      })
     ]
     ++ import ../mkAliases.nix config lib name name;
 
@@ -211,7 +221,7 @@ in {
         (import ./config/traefik.nix lib cfg.domain cfg.network.name)
 
         (lib.mkIf cfg.useSocketProxy {
-          providers.docker.endpoint = config.nps.stacks.docker-socket-proxy.address;
+          providers.docker.endpoint = config.nps.stacks.socket-proxy.address;
         })
 
         (lib.mkIf cfg.enablePrometheusExport {

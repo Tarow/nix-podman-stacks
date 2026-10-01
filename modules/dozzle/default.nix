@@ -5,6 +5,7 @@
 }: let
   name = "dozzle";
   cfg = config.nps.stacks.${name};
+  sections = config.nps.stacks.socket-proxy.sections;
 
   category = "Monitoring";
   displayName = "Dozzle";
@@ -13,7 +14,17 @@ in {
   imports =
     [
       ./extension.nix
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
+        stack = name;
+        permissions = {
+          GET = [
+            sections.containers
+            sections.images
+            sections.info
+            sections.events
+          ];
+        };
+      })
     ]
     ++ import ../mkAliases.nix config lib name [name];
 
@@ -31,7 +42,7 @@ in {
     services.podman.containers.${name} = {
       image = "docker.io/amir20/dozzle:v11.1.1";
       environment = {
-        DOZZLE_REMOTE_HOST = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
+        DOZZLE_REMOTE_HOST = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.socket-proxy.address;
       };
 
       port = 8080;

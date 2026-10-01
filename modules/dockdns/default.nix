@@ -6,6 +6,7 @@
 }: let
   name = "dockdns";
   cfg = config.nps.stacks.${name};
+  sections = config.nps.stacks.socket-proxy.sections;
   yaml = pkgs.formats.yaml {};
 
   category = "Network & Administration";
@@ -15,7 +16,15 @@ in {
   imports =
     [
       ./extension.nix
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
+        stack = name;
+        permissions = {
+          GET = [
+            sections.containers
+            sections.events
+          ];
+        };
+      })
     ]
     ++ import ../mkAliases.nix config lib name [name];
 
@@ -79,7 +88,7 @@ in {
 
       extraEnv =
         {
-          DOCKER_HOST = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
+          DOCKER_HOST = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.socket-proxy.address;
         }
         // cfg.extraEnv;
 

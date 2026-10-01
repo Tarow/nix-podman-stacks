@@ -6,6 +6,7 @@
 }: let
   name = "beszel";
   agentName = "${name}-agent";
+  sections = config.nps.stacks.socket-proxy.sections;
 
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
@@ -20,10 +21,16 @@
 in {
   imports =
     [
-      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {
+      (import ../socket-proxy/mkSocketProxyOptionModule.nix {
         stack = name;
         container = agentName;
         targetLocation = socketTargetLocation;
+        permissions = {
+          GET = [
+            sections.containers
+            sections.info
+          ];
+        };
       })
     ]
     ++ import ../mkAliases.nix config lib name [
@@ -205,7 +212,7 @@ in {
           DOCKER_HOST =
             if !cfg.useSocketProxy
             then "unix://${socketTargetLocation}"
-            else config.nps.stacks.docker-socket-proxy.address;
+            else config.nps.stacks.socket-proxy.address;
         };
         dashboard = {
           inherit category;

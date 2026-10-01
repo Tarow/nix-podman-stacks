@@ -1,6 +1,6 @@
 {dummySecretFile, ...}: {
   imports = [
-    ../docker-socket-proxy/vm-test.nix
+    ../socket-proxy/vm-test.nix
     ../traefik/vm-test.nix
   ];
   nps.stacks.dockdns = {
