@@ -3,8 +3,6 @@
   container ? stack,
   targetLocation ? "/var/run/docker.sock",
   subPath ? [],
-  # Regex allowlists per HTTP method, referencing `nps.stacks.socket-proxy.sections`.
-  # Merged with the `/version` and `/_ping` patterns Docker clients need.
   permissions ? {},
 }: {
   config,
@@ -43,10 +41,6 @@ in {
     services.podman.containers.${container} =
       {
         volumeMap.podman-socket = lib.mkIf (!cfg.useSocketProxy) "${config.nps.socketLocation}:${targetLocation}:ro";
-
-        network = lib.optional cfg.useSocketProxy "socket-proxy";
-
-        wantsContainer = lib.mkIf cfg.useSocketProxy ["socket-proxy"];
         dependsOn = lib.mkIf (!cfg.useSocketProxy) ["podman.socket"];
       }
       // lib.optionalAttrs cfg.useSocketProxy {

@@ -33,9 +33,9 @@ in {
       visible = false;
       default = import ./sections.nix;
       description = ''
-        Reusable regex allowlists for the Docker API sections, one per section.
-        Name the sections a container needs per HTTP method, and add custom
-        regexes to the same list, e.g. `GET = [sections.containers "some regexp"]`.
+        Regex allowlists for the Docker API sections, one per section. Name the
+        sections a container needs per HTTP method, and mix in custom regexes,
+        e.g. `GET = [sections.containers "some regexp"]`.
 
         See <https://github.com/wollomatic/socket-proxy/wiki/Docker-API-regex-pattern-index>
       '';
@@ -47,26 +47,23 @@ in {
       image = "ghcr.io/wollomatic/socket-proxy:1.13.1";
 
       volumeMap.podman-socket = "${config.nps.socketLocation}:/var/run/docker.sock:ro";
-
       user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
 
       environment = {
         SP_PROXYCONTAINERNAME = name;
         SP_LISTENIP = "0.0.0.0";
         SP_PROXYPORT = toString cfg.port;
-        # The health endpoint only listens on 127.0.0.1, which the healthcheck
-        # of a rootless container cannot reach, so the socket is checked in-process.
-        SP_WATCHDOGINTERVAL = 300;
-        SP_STOPONWATCHDOG = true;
+        SP_WATCHDOGINTERVAL = lib.mkDefault 300;
+        SP_STOPONWATCHDOG = lib.mkDefault true;
       };
 
       port = cfg.port;
       stack = name;
-      traefik.name = "dsp";
+      traefik.name = name;
       dashboard = {
         inherit category description;
         name = displayName;
-        icon = "di:haproxy";
+        icon = "di:golang";
       };
     };
   };
