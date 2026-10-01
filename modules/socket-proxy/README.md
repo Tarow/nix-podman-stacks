@@ -1,4 +1,4 @@
-Security-enhanced proxy for the Docker (works with Podman too) Socket
+Security-enhanced proxy for the Docker/Podman Socket
 
 - [Github](https://github.com/wollomatic/socket-proxy)
 - [Allowlist library](https://github.com/wollomatic/socket-proxy/wiki/Allowlist-Library)
