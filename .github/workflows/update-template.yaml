@@ -19,7 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          # A release event checks out the tag, which leaves a detached HEAD.
           ref: main
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -31,16 +30,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          # The pin is the only line naming this repo, so anchor on its name
-          # instead of on `github:owner/repo`, which every input shares.
           flake_repo=$(sed -nE 's|.*github:([^/"]+/nix-podman-stacks)/[^"]*".*|\1|p' template/flake.nix)
           current=$(sed -nE 's|.*github:[^/"]+/nix-podman-stacks/([^"]*)".*|\1|p' template/flake.nix)
           if [[ -z "$flake_repo" || -z "$current" ]]; then
             echo "Could not read the nix-podman-stacks pin from template/flake.nix" >&2
             exit 1
           fi
-          # /releases/latest skips drafts and prereleases. A fork that tracks a
-          # repo it cannot read ends up with no tag, which is not an error.
           latest=$(gh api "repos/$flake_repo/releases/latest" --jq .tag_name 2>/dev/null) || latest=""
           changed=false
           if [[ -z "$latest" ]]; then
@@ -51,6 +46,8 @@ jobs:
             echo "Updating $current -> $latest" >&2
             changed=true
           fi
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
       - name: Bump pin, refresh lock, verify
         if: steps.release.outputs.changed == 'true'
@@ -58,15 +55,11 @@ jobs:
           TAG: ${{ steps.release.outputs.latest }}
         run: |
           set -euo pipefail
-          # The tag lands in a sed replacement, where & and \ are metacharacters.
           [[ "$TAG" =~ ^v[0-9A-Za-z][0-9A-Za-z.+-]*$ ]] || { echo "Unexpected release tag '$TAG'" >&2; exit 1; }
           sed -i -E "s|(github:[^\"]+/nix-podman-stacks/)[^\"]+|\1$TAG|" template/flake.nix
-          # Exactly one line replaced, and the pin reads back as the new tag.
           test "$(git diff --numstat -- template/flake.nix | cut -f2)" -eq 1
           test "$(sed -nE 's|.*github:[^/"]+/nix-podman-stacks/([^"]*)".*|\1|p' template/flake.nix)" = "$TAG"
           nix flake lock ./template
-          # template/flake.lock is gitignored, so this lock only proves the new
-          # pin resolves; the shipped template lets users resolve their own.
           nix build ./template#homeConfigurations.myhost.activationPackage
       - name: Commit
         if: steps.release.outputs.changed == 'true'
@@ -77,7 +70,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add template/flake.nix
-          # Matches the release-drafter group pattern, so this shows up in the
-          # release notes next to the other dependency updates.
           git diff --cached --quiet || git commit -m "chore(deps): update template nix-podman-stacks to $TAG"
           git push
