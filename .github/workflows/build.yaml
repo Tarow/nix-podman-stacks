@@ -70,11 +70,24 @@ jobs:
       - name: Build search
         run: nix build .#search -o result/nix-podman-stacks/search
       - name: Check links
+        id: links
+        # Broken links should not stop the docs from deploying, only be reported.
+        continue-on-error: true
         run: |
           nix run nixpkgs#lychee -- \
             --config ./docs/lychee.toml \
             --root-dir ./result \
+            --output "$RUNNER_TEMP/lychee.md" \
             result/**/*.html
+      - name: Report broken links
+        if: steps.links.outcome == 'failure'
+        run: |
+          echo "::warning title=Broken links::lychee found broken links."
+          {
+            echo "## Broken links"
+            echo
+            cat "$RUNNER_TEMP/lychee.md" 2>/dev/null || echo "(no report produced)"
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload docs
         uses: actions/upload-pages-artifact@v5
         with:
