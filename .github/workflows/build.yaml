@@ -33,7 +33,11 @@ jobs:
           gc-max-store-size-linux: 1073741824
           purge: false
       - name: Build Template Config
-        run: nix build ./template#homeConfigurations.myhost.activationPackage
+        # Test the template against main instead of its pinned release.
+        run: >-
+          nix build ./template#homeConfigurations.myhost.activationPackage
+          --override-input nix-podman-stacks git+file://${{ github.workspace }}
+          --no-write-lock-file
       - name: Build Full Config
         run: nix build .#homeConfigurations.ci.activationPackage
 
