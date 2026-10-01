@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-podman-stacks = {
-      url = "github:Tarow/nix-podman-stacks/v0.16.0";
+      url = "github:Tarow/nix-podman-stacks/v0.17.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
