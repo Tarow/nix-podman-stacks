@@ -36,7 +36,7 @@ jobs:
         # Test the template against main instead of its pinned release.
         run: >-
           nix build ./template#homeConfigurations.myhost.activationPackage
-          --override-input nix-podman-stacks git+file://${{ github.workspace }}
+          --override-input nix-podman-stacks path:${{ github.workspace }}
           --no-write-lock-file
       - name: Build Full Config
         run: nix build .#homeConfigurations.ci.activationPackage
