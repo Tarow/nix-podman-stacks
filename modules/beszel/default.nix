@@ -28,6 +28,7 @@ in {
         permissions = {
           GET = [
             sections.containers
+            sections.images
             sections.info
           ];
         };
