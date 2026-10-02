@@ -15,6 +15,10 @@ let
   section = name: "${apiVersion}/${libpod}${name}${tail}";
   endpoint = name: "${apiVersion}/${libpod}${name}";
 in {
+  # Matches every API path, granting full access for the HTTP methods it is
+  # listed under, including the security critical sections below.
+  all = "${apiVersion}/${libpod}[[:graph:]]+";
+
   # Required by every Docker client
   version = endpoint "version";
   ping = endpoint "_ping";
@@ -22,6 +26,7 @@ in {
   events = section "events";
 
   containers = section "containers";
+  pods = section "pods";
   images = section "images";
   build = section "build";
   commit = section "commit";
