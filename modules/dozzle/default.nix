@@ -40,7 +40,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "docker.io/amir20/dozzle:v11.1.3";
+      image = "docker.io/amir20/dozzle:v11.2.0";
       environment = {
         DOZZLE_REMOTE_HOST = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.socket-proxy.address;
       };
