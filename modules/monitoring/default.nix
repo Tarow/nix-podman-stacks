@@ -108,7 +108,7 @@ in {
           Configuration files for each service will be provided automatically to work out of the box.
         '';
       };
-    grafana = {
+    ${grafanaName} = {
       enable =
         lib.mkEnableOption "Grafana"
         // {
@@ -178,7 +178,7 @@ in {
         };
       };
     };
-    loki = {
+    ${lokiName} = {
       enable =
         lib.mkEnableOption "Loki"
         // {
@@ -201,7 +201,7 @@ in {
         '';
       };
     };
-    alloy = {
+    ${alloyName} = {
       enable =
         lib.mkEnableOption "Alloy"
         // {
@@ -237,7 +237,7 @@ in {
         '';
       };
     };
-    prometheus = {
+    ${prometheusName} = {
       enable =
         lib.mkEnableOption "Prometheus"
         // {
@@ -271,7 +271,7 @@ in {
       };
     };
     podmanExporter.enable = lib.mkEnableOption "Podman Metrics Exporter" // {default = true;};
-    alertmanager = {
+    ${alertmanagerName} = {
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;

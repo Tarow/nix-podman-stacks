@@ -26,7 +26,7 @@ in {
     };
   };
 
-  config = lib.mkIf stackCfg.enable {
+  config = lib.mkIf (stackCfg.enable && (cfg.enable or true)) {
     assertions = let
       optionPath =
         (["nps" "stacks" stack] ++ (lib.flatten subPath))

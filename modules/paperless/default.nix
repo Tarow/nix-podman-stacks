@@ -21,6 +21,8 @@ in {
     name
     dbName
     brokerName
+    tikaName
+    gotenbergName
     ftpName
   ];
 

@@ -16,6 +16,7 @@
 in {
   imports = import ../mkAliases.nix config lib name [
     name
+    guacdName
     dbName
   ];
 

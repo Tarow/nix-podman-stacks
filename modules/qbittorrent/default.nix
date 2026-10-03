@@ -34,7 +34,7 @@ in {
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
 
-    gluetun = {
+    ${gluetunName} = {
       enable =
         lib.mkEnableOption "Gluetun"
         // {
@@ -100,7 +100,7 @@ in {
       };
     };
 
-    qui = {
+    ${quiName} = {
       enable = lib.mkEnableOption "qui";
       adminUsername = lib.mkOption {
         type = lib.types.str;

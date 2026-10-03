@@ -14,7 +14,7 @@
 
   storage = "${config.nps.storageBaseDir}/${name}";
 in {
-  imports = import ../mkAliases.nix config lib name [name dbName];
+  imports = import ../mkAliases.nix config lib name [name dbName redisName];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;

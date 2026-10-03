@@ -86,7 +86,7 @@ in {
           The SABnzbd stack runs standalone and is attached to the streaming network and Traefik.
         '';
       };
-      jellyfin = {
+      ${jellyfinName} = {
         enable =
           lib.mkEnableOption "Jellyfin"
           // {
@@ -123,7 +123,7 @@ in {
           };
         };
       };
-      profilarr = {
+      ${profilarrName} = {
         enable = lib.mkEnableOption "Profilarr";
         enableParser = lib.mkEnableOption "Profilarr Parser";
         oidc = {
@@ -148,8 +148,8 @@ in {
           };
         };
       };
-      seerr.enable = lib.mkEnableOption "Seerr";
-      maintainerr.enable = lib.mkEnableOption "Maintainerr";
+      ${seerrName}.enable = lib.mkEnableOption "Seerr";
+      ${maintainerrName}.enable = lib.mkEnableOption "Maintainerr";
     }
     // (
       lib.genAttrs

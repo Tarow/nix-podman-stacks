@@ -30,7 +30,7 @@ in {
         };
       })
     ]
-    ++ import ../mkAliases.nix config lib name name;
+    ++ import ../mkAliases.nix config lib name [name];
 
   options.nps.stacks.${name} = {
     enable =
