@@ -11,10 +11,6 @@ on:
       - main
   pull_request:
 
-concurrency:
-  group: integration-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   detect:
     runs-on: ubuntu-26.04
@@ -83,6 +79,9 @@ jobs:
     if: needs.detect.outputs.stacks != '[]'
     runs-on: ubuntu-26.04
     name: Integration (${{ matrix.stacks }})
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.stacks }}
+      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
