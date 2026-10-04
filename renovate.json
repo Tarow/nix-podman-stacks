@@ -55,6 +55,7 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": [
         "/postgres/",
+        "/pgvector/",
         "/mysql/",
         "/mariadb/",
         "/pgvecto-rs/",
