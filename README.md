@@ -77,6 +77,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bentopdf.svg" style="width:1em;height:1em;" /> [BentoPDF](https://tarow.github.io/nix-podman-stacks/docs/stacks/bentopdf.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/beszel.svg" style="width:1em;height:1em;" /> [Beszel](https://tarow.github.io/nix-podman-stacks/docs/stacks/beszel.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/blocky.svg" style="width:1em;height:1em;" /> [Blocky](https://tarow.github.io/nix-podman-stacks/docs/stacks/blocky.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/bookorbit.webp" style="width:1em;height:1em;" /> [BookOrbit](https://tarow.github.io/nix-podman-stacks/docs/stacks/bookorbit.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bytestash.svg" style="width:1em;height:1em;" /> [ByteStash](https://tarow.github.io/nix-podman-stacks/docs/stacks/bytestash.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/calibre-web.svg" style="width:1em;height:1em;" /> [Calibre-Web Automated](https://tarow.github.io/nix-podman-stacks/docs/stacks/calibre.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/changedetection.svg" style="width:1em;height:1em;" /> [Changedetection](https://tarow.github.io/nix-podman-stacks/docs/stacks/changedetection.html)

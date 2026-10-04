@@ -11,6 +11,7 @@ let
     bentopdf = ./bentopdf;
     beszel = ./beszel;
     blocky = ./blocky;
+    bookorbit = ./bookorbit;
     bytestash = ./bytestash;
     calibre = ./calibre;
     changedetection = ./changedetection;

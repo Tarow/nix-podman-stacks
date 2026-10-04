@@ -134,6 +134,19 @@ in {
         };
       };
 
+      bookorbit = {
+        enable = true;
+        jwtSecretFile = dummySecretFile;
+        podcastEncryptionKeyFile = dummySecretFile;
+        setupBootstrapTokenFile = dummySecretFile;
+        db.passwordFile = dummySecretFile;
+        oidc = {
+          registerClient = true;
+          clientSecretHash = dummyClientSecretHash;
+        };
+        tts.enable = true;
+      };
+
       bytestash = {
         enable = true;
         jwtSecretFile = dummySecretFile;
