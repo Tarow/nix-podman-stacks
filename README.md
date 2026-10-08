@@ -137,6 +137,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://raw.githubusercontent.com/Lissy93/networking-toolbox/main/static/icon.png" style="width:1em;height:1em;" /> [Networking Toolbox](https://tarow.github.io/nix-podman-stacks/docs/stacks/networking-toolbox.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/norish.svg" style="width:1em;height:1em;" /> [Norish](https://tarow.github.io/nix-podman-stacks/docs/stacks/norish.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ntfy.svg" style="width:1em;height:1em;" /> [ntfy](https://tarow.github.io/nix-podman-stacks/docs/stacks/ntfy.html)
+- <img src="https://raw.githubusercontent.com/omnigent-ai/omnigent/main/docs/images/omnigent-logo.svg" style="width:1em;height:1em;" /> [Omnigent](https://tarow.github.io/nix-podman-stacks/docs/stacks/omnigent.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/omni-tools.png" style="width:1em;" /> [OmniTools](https://tarow.github.io/nix-podman-stacks/docs/stacks/omnitools.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/outline.svg" style="width:1em;" /> [Outline](https://tarow.github.io/nix-podman-stacks/docs/stacks/outline.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pangolin.svg" style="width:1em;height:1em;" /> [Pangolin-Newt](https://tarow.github.io/nix-podman-stacks/docs/stacks/pangolin-newt.html)

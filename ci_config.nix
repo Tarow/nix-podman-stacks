@@ -704,6 +704,20 @@ in {
         enablePrometheusExport = true;
       };
 
+      omnigent = {
+        enable = true;
+        db = {
+          type = "postgres";
+          passwordFile = dummySecretFile;
+        };
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyClientSecretHash;
+          cookieSecretFile = dummySecretFile;
+        };
+      };
+
       omnitools.enable = true;
 
       outline = {
