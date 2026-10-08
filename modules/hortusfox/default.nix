@@ -64,7 +64,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/danielbrendel/hortusfox-web:v6.2";
+        image = "ghcr.io/danielbrendel/hortusfox-web:v6.3";
         volumeMap = {
           img = "${storage}/img:/var/www/html/public/img";
           logs = "${storage}/logs:/var/www/html/app/logs";

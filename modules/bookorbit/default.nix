@@ -159,7 +159,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/bookorbit/bookorbit:3.2.0";
+        image = "ghcr.io/bookorbit/bookorbit:3.3.0";
         volumeMap = {
           books = "${cfg.libraryPath}:/books";
           data = "${storage}/data:/data";
@@ -227,7 +227,7 @@ in {
       };
 
       ${kokoroName} = lib.mkIf cfg.tts.enable {
-        image = "ghcr.io/remsky/kokoro-fastapi-cpu:v0.8.0";
+        image = "ghcr.io/remsky/kokoro-fastapi-cpu:v0.9.0";
 
         stack = name;
         dashboard = {

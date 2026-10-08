@@ -152,7 +152,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/pouzor/homelable-frontend:3.5.1";
+        image = "ghcr.io/pouzor/homelable-frontend:3.6.0";
 
         wantsContainer = [backendName];
 
@@ -167,7 +167,7 @@ in {
       };
 
       ${backendName} = {
-        image = "ghcr.io/pouzor/homelable-backend:3.5.1";
+        image = "ghcr.io/pouzor/homelable-backend:3.6.0";
         volumeMap.data = "${storage}/data:/app/data";
 
         extraEnv =
@@ -234,7 +234,7 @@ in {
       };
 
       ${mcpName} = lib.mkIf cfg.mcp.enable {
-        image = "ghcr.io/pouzor/homelable-mcp:3.5.1";
+        image = "ghcr.io/pouzor/homelable-mcp:3.6.0";
 
         extraEnv = {
           BACKEND_URL = "http://${backendName}:8000";
