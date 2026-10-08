@@ -266,6 +266,17 @@ in {
         };
       };
 
+      excalidash = {
+        enable = true;
+        jwtSecretFile = dummySecretFile;
+        csrfSecretFile = dummySecretFile;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyClientSecretHash;
+        };
+      };
+
       filebrowser-quantum = {
         enable = true;
         mounts = {

@@ -40,7 +40,8 @@
         "/homelable/",
         "/scanopy/",
         "/super-productivity/",
-        "/super-sync-server/"
+        "/super-sync-server/",
+        "/excalidash/"
       ],
       "groupName": "{{parentDir}}"
     },
