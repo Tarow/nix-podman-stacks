@@ -1,10 +1,14 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   stackName = "sablier";
   cfg = config.nps.stacks.sablier;
+
+  yaml = pkgs.formats.yaml {};
+  recursiveMerge = (import ../lib.nix lib).recursiveMerge;
 
   mkMiddlewareName = group: "sablier-${group}";
   capitalizeFirst = s:
@@ -12,29 +16,32 @@
     + builtins.substring 1 (-1) s;
 
   sablierContainers = lib.filterAttrs (k: c: c.sablier.enable) config.services.podman.containers;
-  sablierGroups =
-    sablierContainers
-    |> lib.mapAttrsToList (k: c: c.sablier.group)
-    |> lib.uniqueStrings;
+  # All containers of a group share a single middleware, so group them by their group name.
+  sablierGroups = lib.groupBy (c: c.sablier.group) (lib.attrValues sablierContainers);
 in {
   config = lib.mkIf cfg.enable {
     nps.containers.traefik.wantsContainer = [stackName];
     nps.stacks.traefik = {
-      dynamicConfig.http.middlewares = lib.genAttrs' sablierGroups (
-        group:
-          lib.nameValuePair (mkMiddlewareName group) {
-            plugin.sablier = {
-              sablierUrl = "http://${cfg.containers.sablier.traefik.serviceAddressInternal}";
-              group = group;
-              dynamic = lib.mkIf (cfg.defaultStrategy == "dynamic") (lib.mkDefault {displayName = "";}); # use server default;
-              blocking = lib.mkIf (cfg.defaultStrategy == "blocking") (lib.mkDefault {timeout = "";}); # use server default;
-            };
-          }
-      );
+      dynamicConfig.http.middlewares =
+        lib.mapAttrs' (
+          group: containers:
+            lib.nameValuePair (mkMiddlewareName group) {
+              plugin.sablier = lib.mkMerge [
+                {
+                  sablierUrl = "http://${cfg.containers.sablier.traefik.serviceAddressInternal}";
+                  group = group;
+                }
+                (recursiveMerge (map (c: c.sablier.middleware) containers))
+                (lib.mkIf (cfg.defaultStrategy == "dynamic") {dynamic = lib.mkDefault {displayName = "";};})
+                (lib.mkIf (cfg.defaultStrategy == "blocking") {blocking = lib.mkDefault {timeout = "";};})
+              ];
+            }
+        )
+        sablierGroups;
 
       staticConfig.experimental.plugins.sablier = {
         moduleName = "github.com/sablierapp/sablier-traefik-plugin";
-        version = "v1.3.1";
+        version = "v1.3.0";
       };
     };
   };
@@ -57,8 +64,23 @@ in {
 
                 For details see <https://sablierapp.dev/concepts/groups/>
               '';
-              default = config.stack;
+              default =
+                if (config.stack != null)
+                then config.stack
+                else name;
               defaultText = lib.literalExpression ''containerCfg.stack'';
+            };
+            middleware = lib.mkOption {
+              type = lib.types.attrsOf yaml.type;
+              default = {};
+              description = ''
+                Options for the Traefik Sablier middleware of this container's `group`.
+
+                All containers of a group share one middleware. Their settings are merged:
+                attribute sets recursively, lists as a union, other values with the last one winning.
+
+                For details see <https://plugins.traefik.io/plugins/69104ac3b7d4dd76110a1a09/sablier>
+              '';
             };
           };
         };
@@ -70,7 +92,11 @@ in {
       };
       config = lib.mkIf (cfg.enable && config.sablier.enable) {
         traefik.middleware.${mkMiddlewareName config.sablier.group}.enable = true;
-        extraConfig."X-Sablier" = lib.mapAttrs' (k: v: lib.nameValuePair (capitalizeFirst k) v) config.sablier;
+
+        # Everything except `middleware` is forwarded as a label.
+        extraConfig."X-Sablier" =
+          lib.mapAttrs' (k: v: lib.nameValuePair (capitalizeFirst k) v)
+          (lib.removeAttrs config.sablier ["middleware"]);
       };
     }));
   };

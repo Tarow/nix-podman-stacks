@@ -506,7 +506,23 @@ in {
         db.passwordFile = dummySecretFile;
       };
 
-      it-tools.enable = true;
+      it-tools = {
+        enable = true;
+
+        containers.it-tools.sablier = {
+          enable = true;
+          group = "devtools";
+          idleReplicas = "1";
+          middleware = {
+            sessionDuration = "10m";
+            failOpen = true;
+            ignoreUserAgent = ["curl"];
+            # `displayName` is intentionally unset, `jotty` sets it and the strategy default has
+            # to survive for containers that do not.
+            dynamic.theme = "matrix";
+          };
+        };
+      };
 
       jotty = {
         enable = true;
@@ -514,6 +530,16 @@ in {
           enable = true;
           clientSecretFile = dummySecretFile;
           clientSecretHash = dummyClientSecretHash;
+        };
+        # Second container of the "devtools" Sablier group, to exercise merging.
+        containers.jotty.sablier = {
+          enable = true;
+          group = "devtools";
+          middleware = {
+            sessionDuration = "20m";
+            ignoreUserAgent = ["(?i)uptimerobot" "curl"];
+            dynamic.displayName = "Jotty";
+          };
         };
       };
 

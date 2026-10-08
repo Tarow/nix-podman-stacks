@@ -49,6 +49,25 @@ Example:
 Additional Sablier settings (e.g. `idleReplicas`) are forwarded as `X-Sablier` labels on the systemd unit.
 For details see <https://sablierapp.dev/reference/labels/>
 
+Options for the generated Traefik middleware can be set through the `middleware` option. Since all containers of a
+group share one middleware, their settings are merged.
+
+```nix
+{
+  nps.stacks.streaming.containers.jellyfin.sablier = {
+    enable = true;
+    middleware = {
+      sessionDuration = "45m";
+      failOpen = true;
+      ignoreUserAgent = ["curl" "(?i)uptimerobot"];
+      dynamic.displayName = "Media Server";
+    };
+  };
+}
+```
+
+For all available options see <https://plugins.traefik.io/plugins/69104ac3b7d4dd76110a1a09/sablier>
+
 <RenderDocs :options="data" :include="/services\.podman\.containers\..+\.sablier(\..*)?/" />
 
 ## Container Aliases

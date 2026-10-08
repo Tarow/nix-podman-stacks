@@ -499,6 +499,30 @@ Additional Sablier settings are forwarded as `X-Sablier` labels on the systemd u
 }
 ```
 
+### Middleware Options
+
+Options for the Traefik plugin are set with the `middleware` option.
+All containers of a group share one middleware, so their settings are merged: nested blocks
+recursively, lists as a union, other values with the last one winning.
+
+```nix
+{
+  nps.stacks.homepage.containers.homepage.sablier = {
+    enable = true;
+    middleware = {
+      sessionDuration = "45m";
+      failOpen = true;
+      ignoreUserAgent = ["curl" "(?i)uptimerobot"];
+      # Shown on the waiting page while the container starts
+      dynamic.displayName = "Homepage";
+    };
+  };
+}
+```
+
+Use `nps.stacks.sablier.defaultStrategy` to select the default strategy.
+For all available options see <https://plugins.traefik.io/plugins/69104ac3b7d4dd76110a1a09/sablier>
+
 ## Traefik
 
 ### Change Service Subdomain
