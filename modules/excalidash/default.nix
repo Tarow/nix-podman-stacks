@@ -139,7 +139,7 @@ in {
         dashboard = {
           inherit category description;
           name = displayName;
-          icon = "di:excalidash";
+          icon = "sh:excalidash";
         };
       };
 
@@ -194,7 +194,7 @@ in {
           inherit category;
           name = "Backend";
           parent = name;
-          icon = "di:excalidash";
+          icon = "sh:excalidash";
         };
       };
     };
