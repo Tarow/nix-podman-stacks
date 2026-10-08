@@ -10,7 +10,7 @@
   storage = "${config.nps.storageBaseDir}/${name}";
 
   category = "General";
-  description = "Self-hosted Excalidraw workspace with saved drawings, collections, real-time collaboration, and version history.";
+  description = "Excalidraw with Collaboration";
   displayName = "ExcaliDash";
 in {
   imports = import ../mkAliases.nix config lib name [name backendName];
