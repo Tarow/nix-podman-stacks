@@ -17,7 +17,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/n8n-io/n8n:2.43.2";
+      image = "ghcr.io/n8n-io/n8n:2.43.3";
       # Chown host volume automatically (:U), since n8n will always run as UID/GID 1000
       volumeMap.data = "${storage}/data:/home/node/.n8n:U";
       environment = {
