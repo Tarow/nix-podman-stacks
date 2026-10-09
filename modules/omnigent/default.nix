@@ -190,7 +190,7 @@ in {
           inherit category;
           parent = name;
           name = "Postgres";
-          icon = "https://raw.githubusercontent.com/omnigent-ai/omnigent/main/docs/images/omnigent-logo.svg";
+          icon = "di:postgres"";
         };
       };
     };
