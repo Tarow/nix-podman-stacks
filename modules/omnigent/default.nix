@@ -111,6 +111,7 @@ in {
         redirect_uris = [
           "${cfg.containers.${name}.traefik.serviceUrl}/auth/callback"
         ];
+        claims_policy = name;
       };
 
       # No role mapping based on OIDC claims / groups. Restrict user access on Authelia level
@@ -123,6 +124,15 @@ in {
           }
         ];
       };
+
+      settings.identity_providers.oidc.claims_policies.${name}.id_token = [
+        "email"
+        "email_verified"
+        "alt_emails"
+        "preferred_username"
+        "name"
+        "groups"
+      ];
     };
 
     services.podman.containers = {
@@ -162,7 +172,7 @@ in {
         dashboard = {
           inherit category description;
           name = displayName;
-          icon = "mdi:robot";
+          icon = "https://raw.githubusercontent.com/omnigent-ai/omnigent/main/docs/images/omnigent-logo.svg";
         };
       };
 
@@ -180,7 +190,7 @@ in {
           inherit category;
           parent = name;
           name = "Postgres";
-          icon = "di:postgres";
+          icon = "https://raw.githubusercontent.com/omnigent-ai/omnigent/main/docs/images/omnigent-logo.svg";
         };
       };
     };
