@@ -61,6 +61,7 @@ let
     networking-toolbox = ./networking-toolbox;
     norish = ./norish;
     ntfy = ./ntfy;
+    omnigent = ./omnigent;
     omnitools = ./omnitools;
     outline = ./outline;
     pangolin-newt = ./pangolin-newt;
