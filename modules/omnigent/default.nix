@@ -190,7 +190,7 @@ in {
           inherit category;
           parent = name;
           name = "Postgres";
-          icon = "di:postgres"";
+          icon = "di:postgres";
         };
       };
     };
