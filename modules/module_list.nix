@@ -23,6 +23,7 @@ let
     donetick = ./donetick;
     dozzle = ./dozzle;
     dynacat = ./dynacat;
+    excalidash = ./excalidash;
     filebrowser-quantum = ./filebrowser-quantum;
     flaresolverr = ./flaresolverr;
     forgejo = ./forgejo;
