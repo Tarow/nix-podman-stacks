@@ -194,7 +194,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "ghcr.io/gtsteffaniak/filebrowser:2.1.0-beta";
+      image = "ghcr.io/gtsteffaniak/filebrowser:2.1.1-beta";
       user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
       volumeMap = {
         settings = "${yaml.generate "config.yml" cfg.settings}:/home/filebrowser/config.yml";
