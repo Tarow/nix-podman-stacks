@@ -20,111 +20,12 @@
   # Name of the Dex connector created for Authelia; shown as the login button on
   # the embedded IdP login screen.
   idpName = "Authelia";
-  provisionScript = lib.getExe (pkgs.writeShellApplication {
-    name = "netbird-provision";
-    runtimeInputs = with pkgs; [coreutils jq podman];
-    text = ''
-      set -o pipefail
-      umask 077
-      base_url=http://netbird-server:80
-      state_dir=${lib.escapeShellArg "${storage}/.provisioning"}
-      pat_file="$state_dir/setup-pat"
-      secret_hash_file="$state_dir/oidc-client-secret.sha256"
-      runtime_dir=$(mktemp -d)
-      container_id=""
-      trap '[ -z "$container_id" ] || podman_helper rm --force "$container_id" >/dev/null 2>&1 || true; rm -rf "$runtime_dir"' EXIT
-      mkdir -p "$state_dir"
-      chmod 700 "$state_dir"
-
-      podman_helper() {
-        env -u NOTIFY_SOCKET -u WATCHDOG_USEC podman "$@"
-      }
-
-      request() {
-        local method="$1" path="$2" body="''${3:-}" header_file="$runtime_dir/curlrc"
-        local -a args=(--silent --show-error --write-out '%{http_code}' --request "$method" --config /tmp/curlrc)
-        local -a podman_args=(create --network ${stackName} --user 0 --volume "$header_file:/tmp/curlrc:ro")
-        : > "$header_file"
-        if [ -n "''${pat:-}" ]; then
-          printf 'header = "Authorization: Token %s"\n' "$pat" > "$header_file"
-        fi
-        if [ -n "$body" ]; then
-          args+=(--header 'Content-Type: application/json' --data-binary @/tmp/request.json)
-          podman_args+=(--volume "$body:/tmp/request.json:ro")
-        fi
-        container_id=$(podman_helper "''${podman_args[@]}" curlimages/curl:8.17.0 "''${args[@]}" --output /tmp/response "$base_url$path") || return 1
-        http_status=$(podman_helper start --attach "$container_id") || return 1
-        podman_helper cp "$container_id:/tmp/response" "$runtime_dir/response" || return 1
-        podman_helper rm "$container_id" >/dev/null
-        container_id=""
-      }
-
-      request_with_retry() {
-        local method="$1" path="$2" body="''${3:-}"
-        for attempt in $(seq 1 5); do
-          if request "$method" "$path" "$body"; then
-            [[ "$http_status" =~ ^2 ]] && return 0
-            [[ "$http_status" =~ ^4 ]] && return 1
-          fi
-          sleep $((attempt * 2))
-        done
-        return 1
-      }
-
-      pat=""
-      for attempt in $(seq 1 60); do
-        if request GET /oauth2/.well-known/openid-configuration && [ "$http_status" = 200 ]; then break; fi
-        [[ "''${http_status:-000}" =~ ^4 ]] && { echo "NetBird readiness endpoint returned HTTP $http_status" >&2; exit 1; }
-        sleep 2
-      done
-      [ "''${http_status:-000}" = 200 ] || { echo 'NetBird readiness timed out' >&2; exit 1; }
-
-      request_with_retry GET /api/instance || { echo "Unexpected /api/instance response: HTTP ''${http_status:-000}" >&2; exit 1; }
-      setup_required=$(jq -r 'if has("setup_required") then .setup_required elif has("setupRequired") then .setupRequired else empty end' "$runtime_dir/response")
-      [[ "$setup_required" == true || "$setup_required" == false ]] || { echo 'Missing setup_required in /api/instance response' >&2; exit 1; }
-
-      if [ "$setup_required" = true ]; then
-        jq -n \
-          --arg email ${lib.escapeShellArg cfg.adminProvisioning.email} \
-          --arg name ${lib.escapeShellArg cfg.adminProvisioning.name} \
-          --rawfile password ${cfg.adminProvisioning.passwordFile} \
-          '{email:$email,name:$name,password:$password,create_pat:true,pat_expire_in:365}' > "$runtime_dir/request.json"
-        request POST /api/setup "$runtime_dir/request.json" || { echo 'NetBird setup request failed; inspect server state before retrying' >&2; exit 1; }
-        [ "$http_status" = 200 ] || { echo "NetBird setup failed: HTTP $http_status" >&2; exit 1; }
-        pat=$(jq -er '.personal_access_token // .pat // .token' "$runtime_dir/response") || { echo 'Setup succeeded but response contained no PAT; recover the owner credential manually' >&2; exit 1; }
-        printf '%s' "$pat" > "$pat_file.tmp"
-        chmod 600 "$pat_file.tmp"
-        mv -f "$pat_file.tmp" "$pat_file"
-      elif [ ! -s "$pat_file" ]; then
-        echo 'NetBird setup is complete but no persisted setup PAT exists. Restore or replace the PAT; setup will not be repeated.' >&2
-        exit 1
-      else
-        pat=$(< "$pat_file")
-      fi
-
-      request_with_retry GET /api/identity-providers || { echo "NetBird PAT rejected or provider query failed: HTTP ''${http_status:-000}" >&2; exit 1; }
-      cp "$runtime_dir/response" "$runtime_dir/providers.json"
-      secret_hash=$(sha256sum ${cfg.oidc.clientSecretFile} | cut -d' ' -f1)
-      jq -n \
-        --arg name ${lib.escapeShellArg idpName} \
-        --arg issuer ${lib.escapeShellArg config.nps.containers.authelia.traefik.serviceUrl} \
-        --arg client_id netbird \
-        --rawfile client_secret ${cfg.oidc.clientSecretFile} \
-        '{type:"oidc",name:$name,issuer:$issuer,client_id:$client_id,client_secret:$client_secret}' > "$runtime_dir/request.json"
-      provider_id=$(jq -r --arg name ${lib.escapeShellArg idpName} --arg issuer ${lib.escapeShellArg config.nps.containers.authelia.traefik.serviceUrl} --arg client_id netbird '.[] | select(.name == $name and .issuer == $issuer and .client_id == $client_id) | .id' "$runtime_dir/providers.json" | head -n1)
-      if [ -n "$provider_id" ]; then
-        stored_secret_hash=$(cat "$secret_hash_file" 2>/dev/null || true)
-        if [ "$stored_secret_hash" != "$secret_hash" ]; then
-          request_with_retry PUT "/api/identity-providers/$provider_id" "$runtime_dir/request.json" || { echo "NetBird provider update failed: HTTP ''${http_status:-000}" >&2; exit 1; }
-        fi
-      else
-        request POST /api/identity-providers "$runtime_dir/request.json" || { echo 'NetBird provider creation failed' >&2; exit 1; }
-        [[ "$http_status" =~ ^2 ]] || { echo "NetBird provider creation failed: HTTP $http_status" >&2; exit 1; }
-      fi
-      printf '%s\n' "$secret_hash" > "$secret_hash_file.tmp"
-      chmod 600 "$secret_hash_file.tmp"
-      mv -f "$secret_hash_file.tmp" "$secret_hash_file"
-    '';
+  clientId = stackName;
+  provisionScript = lib.getExe (pkgs.callPackage ./provision.nix {
+    inherit stackName idpName clientId;
+    autheliaIssuer = config.nps.containers.authelia.traefik.serviceUrl;
+    adminProvisioning = cfg.adminProvisioning;
+    clientSecretFile = cfg.oidc.clientSecretFile;
   });
 in {
   imports = import ../mkAliases.nix config lib stackName [dashboardName serverName];
@@ -207,9 +108,6 @@ in {
         # See <https://github.com/netbirdio/netbird/issues/5143>
         claims_policy = stackName;
       };
-
-      # No real RBAC control based on custom claims / groups yet. Restrict user-access on Authelia level for now
-      # See <https://github.com/TwiN/gatus/issues/638>
       settings.identity_providers.oidc.authorization_policies.${stackName} = {
         default_policy = "deny";
         rules = [
