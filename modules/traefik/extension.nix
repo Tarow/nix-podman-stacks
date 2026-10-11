@@ -153,6 +153,20 @@ in {
                   then "https://${d}"
                   else "http://${d}";
               };
+              rule = mkOption {
+                type = types.str;
+                default = ''Host(`${traefikCfg.serviceHost}`)'';
+                defaultText = lib.literalExpression ''"Host(`''${traefikCfg.serviceHost}`)"'';
+                description = "Traefik router rule.";
+              };
+              scheme = mkOption {
+                type = types.str;
+                default = "http";
+                description = ''
+                  Scheme Traefik uses to talk to the service.
+                  Use `h2c` for backends that speak HTTP/2 in clear text, such as gRPC servers.
+                '';
+              };
               middleware = mkOption {
                 type = types.attrsOf (
                   types.submodule {
@@ -200,7 +214,7 @@ in {
               lib.optionalAttrs enableTraefik (
                 {
                   "traefik.enable" = "true";
-                  "traefik.http.routers.${name}.rule" = ''Host(`${traefikCfg.serviceHost}`)'';
+                  "traefik.http.routers.${name}.rule" = lib.mkDefault traefikCfg.rule;
                   # "traefik.http.routers.${name}.entrypoints" = "websecure,websecure-internal";
                   "traefik.http.routers.${name}.service" =
                     if name == moduleName
@@ -209,6 +223,9 @@ in {
                 }
                 // lib.optionalAttrs (containerPort != null) {
                   "traefik.http.services.${name}.loadbalancer.server.port" = containerPort;
+                }
+                // lib.optionalAttrs (traefikCfg.scheme != "http") {
+                  "traefik.http.services.${name}.loadbalancer.server.scheme" = traefikCfg.scheme;
                 }
                 // {
                   "traefik.http.routers.${name}.middlewares" = builtins.concatStringsSep "," (
@@ -239,7 +256,7 @@ in {
         http = {
           routers =
             lib.mapAttrs (cName: c: {
-              rule = "Host(`${c.traefik.serviceHost}`)";
+              rule = c.traefik.rule;
               service =
                 if cName == moduleName
                 then "api@internal"
@@ -257,7 +274,7 @@ in {
             |> lib.mapAttrs (cName: c: {
               loadBalancer.servers = [
                 {
-                  url = "http://${c.traefik.serviceAddressInternal}";
+                  url = "${c.traefik.scheme}://${c.traefik.serviceAddressInternal}";
                 }
               ];
             });

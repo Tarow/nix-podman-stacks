@@ -676,6 +676,19 @@ in {
         };
       };
 
+      netbird = {
+        enable = true;
+        authSecretFile = dummySecretFile;
+        storeEncryptionKeyFile = dummySecretFile;
+        adminProvisioning = {
+          email = dummyEmail;
+          passwordFile = dummySecretFile;
+        };
+        oidc = {
+          clientSecretFile = dummySecretFile;
+        };
+      };
+
       n8n.enable = true;
 
       navidrome.enable = true;
