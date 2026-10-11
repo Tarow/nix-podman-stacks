@@ -141,7 +141,7 @@ in {
       };
 
       ${chromeName} = {
-        image = "ghcr.io/karakeep-app/karakeep-chrome:151.0.7922.47-r1";
+        image = "ghcr.io/karakeep-app/karakeep-chrome:154.0.8037.57-r1";
         exec = lib.concatStringsSep " " [
           "--disable-gpu"
           "--disable-dev-shm-usage"
