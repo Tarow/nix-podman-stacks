@@ -231,7 +231,7 @@ in {
         (lib.mkIf cfg.crowdsec.middleware.enable {
           experimental.plugins.bouncer = {
             moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";
-            version = "v1.7.0";
+            version = "v1.7.1";
           };
         })
       ];
