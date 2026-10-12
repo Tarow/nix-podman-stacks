@@ -8,7 +8,7 @@
 }: {
   imports = [../authelia/vm-test.nix];
 
-  nps.stacks.netbird = {
+  nps.stacks.netbird-management = {
     enable = true;
     authSecretFile = dummySecretFile;
     storeEncryptionKeyFile = pkgs.writeText "netbird-encryption-key" "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=";
@@ -22,7 +22,7 @@
     };
   };
 
-  services.podman.containers.netbird-server = {
+  services.podman.containers.netbird-management-server = {
     environment.SSL_CERT_FILE = "/etc/ssl/certs/nps-test-ca.crt";
     volumeMap.npsTestCa = "${selfSignedCertDir}/wildcard.crt:/etc/ssl/certs/nps-test-ca.crt:ro";
     extraConfig.Container.AddHost = "authelia.example.com:host-gateway";

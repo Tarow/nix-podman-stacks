@@ -58,7 +58,8 @@ let
     monitoring = ./monitoring;
     n8n = ./n8n;
     navidrome = ./navidrome;
-    netbird = ./netbird;
+    netbird-client = ./netbird-client;
+    netbird-management = ./netbird-management;
     networking-toolbox = ./networking-toolbox;
     norish = ./norish;
     ntfy = ./ntfy;

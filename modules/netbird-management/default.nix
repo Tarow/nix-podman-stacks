@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  stackName = "netbird";
+  stackName = "netbird-management";
   dashboardName = "${stackName}-dashboard";
   serverName = "${stackName}-server";
 
@@ -13,14 +13,16 @@
 
   category = "Network & Administration";
   description = "Open Source Zero Trust Networking";
-  displayName = "NetBird";
+  displayName = "NetBird Management";
 
   yaml = pkgs.formats.yaml {};
+  traefikName = "netbird";
   netbirdUrl = cfg.containers.${dashboardName}.traefik.serviceUrl;
-  # Name of the Dex connector created for Authelia; shown as the login button on
-  # the embedded IdP login screen.
   idpName = "Authelia";
   clientId = stackName;
+  grpcName = "${stackName}-grpc";
+  serverRule = "Host(`${cfg.containers.${serverName}.traefik.serviceHost}`) && (PathPrefix(`/relay`) || PathPrefix(`/ws-proxy/`) || PathPrefix(`/api`) || PathPrefix(`/oauth2`))";
+  grpcRule = "Host(`${cfg.containers.${serverName}.traefik.serviceHost}`) && (PathPrefix(`/signalexchange.SignalExchange/`) || PathPrefix(`/management.ManagementService/`) || PathPrefix(`/management.ProxyService/`))";
   provisionScript = lib.getExe (pkgs.callPackage ./provision.nix {
     inherit stackName idpName clientId;
     autheliaIssuer = config.nps.containers.authelia.traefik.serviceUrl;
@@ -86,6 +88,21 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    nps.stacks.traefik.dynamicConfig.http = lib.mkIf (config.nps.stacks.traefik.provider == "file") {
+      routers.${serverName}.priority = 100;
+      routers.${grpcName} = {
+        rule = grpcRule;
+        priority = 100;
+        service = grpcName;
+        middlewares = lib.optional (!cfg.containers.${serverName}.expose) "private" ++ lib.optional cfg.containers.${serverName}.expose "public";
+      };
+      services.${grpcName}.loadBalancer.servers = [
+        {
+          url = "h2c://${serverName}:80";
+        }
+      ];
+    };
+
     nps.stacks.lldap.bootstrap.groups = {
       ${cfg.oidc.userGroup} = {};
     };
@@ -200,7 +217,7 @@ in {
         labels."traefik.http.routers.${dashboardName}.priority" = "1";
         traefik = {
           name = dashboardName;
-          subDomain = stackName;
+          subDomain = traefikName;
         };
         homepage = {
           inherit category;
@@ -247,13 +264,21 @@ in {
         port = 80;
 
         # The combined server shares its host with the dashboard, so restrict its
-        # router to the server paths (HTTP and gRPC, which is multiplexed on the
-        # same port and speaks h2c).
+        # HTTP router to NetBird's documented backend paths. gRPC has a separate
+        # router/service below because it requires h2c while these paths do not.
         traefik = {
           name = serverName;
-          subDomain = stackName;
-          scheme = "h2c";
-          rule = "Host(`${cfg.containers.${serverName}.traefik.serviceHost}`) && (PathPrefix(`/relay`) || PathPrefix(`/ws-proxy/`) || PathPrefix(`/api`) || PathPrefix(`/oauth2`) || PathPrefix(`/signalexchange.SignalExchange/`) || PathPrefix(`/management.ManagementService/`))";
+          subDomain = traefikName;
+          rule = serverRule;
+        };
+        labels = {
+          "traefik.http.routers.${serverName}.priority" = "100";
+          "traefik.http.routers.${grpcName}.rule" = grpcRule;
+          "traefik.http.routers.${grpcName}.priority" = "100";
+          "traefik.http.routers.${grpcName}.tls" = "true";
+          "traefik.http.routers.${grpcName}.service" = grpcName;
+          "traefik.http.services.${grpcName}.loadbalancer.server.port" = "80";
+          "traefik.http.services.${grpcName}.loadbalancer.server.scheme" = "h2c";
         };
         glance = {
           inherit category;

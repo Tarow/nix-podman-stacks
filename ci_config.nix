@@ -676,7 +676,12 @@ in {
         };
       };
 
-      netbird = {
+      netbird-client = {
+        enable = true;
+        setupKeyFile = dummySecretFile;
+      };
+
+      netbird-management = {
         enable = true;
         authSecretFile = dummySecretFile;
         storeEncryptionKeyFile = dummySecretFile;

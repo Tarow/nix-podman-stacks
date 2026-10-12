@@ -16,7 +16,7 @@ pkgs.writeShellApplication {
     set -o pipefail
     umask 077
 
-    base_url=http://netbird-server:80
+    base_url=http://netbird-management-server:80
     runtime_dir=$(mktemp -d)
     container_id=""
     trap '[ -z "$container_id" ] || podman_helper rm --force "$container_id" >/dev/null 2>&1 || true; rm -rf "$runtime_dir"' EXIT

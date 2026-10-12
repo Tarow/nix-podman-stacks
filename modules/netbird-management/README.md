@@ -12,7 +12,7 @@ and a password file:
 
 ```nix
 {config, ...}: {
-  nps.stacks.netbird = {
+  nps.stacks.netbird-management = {
     enable = true;
     authSecretFile = config.sops.secrets."netbird/auth_secret".path;
     storeEncryptionKeyFile = config.sops.secrets."netbird/encryption_key".path;
@@ -25,4 +25,20 @@ and a password file:
     };
   };
 }
+```
+
+Peers are enrolled with the NetBird client stack
+([docs page](/stacks/netbird-client)) or by installing the client on the device itself.
+
+## Setup Keys
+
+Register unattended peers with a setup key, created in the dashboard under
+"Peers" → "Setup Keys". The key has to reach the client as a file, for example
+via [sops-nix](https://github.com/Mic92/sops-nix):
+
+```nix
+nps.stacks.netbird-client = {
+  enable = true;
+  setupKeyFile = config.sops.secrets."netbird/setup_key".path;
+};
 ```
