@@ -42,8 +42,7 @@
         "/super-productivity/",
         "/super-sync-server/",
         "/excalidash/",
-        "/netbird-server/",
-        "/netbirdio\\/netbird$/"
+        "/netbirdio/"
       ],
       "groupName": "{{parentDir}}"
     },
