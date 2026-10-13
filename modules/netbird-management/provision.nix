@@ -6,6 +6,7 @@
   autheliaIssuer,
   clientId,
   adminProvisioning,
+  provisionOidc,
   clientSecretFile,
   ...
 }:
@@ -93,28 +94,30 @@ pkgs.writeShellApplication {
     [ "$http_status" = 200 ] || { echo "NetBird setup failed: HTTP $http_status" >&2; exit 1; }
     pat=$(jq -er '.personal_access_token // .pat // .token' "$runtime_dir/response") || { echo 'Setup succeeded but the response contained no PAT; complete the provider setup manually.' >&2; exit 1; }
 
-    # Register Authelia as a Dex connector, matched by the stable tuple
-    # name + issuer + client ID so an unrelated provider is never touched.
-    jq -n \
-      --arg name ${idpName} \
-      --arg issuer ${lib.escapeShellArg autheliaIssuer} \
-      --arg client_id ${clientId} \
-      --rawfile client_secret ${clientSecretFile} \
-      '{type:"oidc",name:$name,issuer:$issuer,client_id:$client_id,client_secret:$client_secret}' > "$runtime_dir/request.json"
+    ${lib.optionalString provisionOidc ''
+      # Register Authelia as a Dex connector, matched by the stable tuple
+      # name + issuer + client ID so an unrelated provider is never touched.
+      jq -n \
+        --arg name ${idpName} \
+        --arg issuer ${lib.escapeShellArg autheliaIssuer} \
+        --arg client_id ${clientId} \
+        --rawfile client_secret ${clientSecretFile} \
+        '{type:"oidc",name:$name,issuer:$issuer,client_id:$client_id,client_secret:$client_secret}' > "$runtime_dir/request.json"
 
-    request_with_retry GET /api/identity-providers || { echo "Provider query failed with the new PAT: HTTP ''${http_status:-000}" >&2; exit 1; }
-    provider_id=$(jq -r \
-      --arg name ${idpName} \
-      --arg issuer ${lib.escapeShellArg autheliaIssuer} \
-      --arg client_id ${clientId} \
-      '.[] | select(.name == $name and .issuer == $issuer and .client_id == $client_id) | .id' "$runtime_dir/response" | head -n1)
+      request_with_retry GET /api/identity-providers || { echo "Provider query failed with the new PAT: HTTP ''${http_status:-000}" >&2; exit 1; }
+      provider_id=$(jq -r \
+        --arg name ${idpName} \
+        --arg issuer ${lib.escapeShellArg autheliaIssuer} \
+        --arg client_id ${clientId} \
+        '.[] | select(.name == $name and .issuer == $issuer and .client_id == $client_id) | .id' "$runtime_dir/response" | head -n1)
 
-    if [ -n "$provider_id" ]; then
-      request PUT "/api/identity-providers/$provider_id" "$runtime_dir/request.json" || { echo 'NetBird provider update failed.' >&2; exit 1; }
-      [[ "$http_status" =~ ^2 ]] || { echo "NetBird provider update failed: HTTP $http_status" >&2; exit 1; }
-    else
-      request POST /api/identity-providers "$runtime_dir/request.json" || { echo 'NetBird provider creation failed.' >&2; exit 1; }
-      [[ "$http_status" =~ ^2 ]] || { echo "NetBird provider creation failed: HTTP $http_status" >&2; exit 1; }
-    fi
+      if [ -n "$provider_id" ]; then
+        request PUT "/api/identity-providers/$provider_id" "$runtime_dir/request.json" || { echo 'NetBird provider update failed.' >&2; exit 1; }
+        [[ "$http_status" =~ ^2 ]] || { echo "NetBird provider update failed: HTTP $http_status" >&2; exit 1; }
+      else
+        request POST /api/identity-providers "$runtime_dir/request.json" || { echo 'NetBird provider creation failed.' >&2; exit 1; }
+        [[ "$http_status" =~ ^2 ]] || { echo "NetBird provider creation failed: HTTP $http_status" >&2; exit 1; }
+      fi
+    ''}
   '';
 }

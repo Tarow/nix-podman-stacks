@@ -16,12 +16,17 @@ Self-hosted NetBird management server and dashboard
       passwordFile = config.sops.secrets."netbird/admin_password".path;
     };
     oidc = {
+      enable = true;
       clientSecretFile = config.sops.secrets."netbird/authelia/client_secret".path;
     };
   };
 }
 ```
 
-The OIDC provider is configured during NetBird's initial setup. The [setup API](https://docs.netbird.io/selfhosted/automated-setup) is only available before setup completes; later provider changes must be made in the web UI, so this part is not fully declarative.
+`adminProvisioning` creates the initial owner only while NetBird setup is incomplete. `oidc.enable`
+configures the Authelia client in Nix and registers the provider during initial setup. The
+[setup API](https://docs.netbird.io/selfhosted/automated-setup) is only available before setup
+completes, so enabling OIDC later will not register the provider. Manage later provider changes in
+the NetBird web UI. Keep OIDC enabled in Nix to retain its Authelia client configuration.
 
 See the [NetBird client stack](/stacks/netbird-client) to enroll peers.

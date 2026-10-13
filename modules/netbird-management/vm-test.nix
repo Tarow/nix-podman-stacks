@@ -17,6 +17,7 @@
       passwordFile = dummySecretFile;
     };
     oidc = {
+      enable = true;
       clientSecretFile = dummySecretFile;
       clientSecretHash = dummyClientSecretHash;
     };

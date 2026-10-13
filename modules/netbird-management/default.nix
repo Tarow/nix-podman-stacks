@@ -27,6 +27,7 @@
     inherit stackName idpName clientId;
     autheliaIssuer = config.nps.containers.authelia.traefik.serviceUrl;
     adminProvisioning = cfg.adminProvisioning;
+    provisionOidc = cfg.oidc.enable;
     clientSecretFile = cfg.oidc.clientSecretFile;
   });
 in {
@@ -62,6 +63,11 @@ in {
       };
     };
     oidc = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable Authelia OIDC integration. The provider is registered only during NetBird's initial setup.";
+      };
       clientSecretFile = (import ../authelia/options.nix lib).clientSecretFile;
       clientSecretHash = (import ../authelia/options.nix lib).derivableClientSecretHash cfg.oidc.clientSecretFile;
       userGroup = lib.mkOption {
@@ -88,10 +94,10 @@ in {
       ];
     };
 
-    nps.stacks.lldap.bootstrap.groups = {
+    nps.stacks.lldap.bootstrap.groups = lib.mkIf cfg.oidc.enable {
       ${cfg.oidc.userGroup} = {};
     };
-    nps.stacks.authelia = {
+    nps.stacks.authelia = lib.mkIf cfg.oidc.enable {
       oidc.clients.${stackName} = {
         client_name = displayName;
         client_secret = cfg.oidc.clientSecretHash;
