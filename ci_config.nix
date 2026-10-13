@@ -676,6 +676,24 @@ in {
         };
       };
 
+      netbird-client = {
+        enable = true;
+        setupKeyFile = dummySecretFile;
+      };
+
+      netbird-management = {
+        enable = true;
+        authSecretFile = dummySecretFile;
+        storeEncryptionKeyFile = dummySecretFile;
+        adminProvisioning = {
+          email = dummyEmail;
+          passwordFile = dummySecretFile;
+        };
+        oidc = {
+          clientSecretFile = dummySecretFile;
+        };
+      };
+
       n8n.enable = true;
 
       navidrome.enable = true;

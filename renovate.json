@@ -41,7 +41,8 @@
         "/scanopy/",
         "/super-productivity/",
         "/super-sync-server/",
-        "/excalidash/"
+        "/excalidash/",
+        "/netbirdio/"
       ],
       "groupName": "{{parentDir}}"
     },

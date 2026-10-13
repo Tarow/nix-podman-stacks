@@ -134,6 +134,8 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/podman.svg" style="width:1em;height:1em;" /> Podman Metrics Exporter
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/n8n.svg" style="width:1em;height:1em;" /> [n8n](https://tarow.github.io/nix-podman-stacks/docs/stacks/n8n.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/navidrome.svg" style="width:1em;height:1em;" /> [Navidrome](https://tarow.github.io/nix-podman-stacks/docs/stacks/navidrome.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netbird.png" style="width:1em;height:1em;" /> [NetBird Client](https://tarow.github.io/nix-podman-stacks/docs/stacks/netbird-client.html)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netbird.png" style="width:1em;height:1em;" /> [NetBird Management](https://tarow.github.io/nix-podman-stacks/docs/stacks/netbird-management.html)
 - <img src="https://raw.githubusercontent.com/Lissy93/networking-toolbox/main/static/icon.png" style="width:1em;height:1em;" /> [Networking Toolbox](https://tarow.github.io/nix-podman-stacks/docs/stacks/networking-toolbox.html)
 - <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/norish.svg" style="width:1em;height:1em;" /> [Norish](https://tarow.github.io/nix-podman-stacks/docs/stacks/norish.html)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ntfy.svg" style="width:1em;height:1em;" /> [ntfy](https://tarow.github.io/nix-podman-stacks/docs/stacks/ntfy.html)

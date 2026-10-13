@@ -21,7 +21,7 @@ with types; rec {
   });
 
   clientSecretFile = mkOption {
-    type = str;
+    type = path;
     example = lib.literalExpression ''config.sops.secrets."immich/authelia/client_secret".path"'';
     description = ''
       The file containing the client secret for the OIDC client that will be registered in Authelia.
