@@ -101,7 +101,7 @@ in {
 
     services.podman.containers = {
       ${webName} = {
-        image = "ghcr.io/usekaneo/web:2.44.0";
+        image = "ghcr.io/usekaneo/web:2.46.2";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
 
         environment = {
@@ -123,7 +123,7 @@ in {
       };
 
       ${apiName} = {
-        image = "ghcr.io/usekaneo/api:2.44.0";
+        image = "ghcr.io/usekaneo/api:2.46.2";
 
         extraEnv =
           {
