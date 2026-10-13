@@ -17,6 +17,10 @@ NetBird client for connecting this host to a management server
 
 `managementUrl` defaults to the enabled `netbird-management` stack or NetBird Cloud.
 
+Set `mode = "rootless"` to use the rootless image with host networking. This allows
+the client to reach services through the host IP and published ports; it does not
+join the Traefik network.
+
 Set `enableRouting = false` to disable forwarding for this peer (enabled by default).
 
 ```nix

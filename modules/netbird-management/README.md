@@ -22,4 +22,6 @@ Self-hosted NetBird management server and dashboard
 }
 ```
 
+The OIDC provider is configured during NetBird's initial setup. The [setup API](https://docs.netbird.io/selfhosted/automated-setup) is only available before setup completes; later provider changes must be made in the web UI, so this part is not fully declarative.
+
 See the [NetBird client stack](/stacks/netbird-client) to enroll peers.
