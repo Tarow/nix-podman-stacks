@@ -137,7 +137,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/omnigent-ai/omnigent-server:v0.17.0";
+        image = "ghcr.io/omnigent-ai/omnigent-server:v0.18.0";
         volumeMap.data = "${storage}/data:/data";
 
         environment = {
