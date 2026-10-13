@@ -20,11 +20,7 @@ in {
 
     setupKeyFile = lib.mkOption {
       type = lib.types.path;
-      description = ''
-        Path to a file containing the setup key used to enroll this peer.
-
-        Create one in the NetBird dashboard under "Peers" → "Setup Keys".
-      '';
+      description = "File containing the setup key used to enroll this peer.";
     };
 
     managementUrl = lib.mkOption {
@@ -38,30 +34,19 @@ in {
         then config.nps.stacks.${managementStackName}.containers.${managementServerName}.traefik.serviceUrl
         else "${cloudManagementUrl}"
       '';
-      description = ''
-        URL of the management service this peer registers with.
-        Defaults to the `netbird-management` stack when it is enabled, otherwise to NetBird Cloud.
-      '';
+      description = "Management service URL. Defaults to the enabled netbird-management stack or NetBird Cloud.";
     };
 
     peerName = lib.mkOption {
       type = lib.types.str;
       default = name;
-      description = ''
-        Name this peer registers with.
-        Becomes the container hostname, so it is how the device is shown in the management service.
-      '';
+      description = "Name this peer uses in the management service.";
     };
 
     enableRouting = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether to enable IP forwarding inside the container so this peer can act as a
-        routing peer and forward traffic from the overlay network to the host network.
-
-        The routes themselves still have to be configured in the NetBird management service.
-      '';
+      description = "Enable IP forwarding so this peer can route traffic to the host network.";
     };
   };
 
@@ -96,6 +81,7 @@ in {
       extraEnv = {
         NB_MANAGEMENT_URL = cfg.managementUrl;
         NB_SETUP_KEY.fromFile = cfg.setupKeyFile;
+        NB_ENABLE_LOCAL_FORWARDING = lib.mkDefault true;
       };
 
       volumeMap.data = "${storage}/data:/var/lib/netbird";

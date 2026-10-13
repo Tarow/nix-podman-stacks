@@ -36,30 +36,15 @@ in {
     enable = lib.mkEnableOption stackName;
     authSecretFile = lib.mkOption {
       type = lib.types.path;
-      description = ''
-        Path to a file containing the shared secret for relay authentication.
-        Can be generated using `openssl rand -hex 32`.
-
-        For details see <https://docs.netbird.io/selfhosted/configuration-files#server-settings>
-      '';
+      description = "File containing the relay authentication secret.";
     };
     storeEncryptionKeyFile = lib.mkOption {
       type = lib.types.path;
-      description = ''
-        Path to a file containing the 32-byte encryption key for sensitive data at rest.
-        Can be generated using `openssl rand -base64 32`.
-
-        For details see <https://docs.netbird.io/selfhosted/configuration-files#store-settings>
-      '';
+      description = "File containing the 32-byte encryption key for stored data.";
     };
     settings = lib.mkOption {
       type = yaml.type;
-      description = ''
-        Netbird settings. Will be provided in the `configuration.yml`.
-        The config will be templated using `gomplate`, so you can refer to secrets etc.
-
-        For details see <https://docs.netbird.io/selfhosted/configuration-files#config-yaml>
-      '';
+      description = "NetBird server settings, templated with gomplate.";
     };
     adminProvisioning = {
       email = lib.mkOption {
@@ -82,7 +67,7 @@ in {
       userGroup = lib.mkOption {
         type = lib.types.str;
         default = "${stackName}_user";
-        description = "Users of this group will be able to log in";
+        description = "Group allowed to log in.";
       };
     };
   };
