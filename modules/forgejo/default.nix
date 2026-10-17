@@ -364,7 +364,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "codeberg.org/forgejo/forgejo:16";
+        image = "codeberg.org/forgejo/forgejo:17";
         volumeMap.data = "${storage}/data:/data";
         ports = lib.mkIf (!cfg.ssh.proxied) ["${sshHostPort}:22"];
 
