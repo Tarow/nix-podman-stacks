@@ -38,7 +38,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/jordan-dalby/bytestash:1.5.14";
+      image = "ghcr.io/jordan-dalby/bytestash:1.6.0";
       volumeMap.snippets = "${storage}/snippets:/data/snippets";
 
       environment = {
