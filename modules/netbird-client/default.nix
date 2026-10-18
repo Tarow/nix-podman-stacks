@@ -53,10 +53,10 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} =
       {
-        image = "ghcr.io/netbirdio/netbird:0.80.0";
+        image = "ghcr.io/netbirdio/netbird:0.81.2";
       }
       // lib.optionalAttrs (cfg.mode == "rootless") {
-        image = "ghcr.io/netbirdio/netbird:0.80.0-rootless";
+        image = "ghcr.io/netbirdio/netbird:0.81.2-rootless";
       }
       // {
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
