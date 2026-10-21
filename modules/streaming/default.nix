@@ -319,7 +319,7 @@ in {
         };
 
         ${maintainerrName} = lib.mkIf cfg.maintainerr.enable {
-          image = "ghcr.io/maintainerr/maintainerr:3.30.2";
+          image = "ghcr.io/maintainerr/maintainerr:3.31.0";
           user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
           volumeMap = {
             data = "${storage}/${maintainerrName}/data:/opt/data";
