@@ -26,6 +26,13 @@ in {
         See <https://github.com/norish-recipes/norish?tab=readme-ov-file#required-variables>
       '';
     };
+    cdpTokenFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to the file containing the Chrome DevTools Protocol token.
+        Can be generated with `openssl rand -hex 32`.
+      '';
+    };
     db = {
       username = lib.mkOption {
         type = lib.types.str;
@@ -114,6 +121,7 @@ in {
             MASTER_KEY.fromFile = cfg.masterKeyFile;
             REDIS_URL = "redis://${redisName}:6379";
             OBSCURA_ENDPOINT = "ws://${browserName}:9222";
+            OBSCURA_CDP_TOKEN.fromFile = cfg.cdpTokenFile;
           }
           // lib.optionalAttrs cfg.oidc.enable {
             OIDC_NAME = "Authelia";
@@ -170,7 +178,9 @@ in {
       };
 
       ${browserName} = {
-        image = "docker.io/norishapp/obscura:0.2.2-norish.1";
+        image = "docker.io/norishapp/obscura:0.2.4-norish.1";
+
+        extraEnv.OBSCURA_CDP_TOKEN.fromFile = cfg.cdpTokenFile;
 
         stack = name;
         dashboard = {

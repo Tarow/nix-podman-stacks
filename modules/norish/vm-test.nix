@@ -8,6 +8,7 @@
     enable = true;
     masterKeyFile = dummySecretFile;
     db.passwordFile = dummySecretFile;
+    cdpTokenFile = dummySecretFile;
     oidc = {
       enable = true;
       clientSecretFile = dummySecretFile;
