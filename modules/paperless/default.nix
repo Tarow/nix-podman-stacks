@@ -264,7 +264,7 @@ in {
       };
 
       ${tikaName} = lib.mkIf cfg.enableTika {
-        image = "docker.io/apache/tika:3.3.1.0";
+        image = "docker.io/apache/tika:3.3.3.0";
 
         stack = name;
         dashboard = {
