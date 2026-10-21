@@ -73,7 +73,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/stirlingtools/stirling-pdf:3.2.0";
+      image = "docker.io/stirlingtools/stirling-pdf:3.2.1";
       volumeMap.configs = "${storage}/configs:/configs";
       extraEnv =
         {
