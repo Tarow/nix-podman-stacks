@@ -100,7 +100,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/papra-hq/papra:26.7.0-rootless";
+        image = "ghcr.io/papra-hq/papra:26.7.1-rootless";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap = {
           data = "${storage}/data:/app/app-data";
