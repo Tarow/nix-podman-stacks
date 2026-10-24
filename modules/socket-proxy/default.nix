@@ -44,7 +44,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.podman.containers.${name} = {
-      image = "ghcr.io/wollomatic/socket-proxy:1.13.1";
+      image = "ghcr.io/wollomatic/socket-proxy:1.13.2";
 
       volumeMap.podman-socket = "${config.nps.socketLocation}:/var/run/docker.sock:ro";
       user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
