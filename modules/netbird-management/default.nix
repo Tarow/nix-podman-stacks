@@ -227,7 +227,7 @@ in {
       };
 
       ${serverName} = {
-        image = "ghcr.io/netbirdio/netbird-server:0.81.3";
+        image = "ghcr.io/netbirdio/netbird-server:0.81.4";
         environment.NB_SETUP_PAT_ENABLED = true;
         ports = ["3478:3478/udp"];
         volumeMap.data = "${storage}/data:/var/lib/netbird";
