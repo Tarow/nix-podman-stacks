@@ -210,7 +210,7 @@ in {
       };
 
     services.podman.containers.${name} = {
-      image = "docker.io/panonim/dynacat:3.0.1";
+      image = "docker.io/panonim/dynacat:3.0.2";
 
       volumeMap = {
         settings = "${cfg.settings}:/app/config/dynacat.yml";
