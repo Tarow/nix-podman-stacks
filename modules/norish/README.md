@@ -8,7 +8,7 @@ Shared recipe app
 {config, ...}: {
   nps.stacks.norish = {
     enable = true;
-
+    cdpTokenFile = config.sops.secrets."norish/cdp_token".path;
     masterKeyFile = config.sops.secrets."norish/master_key".path;
     db.passwordFile = config.sops.secrets."norish/db_password".path;
     oidc = {
