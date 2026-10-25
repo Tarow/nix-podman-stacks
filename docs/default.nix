@@ -200,6 +200,10 @@
               text = "Integration Tests";
               link = "/testing";
             }
+            {
+              text = "Inspector";
+              link = "/inspection";
+            }
           ];
         }
       ];
@@ -253,6 +257,10 @@
             {
               text = "Integration Tests";
               link = "/testing";
+            }
+            {
+              text = "Inspector";
+              link = "/inspection";
             }
           ];
         }
