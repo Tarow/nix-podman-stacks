@@ -68,7 +68,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/johannesjo/super-productivity:v19.3.0";
+        image = "docker.io/johannesjo/super-productivity:v19.3.1";
 
         stack = name;
         port = 80;
