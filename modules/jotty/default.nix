@@ -95,7 +95,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/fccview/jotty:1.29.1";
+        image = "ghcr.io/fccview/jotty:1.29.2";
 
         volumeMap = {
           data = "${storage}/data:/app/data";
