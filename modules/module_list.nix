@@ -1,6 +1,7 @@
 let
   modules = {
     settings = ./settings.nix;
+    inspection = ./inspection.nix;
     adguard = ./adguard;
     adventurelog = ./adventurelog;
     aiostreams = ./aiostreams;

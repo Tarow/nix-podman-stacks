@@ -75,6 +75,9 @@
         };
       in
         docs
+        // {
+          inspect = import ./packages/inspect.nix {inherit pkgs;};
+        }
     );
 
     # NixOS VM integration tests (only defined for Linux systems and only for
