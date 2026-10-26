@@ -38,7 +38,7 @@ in {
     services.podman.containers = {
       ${name} = {
         # renovate: versioning=regex:^v(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)-ls(?<build>.+)$
-        image = "ghcr.io/linuxserver/healthchecks:v5.0.1-ls366";
+        image = "ghcr.io/linuxserver/healthchecks:v5.0.2-ls367";
         volumeMap.config = "${storage}/config:/config";
         environment = {
           PUID = config.nps.defaultUid;
