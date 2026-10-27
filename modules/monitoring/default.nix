@@ -434,7 +434,7 @@ in {
 
     services.podman.containers = {
       ${grafanaName} = lib.mkIf cfg.grafana.enable {
-        image = "docker.io/grafana/grafana:13.2.4";
+        image = "docker.io/grafana/grafana:13.3.0";
         user = config.nps.defaultUid;
         volumeMap = {
           data = "${storage}/grafana/data:/var/lib/grafana";
