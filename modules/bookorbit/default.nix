@@ -159,7 +159,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/bookorbit/bookorbit:3.5.0";
+        image = "ghcr.io/bookorbit/bookorbit:3.6.0";
         volumeMap = {
           books = "${cfg.libraryPath}:/books";
           data = "${storage}/data:/data";
