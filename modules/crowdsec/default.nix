@@ -189,7 +189,7 @@ in {
     };
 
     services.podman.containers.${name} = {
-      image = "docker.io/crowdsecurity/crowdsec:v1.8.1";
+      image = "docker.io/crowdsecurity/crowdsec:v1.8.2";
       volumeMap =
         {
           data = "${storage}/db:/var/lib/crowdsec/data";
