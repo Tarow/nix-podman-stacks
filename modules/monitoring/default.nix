@@ -571,7 +571,7 @@ in {
       };
 
       ${alertmanagerName} = lib.mkIf cfg.alertmanager.enable {
-        image = "docker.io/prom/alertmanager:v0.34.1";
+        image = "docker.io/prom/alertmanager:v0.34.2";
         user = config.nps.defaultUid;
         volumeMap = {
           settings = "${cfg.alertmanager.settings}:/config/alertmanager.yml";
