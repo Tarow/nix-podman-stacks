@@ -126,7 +126,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/zimengxiong/excalidash-frontend:0.6.6";
+        image = "docker.io/zimengxiong/excalidash-frontend:0.6.7";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         environment = {
           BACKEND_URL = "${backendName}:8000";
@@ -144,7 +144,7 @@ in {
       };
 
       ${backendName} = {
-        image = "docker.io/zimengxiong/excalidash-backend:0.6.6";
+        image = "docker.io/zimengxiong/excalidash-backend:0.6.7";
 
         extraConfig.Container = {
           HealthCmd = "node -e \"require('http').get('http://127.0.0.1:8000/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\"";
