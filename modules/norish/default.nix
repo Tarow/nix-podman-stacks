@@ -178,7 +178,7 @@ in {
       };
 
       ${browserName} = {
-        image = "docker.io/norishapp/obscura:0.2.4-norish.1";
+        image = "docker.io/norishapp/obscura:0.2.5-norish.1";
 
         extraEnv.OBSCURA_CDP_TOKEN.fromFile = cfg.cdpTokenFile;
 
