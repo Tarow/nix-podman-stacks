@@ -114,7 +114,7 @@ in {
 
     services.podman.containers = {
       ${webName} = {
-        image = "ghcr.io/seanmorley15/adventurelog-frontend:v0.13.0";
+        image = "ghcr.io/seanmorley15/adventurelog-frontend:v0.13.1";
 
         environment = {
           PUBLIC_SERVER_URL = "http://${backendName}:8000";
@@ -133,7 +133,7 @@ in {
       };
 
       ${backendName} = {
-        image = "ghcr.io/seanmorley15/adventurelog-backend:v0.13.0";
+        image = "ghcr.io/seanmorley15/adventurelog-backend:v0.13.1";
         volumes = [
           "${storage}/media:/code/media"
         ];
