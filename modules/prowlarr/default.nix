@@ -26,7 +26,7 @@
     stackName = name;
   };
 in {
-  imports = import ../mkAliases.nix config lib name [name];
+  imports = import ../mkAliases.nix config lib name (arrlib.arrContainerNames [name]);
 
   options.nps.stacks.${name} = let
     o = arrlib.mkArrOptions name;

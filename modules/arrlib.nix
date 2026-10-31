@@ -137,4 +137,7 @@ in rec {
 
   arrDbs = names:
     lib.genAttrs' names (name: lib.nameValuePair "${name}-db" (mkArrPostgres name));
+
+  arrContainerNames = names:
+    names ++ builtins.attrNames (arrDbs names);
 }

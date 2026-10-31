@@ -10,6 +10,7 @@
   sonarrName = "sonarr";
   radarrName = "radarr";
   bazarrName = "bazarr";
+  arrNames = [sonarrName radarrName bazarrName];
   seerrName = "seerr";
   profilarrName = "profilarr";
   profilarrParserName = "${profilarrName}-parser";
@@ -50,9 +51,7 @@
 in {
   imports = import ../mkAliases.nix config lib stackName [
     jellyfinName
-    sonarrName
-    radarrName
-    bazarrName
+    (arrlib.arrContainerNames arrNames)
     seerrName
     profilarrName
     profilarrParserName
@@ -151,15 +150,7 @@ in {
       ${seerrName}.enable = lib.mkEnableOption "Seerr";
       ${maintainerrName}.enable = lib.mkEnableOption "Maintainerr";
     }
-    // (
-      lib.genAttrs
-      [
-        sonarrName
-        radarrName
-        bazarrName
-      ]
-      arrlib.mkArrOptions
-    );
+    // lib.genAttrs arrNames arrlib.mkArrOptions;
 
   config = lib.mkIf cfg.enable {
     # Enable qBittorrent stack. Attach Gluetun to the streaming network when the VPN is enabled, otherwise qBittorrent directly
@@ -424,6 +415,6 @@ in {
             homepage.settings.widget.type = "bazarr";
           });
       }
-      // arrlib.arrDbs [sonarrName radarrName bazarrName];
+      // arrlib.arrDbs arrNames;
   };
 }
