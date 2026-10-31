@@ -120,7 +120,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/leantime/leantime:3.12.0";
+        image = "docker.io/leantime/leantime:3.13.1";
 
         volumeMap = {
           publicUserfile = "${storage}/userfiles:/var/www/html/public/userfiles";
