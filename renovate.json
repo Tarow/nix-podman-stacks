@@ -42,7 +42,10 @@
         "/super-productivity/",
         "/super-sync-server/",
         "/excalidash/",
-        "/netbirdio/"
+        "/netbirdio/",
+        "ghcr.io/maziggy/bambuddy",
+        "ghcr.io/maziggy/orca-slicer-api",
+        "ghcr.io/maziggy/bambu-studio-api"
       ],
       "groupName": "{{parentDir}}"
     },
