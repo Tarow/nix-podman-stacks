@@ -95,6 +95,18 @@ in {
 
       baikal.enable = true;
 
+      bambuddy = {
+        enable = true;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyClientSecretHash;
+        };
+        orcaSlicer.enable = true;
+        bambuStudio.enable = true;
+        virtualPrinter.enable = true;
+      };
+
       bentopdf.enable = true;
 
       beszel = {
