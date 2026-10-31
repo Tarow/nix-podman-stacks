@@ -145,6 +145,7 @@ in {
               ${cfg.oidc.operatorGroup} = "Operators";
               ${cfg.oidc.viewerGroup} = "Viewers";
             };
+            BAMBUDDY_LOCAL_LOGIN = lib.mkDefault false;
           }
           // lib.optionalAttrs cfg.orcaSlicer.enable {
             SLICER_API_URL = "http://${orcaName}:3000";
