@@ -110,7 +110,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/norishapp/norish:v0.25.1-beta";
+        image = "docker.io/norishapp/norish:v0.26.0-beta";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap.data = "${storage}/data:/app/uploads";
 
