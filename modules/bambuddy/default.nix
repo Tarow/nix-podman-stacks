@@ -13,7 +13,7 @@
   category = "General";
   description = "3D Printer Management";
   displayName = "Bambuddy";
-  icon = "https://raw.githubusercontent.com/maziggy/bambuddy/v1.2.5.7/static/img/bambuddy_logo_dark_transparent.png";
+  icon = "sh:bambuddy";
   roleGroups = [cfg.oidc.adminGroup cfg.oidc.operatorGroup cfg.oidc.viewerGroup];
 in {
   imports = import ../mkAliases.nix config lib name [name orcaName bambuName];
@@ -163,8 +163,7 @@ in {
           lib.optional cfg.oidc.enable "authelia"
           ++ lib.optional cfg.orcaSlicer.enable orcaName
           ++ lib.optional cfg.bambuStudio.enable bambuName;
-        # Suppress the shared direct-web-port fallback when Traefik is disabled.
-        ports = lib.mkOverride 90 (lib.optionals cfg.virtualPrinter.enable [
+        ports = lib.optionals cfg.virtualPrinter.enable [
           "3000:3000/tcp"
           "3002:3002/tcp"
           "8883:8883/tcp"
@@ -173,7 +172,7 @@ in {
           "322:322/tcp"
           "2024-2026:2024-2026/tcp"
           "50000-50100:50000-50100/tcp"
-        ]);
+        ];
         addCapabilities = lib.optional cfg.virtualPrinter.enable "NET_BIND_SERVICE";
         stack = name;
         port = 8000;
