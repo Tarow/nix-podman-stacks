@@ -113,7 +113,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/madeofpendletonwool/pinepods:0.9.0";
+        image = "docker.io/madeofpendletonwool/pinepods:0.9.1";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap = {
           downloads = "${storage}/downloads:/opt/pinepods/downloads";
