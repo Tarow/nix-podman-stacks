@@ -101,7 +101,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/gotson/komga:1.29.2";
+        image = "ghcr.io/gotson/komga:1.30.0";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap = {
           data = "${storage}/data:/data";
