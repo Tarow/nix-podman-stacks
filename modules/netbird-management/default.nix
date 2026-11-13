@@ -188,7 +188,7 @@ in {
 
     services.podman.containers = {
       ${dashboardName} = {
-        image = "docker.io/netbirdio/dashboard:v2.96.0";
+        image = "docker.io/netbirdio/dashboard:v2.97.0";
 
         extraEnv = {
           NETBIRD_MGMT_API_ENDPOINT = cfg.containers.${serverName}.traefik.serviceUrl;
@@ -227,7 +227,7 @@ in {
       };
 
       ${serverName} = {
-        image = "ghcr.io/netbirdio/netbird-server:0.82.0";
+        image = "ghcr.io/netbirdio/netbird-server:0.83.1";
         environment.NB_SETUP_PAT_ENABLED = true;
         ports = ["3478:3478/udp"];
         volumeMap.data = "${storage}/data:/var/lib/netbird";
