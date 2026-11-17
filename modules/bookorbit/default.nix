@@ -227,7 +227,7 @@ in {
       };
 
       ${kokoroName} = lib.mkIf cfg.tts.enable {
-        image = "ghcr.io/remsky/kokoro-fastapi-cpu:v0.9.2";
+        image = "ghcr.io/remsky/kokoro-fastapi-cpu:v0.10.0";
 
         stack = name;
         dashboard = {
