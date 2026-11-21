@@ -80,12 +80,13 @@
         }
     );
 
-    # NixOS VM integration tests (only defined for Linux systems and only for
-    # stacks that ship a `modules/<stack>/vm-test.nix` file). Kept outside of
-    # `packages` and under a custom output because `nix flake check` realises
-    # every `packages.<system>` derivation, which would build all the heavy VM
-    # test closures on every check. Use `nix build
-    # .#integrationTests.x86_64-linux.<stack>-integration` to run a test.
+    # NixOS VM integration tests (only defined for Linux systems). Every stack
+    # ships `modules/<stack>/vm-tests/default.nix`; additional
+    # `vm-tests/<scenario>.nix` files become `<stack>-<scenario>-integration`.
+    # Kept outside of `packages` and under a custom output because
+    # `nix flake check` realises every `packages.<system>` derivation, which
+    # would build all the heavy VM test closures on every check. Use `nix build
+    # .#integrationTests.x86_64-linux.<name>-integration` to run a test.
     # Built via `self.lib.mkIntegrationTest`, the same entry point consumers use.
     integrationTests = forAllSystems (
       system: let
@@ -94,20 +95,16 @@
         lib.optionalAttrs (builtins.elem system [
           "aarch64-linux"
           "x86_64-linux"
-        ]) (let
-          stackNames = builtins.filter (
-            name: builtins.pathExists ./modules/${name}/vm-test.nix
-          ) (builtins.attrNames (import ./modules/module_list.nix));
-        in
-          (lib.listToAttrs (map (name: {
-              name = "${name}-integration";
-              value = self.lib.mkIntegrationTest {
-                inherit pkgs;
-                name = "${name}-integration";
-                modules = [./modules/${name}/vm-test.nix];
-              };
-            })
-            stackNames))
+        ]) (
+          (lib.mapAttrs' (
+              name: module:
+                lib.nameValuePair "${name}-integration" (self.lib.mkIntegrationTest {
+                  inherit pkgs;
+                  name = "${name}-integration";
+                  modules = [module];
+                })
+            )
+            self.lib.stackTestModules)
           // {
             # End-to-end test of the shipped template config
             template-integration = self.lib.mkIntegrationTest {
@@ -124,7 +121,8 @@
               diskSize = 20480;
               waitTimeout = 1800;
             };
-          })
+          }
+        )
     );
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);

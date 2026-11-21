@@ -32,27 +32,32 @@ nix build .#packages.x86_64-linux.search
 
 ### Integration Tests
 
-Each stack that ships a `modules/<stack>/vm-test.nix` gets a NixOS VM integration
+Every stack ships `modules/<stack>/vm-tests/default.nix`, a NixOS VM integration
 test that activates the stack like a real deployment and verifies that all its
-systemd user services reach a stable `active (running)` state.
+systemd user services reach a stable `active (running)` state. Additional
+`modules/<stack>/vm-tests/<scenario>.nix` files become separate tests, e.g.
+`<stack>-<scenario>-integration`, for scenarios such as OIDC enabled/disabled or
+custom settings.
 
 ```bash
 # Requires network access for the VM, hence sandbox is disabled
 nix build .#integrationTests.x86_64-linux.<stack>-integration --no-link --option sandbox false
+nix build .#integrationTests.x86_64-linux.<stack>-<scenario>-integration --no-link --option sandbox false
 ```
 
 The central test scaffolding lives in `tests/` (`base-config.nix`, `base-home.nix`,
 `mk-integration-test.nix`, `check.sh`, `driver.py`, `dummy-values.nix`) and is merged
-with the per-stack `vm-test.nix` home-manager fragment.
+with the per-stack `vm-tests/default.nix` home-manager fragment.
 
 The scaffolding is also exported as the `lib` flake output (`lib.mkIntegrationTest`,
 `lib.stackTestModules`) so consumers can test their own configuration. The
 `integrationTests` output is generated with
 `self.lib.mkIntegrationTest`, so repo and consumer tests share one code path. When
 changing anything under `tests/` or `lib/`, update the `integrationTests` call site in
-`flake.nix` and the options table in `docs/book/testing.md` with it. CI builds the stacks
-matching changed files and falls back to `it-tools` when the shared scaffolding changed,
-but it only covers `x86_64-linux`/KVM, so verify locally with:
+`flake.nix` and the options table in `docs/book/testing.md` with it. CI runs every
+scenario of a stack when any file under `modules/<stack>/` changes; it falls back to
+`it-tools` when the shared scaffolding changed, but it only covers
+`x86_64-linux`/KVM, so verify locally with:
 `nix build .#integrationTests.x86_64-linux.it-tools-integration --option sandbox false`.
 
 `npsTest.*` options are declared by `tests/base-config.nix`.
@@ -88,15 +93,20 @@ in {
 
 ### Test Files
 
-When adding a new module, also add a `modules/<name>/vm-test.nix` (a home-manager
-fragment enabling the stack with dummy secrets) so the stack gets a NixOS VM
-integration test. Available dummy secrets are exposed via `_module.args`
-(`dummySecretFile`, `dummyClientSecretHash`) from `tests/base-home.nix`, which sources them from
-`tests/dummy-values.nix`. See `modules/it-tools/vm-test.nix` for a minimal example.
+When adding a new module, also add `modules/<name>/vm-tests/default.nix` (a
+home-manager fragment enabling the stack with dummy secrets) so the stack gets a
+NixOS VM integration test. Add further scenarios as
+`modules/<name>/vm-tests/<scenario>.nix`; every `.nix` file in that directory is a
+test, and a scenario can import `./default.nix` to reuse the base config. Available
+dummy secrets are exposed via `_module.args` (`dummySecretFile`,
+`dummyClientSecretHash`) from `tests/base-home.nix`, which sources them from
+`tests/dummy-values.nix`. See `modules/it-tools/vm-tests/default.nix` for a minimal
+example.
 
-A memory hungry stack raises `npsTests.memorySize` in its own `vm-test.nix` (e.g. `immich`).
-That option is declared by `tests/base-home.nix` and used by `tests/base-config.nix`, so
-exported stack test modules work standalone.
+A memory hungry stack raises `npsTests.memorySize` in its `vm-tests/default.nix` or
+in the scenario file (e.g. `immich`). That option is declared by
+`tests/base-home.nix` and used by `tests/base-config.nix`, so exported stack test
+modules work standalone.
 
 ## Container Configuration Patterns
 

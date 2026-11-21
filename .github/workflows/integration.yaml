@@ -18,7 +18,7 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
-      stacks: ${{ steps.affected.outputs.stacks }}
+      tests: ${{ steps.affected.outputs.tests }}
     steps:
       - uses: actions/checkout@v7
       - name: Filter changed files
@@ -35,7 +35,7 @@ jobs:
               - 'tests/**'
               - 'lib/**'
               - 'flake.nix'
-      - name: Determine affected stacks
+      - name: Determine affected tests
         id: affected
         env:
           STACK_FILES: ${{ steps.filter.outputs.stacks_files }}
@@ -47,7 +47,7 @@ jobs:
 
           if [[ -n "$MANUAL_STACKS" ]]; then
             if [[ "$MANUAL_STACKS" == "all" ]]; then
-              STACKS=$( { ls -d modules/*/vm-test.nix | cut -d/ -f2; echo template; } )
+              STACKS=$( { for f in modules/*/vm-tests/default.nix; do [[ -e "$f" ]] && printf '%s\n' "$f" | cut -d/ -f2; done; echo template; } )
             else
               STACKS=$(echo "$MANUAL_STACKS" | tr ',' '\n')
             fi
@@ -63,29 +63,38 @@ jobs:
             fi
           fi
 
-          # Keep only tests that exist
-          FILTERED=""
+          TESTS=()
           for s in $STACKS; do
-            if [[ "$s" == "template" ]] || [[ -f "modules/$s/vm-test.nix" ]]; then
-              FILTERED="$FILTERED$s\n"
+            if [[ "$s" == "template" ]]; then
+              TESTS+=("template-integration")
+              continue
             fi
+            [[ -f "modules/$s/vm-tests/default.nix" ]] || continue
+            TESTS+=("$s-integration")
+            for f in "modules/$s/vm-tests"/*.nix; do
+              [[ -e "$f" ]] || continue
+              n=$(basename "$f" .nix)
+              if [[ "$n" != "default" ]]; then
+                TESTS+=("$s-$n-integration")
+              fi
+            done
           done
 
-          STACKS_JSON=$(printf "$FILTERED" | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          echo "stacks=$STACKS_JSON" >> "$GITHUB_OUTPUT"
+          TESTS_JSON=$(printf '%s\n' "${TESTS[@]}" | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "tests=$TESTS_JSON" >> "$GITHUB_OUTPUT"
 
   integration:
     needs: detect
-    if: needs.detect.outputs.stacks != '[]'
+    if: needs.detect.outputs.tests != '[]'
     runs-on: ubuntu-26.04
-    name: Integration (${{ matrix.stacks }})
+    name: Integration (${{ matrix.tests }})
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.stacks }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.tests }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
-        stacks: ${{ fromJson(needs.detect.outputs.stacks) }}
+        tests: ${{ fromJson(needs.detect.outputs.tests) }}
     steps:
       - uses: actions/checkout@v7
       - name: Install Nix
@@ -101,5 +110,5 @@ jobs:
           purge: false
       - name: Run integration test
         env:
-          STACK: ${{ matrix.stacks }}
-        run: nix build .#integrationTests.x86_64-linux.$STACK-integration --no-link --option sandbox false -L
+          TEST: ${{ matrix.tests }}
+        run: nix build ".#integrationTests.x86_64-linux.$TEST" --no-link --option sandbox false -L

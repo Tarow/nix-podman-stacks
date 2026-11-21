@@ -7,7 +7,7 @@
   options.npsTests.memorySize = lib.mkOption {
     type = lib.types.int;
     default = 2048;
-    description = "Memory size of the integration test VM in MiB. Override per stack in its vm-test.nix.";
+    description = "Memory size of the integration test VM in MiB. Override per stack in its vm-tests/default.nix or scenario file.";
   };
 
   config = {

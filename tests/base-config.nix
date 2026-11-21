@@ -84,7 +84,7 @@ in {
       description = ''
         Memory size of the integration test VM in MiB. `null` uses the
         `npsTests.memorySize` Home Manager option, which is where a stack's
-        vm-test.nix states its requirement.
+        `vm-tests/default.nix` or scenario file states its requirement.
       '';
     };
   };

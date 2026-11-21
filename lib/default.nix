@@ -5,7 +5,9 @@
   self,
   home-manager,
   lib,
-}: {
+}: let
+  scenarios = import ../tests/scenarios.nix {inherit lib;};
+in {
   # Activates Home Manager modules as the `ci` user in a VM and verifies that all
   # stack services reach a stable `active (running)` state.
   mkIntegrationTest = import ../tests/mk-integration-test.nix {
@@ -15,11 +17,7 @@
       ;
   };
 
-  # Per-stack test modules of this repository, e.g. `stackTestModules.immich`.
-  stackTestModules =
-    lib.mapAttrs (
-      name: _: ../modules/${name}/vm-test.nix
-    ) (lib.filterAttrs (
-      name: _: builtins.pathExists ../modules/${name}/vm-test.nix
-    ) (import ../modules/module_list.nix));
+  # Test modules keyed by test name: the stack name for the default scenario and
+  # `<stack>-<scenario>` for additional ones, e.g. `stackTestModules.mealie-no-oidc`.
+  stackTestModules = scenarios.testModules;
 }

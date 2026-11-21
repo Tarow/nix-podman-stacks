@@ -36,10 +36,10 @@ containers are pulled inside the VM.
 
 ## What the flake exports
 
-| Output             | Purpose                                                                     |
-| ------------------ | --------------------------------------------------------------------------- |
-| `mkIntegrationTest` | Builds the VM test from a list of Home Manager modules                      |
-| `stackTestModules` | The stack test modules of this repository, e.g. `stackTestModules.authelia` |
+| Output              | Purpose                                                                                               |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `mkIntegrationTest` | Builds the VM test from a list of Home Manager modules                                                |
+| `stackTestModules`  | Test modules keyed by test name, e.g. `stackTestModules.authelia` or `stackTestModules.mealie-no-oidc` |
 
 ### Options of `mkIntegrationTest`
 
@@ -59,6 +59,44 @@ containers are pulled inside the VM.
 | `waitTimeout`        | int                   | `600`               | Seconds **all** units share to become active, not per unit         |
 | `stabilityGrace`     | int                   | `60`                | Seconds a running unit must stay up without restarting             |
 | `globalTimeout`      | `null \| int`         | `null`              | Driver timeout, derived from the two timeouts when `null`          |
+
+## Multiple scenarios per stack
+
+Every stack in this repository ships a default scenario in
+`modules/<stack>/vm-tests/default.nix`, which becomes the `<stack>-integration` test.
+Additional files in that directory become separate tests:
+
+| File                                      | Test                             |
+| ----------------------------------------- | -------------------------------- |
+| `modules/<stack>/vm-tests/default.nix`    | `<stack>-integration`            |
+| `modules/<stack>/vm-tests/<scenario>.nix` | `<stack>-<scenario>-integration` |
+
+For example, `modules/mealie/vm-tests/no-oidc.nix` adds
+`mealie-no-oidc-integration`. A scenario is a regular Home Manager module; import
+`./default.nix` to reuse the default configuration and override what differs:
+
+```nix
+# modules/blocky/vm-tests/custom-settings.nix
+{...}: {
+  imports = [./default.nix];
+  nps.stacks.blocky.settings = {
+    # ...
+  };
+}
+```
+
+Run a scenario like any other test:
+
+```sh
+nix build .#integrationTests.x86_64-linux.mealie-no-oidc-integration --option sandbox false
+```
+
+`lib.stackTestModules` is keyed by test name, so both the default and the scenario are
+available to consumers:
+
+```nix
+modules = [nix-podman-stacks.lib.stackTestModules.mealie-no-oidc];
+```
 
 ## Your own test
 
@@ -106,8 +144,9 @@ A memory hungry stack raises `npsTests.memorySize` in its own test module.
 
 ## Combining with the bundled test modules
 
-`stackTestModules` contains the test module of every stack in this repository, so an
-OIDC deployment can reuse the Traefik and Authelia setup instead of rebuilding it. Pick
+`stackTestModules` contains the test modules of every stack in this repository (the
+default scenario plus any additional ones), keyed by test name, so an OIDC deployment
+can reuse the Traefik and Authelia setup instead of rebuilding it. Pick
 a stack whose OIDC is configured declaratively: `oidc.enable = true` writes the app's
 own provider config, while `oidc.registerClient = true` (e.g. `memos`) only registers the
 client in Authelia and leaves the rest to the app's web UI.

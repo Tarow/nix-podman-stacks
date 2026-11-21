@@ -1,0 +1,30 @@
+{
+  config,
+  dummyClientSecretHash,
+  dummySecretFile,
+  selfSignedCertDir,
+  ...
+}: {
+  imports = [../../authelia/vm-tests/default.nix];
+  nps.stacks.filebrowser-quantum = {
+    enable = true;
+    mounts = {
+      "${config.nps.externalStorageBaseDir}/hdd" = {
+        path = "/hdd";
+        name = "hdd";
+        config.denyByDefault = true;
+      };
+    };
+    oidc = {
+      enable = true;
+      clientSecretFile = dummySecretFile;
+      clientSecretHash = dummyClientSecretHash;
+    };
+    settings.auth.methods.password.enabled = false;
+  };
+
+  services.podman.containers.filebrowser-quantum = {
+    extraEnv.SSL_CERT_FILE = "/etc/ssl/certs/nps-test/wildcard.crt";
+    volumeMap.npsTestCert = "${selfSignedCertDir}:/etc/ssl/certs/nps-test:ro";
+  };
+}
