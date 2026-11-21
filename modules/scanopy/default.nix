@@ -110,7 +110,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/scanopy/scanopy/server:v0.19.6";
+        image = "ghcr.io/scanopy/scanopy/server:v0.20.1";
         volumeMap.data = "${storage}/data:/data";
 
         extraEnv =
@@ -142,7 +142,7 @@ in {
       };
 
       ${daemonName} = {
-        image = "ghcr.io/scanopy/scanopy/daemon:v0.19.6";
+        image = "ghcr.io/scanopy/scanopy/daemon:v0.20.1";
 
         volumeMap = {
           config = "${storage}/daemon:/root/.config";
