@@ -4,6 +4,7 @@ let
     inspection = ./inspection.nix;
     adguard = ./adguard;
     adventurelog = ./adventurelog;
+    agentgateway = ./agentgateway;
     aiostreams = ./aiostreams;
     anchor = ./anchor;
     audiobookshelf = ./audiobookshelf;
