@@ -88,7 +88,7 @@ in {
         pkce_challenge_method = "S256";
         pre_configured_consent_duration = config.nps.stacks.authelia.oidc.defaultConsentDuration;
         redirect_uris = [
-          "${cfg.containers.${name}.traefik.serviceUrl}/api/auth/oauth2/callback/oidc"
+          "${cfg.containers.${name}.traefik.serviceUrl}/api/auth/callback/oidc"
         ];
         token_endpoint_auth_method = "client_secret_post";
       };
@@ -110,7 +110,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "docker.io/norishapp/norish:v0.25.1-beta";
+        image = "docker.io/norishapp/norish:v0.27.0-beta";
         user = "${toString config.nps.defaultUid}:${toString config.nps.defaultGid}";
         volumeMap.data = "${storage}/data:/app/uploads";
 
