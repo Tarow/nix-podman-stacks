@@ -112,3 +112,38 @@ jobs:
         env:
           TEST: ${{ matrix.tests }}
         run: nix build ".#integrationTests.x86_64-linux.$TEST" --no-link --option sandbox false -L
+
+  # Single, stable check for branch protection. The matrix job itself cannot be
+  # required: its entries are dynamic and a skipped matrix job counts as a pass.
+  # Re-run all failed jobs together; a partial re-run can mask a failed matrix leg.
+  integration-results:
+    name: Integration Results
+    needs: [detect, integration]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Check integration results
+        env:
+          DETECT_RESULT: ${{ needs.detect.result }}
+          MATRIX_RESULT: ${{ needs.integration.result }}
+          TESTS: ${{ needs.detect.outputs.tests }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$DETECT_RESULT" != "success" ]]; then
+            echo "::error::Test detection did not succeed ($DETECT_RESULT)."
+            exit 1
+          fi
+
+          # An empty matrix skips the integration job, which is not a failure.
+          if [[ "$TESTS" == "[]" ]]; then
+            echo "No affected integration tests; nothing to check."
+            exit 0
+          fi
+
+          if [[ "$MATRIX_RESULT" != "success" ]]; then
+            echo "::error::One or more integration tests did not succeed ($MATRIX_RESULT)."
+            exit 1
+          fi
+
+          echo "All integration tests passed."
