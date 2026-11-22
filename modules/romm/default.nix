@@ -234,7 +234,7 @@ in {
             HealthInterval = "10s";
             HealthTimeout = "10s";
             HealthRetries = 5;
-            HealthStartPeriod = "5s";
+            HealthStartPeriod = "30s";
             HealthOnFailure = "kill";
           };
         };

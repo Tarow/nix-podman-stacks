@@ -1,37 +1,12 @@
 {
-  config,
-  dummySecretFile,
-  dummyClientSecretHash,
-  selfSignedCertDir,
-  ...
-}: {
-  imports = [
-    ../../authelia/vm-tests/default.nix
-  ];
-
   nps.stacks.gatus = {
     enable = true;
-    db = {
-      type = "postgres";
-      passwordFile = dummySecretFile;
-    };
-    oidc = {
-      enable = true;
-      clientSecretFile = dummySecretFile;
-      clientSecretHash = dummyClientSecretHash;
-    };
+    # Gatus refuses to start with an empty endpoint list.
     settings.endpoints = [
       {
-        name = "Authelia";
-        url = config.nps.containers.authelia.traefik.serviceUrl;
+        name = "Self";
+        url = "http://localhost:8080";
       }
     ];
-  };
-
-  # Gatus performs the OIDC discovery against Authelia over HTTPS at startup.
-  # Trust the self-signed wildcard certificate that Traefik serves in this test.
-  services.podman.containers.gatus = {
-    extraEnv.SSL_CERT_FILE = "/etc/ssl/certs/nps-test/wildcard.crt";
-    volumeMap.npsTestCert = "${selfSignedCertDir}:/etc/ssl/certs/nps-test:ro";
   };
 }

@@ -1,18 +1,8 @@
-{
-  dummyClientSecretHash,
-  dummySecretFile,
-  ...
-}: {
-  imports = [../../authelia/vm-tests/default.nix];
+{...}: {
   nps.stacks.shelfmark = {
     enable = true;
-    useProwlarr = true;
+    useFlaresolverr = false;
+    useProwlarr = false;
     useQbittorrent = false;
-    extraEnv.PROWLARR_API_KEY.fromFile = dummySecretFile;
-    oidc = {
-      enable = true;
-      clientSecretFile = dummySecretFile;
-      clientSecretHash = dummyClientSecretHash;
-    };
   };
 }

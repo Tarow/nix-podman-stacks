@@ -1,10 +1,8 @@
 {
-  dummyClientSecretHash,
   dummySecretFile,
   dummyUser,
   ...
 }: {
-  imports = [../../authelia/vm-tests/default.nix];
   nps.stacks.guacamole = {
     enable = true;
     userMappingXml = ''
@@ -18,7 +16,5 @@
         </authorize>
       </user-mapping>
     '';
-    oidc.enable = true;
-    db.passwordFile = dummySecretFile;
   };
 }

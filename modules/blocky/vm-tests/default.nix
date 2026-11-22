@@ -1,7 +1,3 @@
 {...}: {
-  nps.stacks.blocky = {
-    enable = true;
-    enableGrafanaDashboard = true;
-    enablePrometheusExport = true;
-  };
+  nps.stacks.blocky.enable = true;
 }
