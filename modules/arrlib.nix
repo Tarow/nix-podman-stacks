@@ -74,8 +74,8 @@ in rec {
       {
         PUID = config.nps.defaultUid;
         PGID = config.nps.defaultGid;
-        "${upperName}__AUTH__METHOD" = "Forms";
-        "${upperName}__AUTH__REQUIRED" = "DisabledForLocalAddresses";
+        "${upperName}__AUTH__METHOD" = lib.mkDefault "Forms";
+        "${upperName}__AUTH__REQUIRED" = lib.mkDefault "DisabledForLocalAddresses";
       }
       // lib.optionalAttrs (arrCfg.db.type == "postgres") {
         "${upperName}__POSTGRES__HOST" = "${name}-db";

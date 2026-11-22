@@ -1000,13 +1000,24 @@ in {
           useSabnzbd = true;
           maintainerr.enable = true;
         }
-        // lib.genAttrs ["sonarr" "radarr" "bazarr"] (name: {
-          db = {
-            type = "postgres";
-            passwordFile = dummySecretFile;
-          };
-          extraEnv."${lib.toUpper name}__AUTH__APIKEY".fromFile = dummySecretFile;
-        });
+        // lib.genAttrs ["sonarr" "radarr" "bazarr"] (
+          name:
+            {
+              db = {
+                type = "postgres";
+                passwordFile = dummySecretFile;
+              };
+              extraEnv."${lib.toUpper name}__AUTH__APIKEY".fromFile = dummySecretFile;
+            }
+            // lib.optionalAttrs (name == "radarr") {
+              oidc = {
+                enable = true;
+                clientSecretFile = dummySecretFile;
+                clientSecretHash = dummyClientSecretHash;
+                userEmail = dummyEmail;
+              };
+            }
+        );
 
       super-productivity = {
         enable = true;

@@ -64,6 +64,12 @@ Additionally, the following services can be enabled (disabled by default):
       };
     };
 
+    radarr.oidc = {
+      enable = true;
+      clientSecretFile = config.sops.secrets."radarr/authelia/client_secret".path;
+      userEmail = "admin@example.com";
+    };
+
     profilarr.enable = true;
     seerr.enable = true;
     maintainerr.enable = true;
