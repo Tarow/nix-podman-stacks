@@ -116,7 +116,7 @@ in {
     services.podman.containers = {
       ${name} = {
         # renovate: versioning=regex:^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?:\.(?<build>\d+))?$
-        image = "ghcr.io/maziggy/bambuddy:1.2.5.7";
+        image = "ghcr.io/maziggy/bambuddy:1.3.2";
         volumeMap = {
           data = "${storage}/data:/app/data";
           logs = "${storage}/logs:/app/logs";
@@ -186,7 +186,7 @@ in {
 
       ${orcaName} = lib.mkIf cfg.orcaSlicer.enable {
         # renovate: versioning=regex:^bambuddy-(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?:\.(?<build>\d+))?$
-        image = "ghcr.io/maziggy/orca-slicer-api:bambuddy-1.2.5.7";
+        image = "ghcr.io/maziggy/orca-slicer-api:bambuddy-1.3.2";
         volumeMap.data = "${storage}/orca-slicer:/app/data";
         environment = {
           NODE_ENV = "production";
@@ -203,7 +203,7 @@ in {
 
       ${bambuName} = lib.mkIf cfg.bambuStudio.enable {
         # renovate: versioning=regex:^bambuddy-(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?:\.(?<build>\d+))?$
-        image = "ghcr.io/maziggy/bambu-studio-api:bambuddy-1.2.5.7";
+        image = "ghcr.io/maziggy/bambu-studio-api:bambuddy-1.3.2";
         volumeMap.data = "${storage}/bambu-studio:/app/data";
         environment = {
           NODE_ENV = "production";
