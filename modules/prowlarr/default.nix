@@ -56,7 +56,7 @@ in {
         ${name} =
           arrlib.mkArrBase name
           // {
-            image = "lscr.io/linuxserver/prowlarr:3.0.2";
+            image = "lscr.io/linuxserver/prowlarr:3.1.0";
             port = 9696;
 
             dashboard = {
