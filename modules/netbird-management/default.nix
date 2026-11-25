@@ -188,7 +188,7 @@ in {
 
     services.podman.containers = {
       ${dashboardName} = {
-        image = "docker.io/netbirdio/dashboard:v2.98.0";
+        image = "docker.io/netbirdio/dashboard:v2.99.0";
 
         extraEnv = {
           NETBIRD_MGMT_API_ENDPOINT = cfg.containers.${serverName}.traefik.serviceUrl;
