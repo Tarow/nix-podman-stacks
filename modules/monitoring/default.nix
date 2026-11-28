@@ -489,7 +489,7 @@ in {
       };
 
       ${lokiName} = lib.mkIf cfg.loki.enable {
-        image = "docker.io/grafana/loki:3.7.10";
+        image = "docker.io/grafana/loki:3.7.11";
         exec = "-config.file=/etc/loki/local-config.yaml";
         user = config.nps.defaultUid;
         volumeMap = {
